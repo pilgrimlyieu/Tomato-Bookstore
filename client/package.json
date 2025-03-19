@@ -9,13 +9,36 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.5.13"
+    "@iconify/vue": "^4.3.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.0.14",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@vee-validate/rules": "^4.15.0",
+    "axios": "^1.8.3",
+    "element-plus": "^2.9.6",
+    "install": "^0.13.0",
+    "pinia": "^3.0.1",
+    "tailwindcss": "^4.0.14",
+    "vee-validate": "^4.5.8",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@typescript-eslint/parser": "^8.26.1",
     "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-vue": "^10.0.0",
+    "prettier": "^3.5.3",
     "typescript": "~5.7.2",
+    "unplugin-auto-import": "^19.1.1",
+    "unplugin-vue-components": "^28.4.1",
     "vite": "^6.2.0",
+    "vite-plugin-pages": "^0.32.5",
+    "vitest": "^3.0.9",
     "vue-tsc": "^2.2.4"
   }
 }
