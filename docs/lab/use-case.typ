@@ -1,4 +1,4 @@
-#import "simplepaper.typ": *
+#import "../template/simplepaper.typ": *
 
 #show: project.with(title: "番茄商城系统用例文档")
 
@@ -168,7 +168,7 @@
     ],
     special-req: "支持模糊搜索。",
   ),
-    (
+  (
     name: "添加到购物车",
     actor: Actor.CUSTOMER,
     trigger: "用户在商品详情页点击「加入购物车」按钮",
@@ -246,7 +246,7 @@
     ],
     special-req: "订单号需要唯一。",
   ),
-(
+  (
     name: "修改订单状态（支付、取消）",
     actor: Actor.CUSTOMER,
     trigger: "用户点击「支付」或「取消」按钮",
@@ -279,7 +279,7 @@
       2. 系统在页面指定位置显示广告（图片、链接等）。
     ],
   ),
-(
+  (
     name: "发布书评",
     actor: Actor.CUSTOMER,
     trigger: "用户在书籍详情页点击「写书评」按钮",
@@ -300,7 +300,7 @@
     ],
     special-req: "书评内容需要进行敏感词过滤。",
   ),
-(
+  (
     name: "撰写读书笔记",
     actor: Actor.CUSTOMER,
     trigger: "用户点击「撰写读书笔记」按钮",
@@ -321,77 +321,77 @@
     special-req: "读书笔记内容需要进行敏感词过滤。",
   ),
   (
-      name: "创建商品",
-      actor: Actor.ADMIN,
-      trigger: "管理员点击「创建商品」按钮",
-      pre-cond: "管理员已登录",
-      post-cond: "商品创建成功",
-      priority: Priority.HIGH,
-      normal-flow: [
-        1. 系统显示商品创建页面。
-        2. 管理员输入商品信息（名称、作者、价格、图片、描述、库存等）。
-        3. 系统验证输入信息的有效性。
-        4. 系统将商品信息存入数据库。
-        5. 系统提示管理员创建成功。
-      ],
-      alt-flow: [
-        - 3a. 如果商品名称已存在，系统提示管理员。
-      ],
-    ),
-    (
-      name: "更新商品信息",
-      actor: Actor.ADMIN,
-      trigger: "管理员点击「编辑商品」按钮",
-      pre-cond: "管理员已登录",
-      post-cond: "商品信息更新成功",
-      priority: Priority.HIGH,
-      normal-flow: [
-        1. 系统显示商品编辑页面。
-        2. 管理员修改商品信息。
-        3. 系统验证输入信息的有效性。
-        4. 系统更新数据库中的商品信息。
-        5. 系统提示管理员修改成功。
-      ],
-      alt-flow: [
-        - 3a. 如果商品名称已存在，系统提示管理员。
-      ],
-    ),
-    (
-      name: "删除商品",
-      actor: Actor.ADMIN,
-      trigger: "管理员点击「删除商品」按钮",
-      pre-cond: "管理员已登录",
-      post-cond: "商品删除成功",
-      priority: Priority.HIGH,
-      normal-flow: [
-        1. 系统提示管理员确认是否删除商品。
-        2. 管理员确认删除。
-        3. 系统从数据库中删除商品信息。
-        4. 系统提示管理员删除成功。
-      ],
-      alt-flow: [
-        - 2a. 如果管理员取消删除，系统不执行任何操作。
-      ],
-    ),
-    (
-      name: "调整商品库存",
-      actor: Actor.ADMIN,
-      trigger: "管理员点击「调整库存」按钮",
-      pre-cond: "管理员已登录",
-      post-cond: "商品库存更新成功",
-      priority: Priority.HIGH,
-      normal-flow: [
-        1. 系统显示商品库存调整页面。
-        2. 管理员输入新的库存数量。
-        3. 系统验证输入数量的有效性（如必须为非负整数）。
-        4. 系统更新数据库中的商品库存数量。
-        5. 系统提示管理员调整成功。
-      ],
-      alt-flow: [
-        - 3a. 如果输入数量无效，系统提示管理员重新输入。
-      ],
-    ),
-(
+    name: "创建商品",
+    actor: Actor.ADMIN,
+    trigger: "管理员点击「创建商品」按钮",
+    pre-cond: "管理员已登录",
+    post-cond: "商品创建成功",
+    priority: Priority.HIGH,
+    normal-flow: [
+      1. 系统显示商品创建页面。
+      2. 管理员输入商品信息（名称、作者、价格、图片、描述、库存等）。
+      3. 系统验证输入信息的有效性。
+      4. 系统将商品信息存入数据库。
+      5. 系统提示管理员创建成功。
+    ],
+    alt-flow: [
+      - 3a. 如果商品名称已存在，系统提示管理员。
+    ],
+  ),
+  (
+    name: "更新商品信息",
+    actor: Actor.ADMIN,
+    trigger: "管理员点击「编辑商品」按钮",
+    pre-cond: "管理员已登录",
+    post-cond: "商品信息更新成功",
+    priority: Priority.HIGH,
+    normal-flow: [
+      1. 系统显示商品编辑页面。
+      2. 管理员修改商品信息。
+      3. 系统验证输入信息的有效性。
+      4. 系统更新数据库中的商品信息。
+      5. 系统提示管理员修改成功。
+    ],
+    alt-flow: [
+      - 3a. 如果商品名称已存在，系统提示管理员。
+    ],
+  ),
+  (
+    name: "删除商品",
+    actor: Actor.ADMIN,
+    trigger: "管理员点击「删除商品」按钮",
+    pre-cond: "管理员已登录",
+    post-cond: "商品删除成功",
+    priority: Priority.HIGH,
+    normal-flow: [
+      1. 系统提示管理员确认是否删除商品。
+      2. 管理员确认删除。
+      3. 系统从数据库中删除商品信息。
+      4. 系统提示管理员删除成功。
+    ],
+    alt-flow: [
+      - 2a. 如果管理员取消删除，系统不执行任何操作。
+    ],
+  ),
+  (
+    name: "调整商品库存",
+    actor: Actor.ADMIN,
+    trigger: "管理员点击「调整库存」按钮",
+    pre-cond: "管理员已登录",
+    post-cond: "商品库存更新成功",
+    priority: Priority.HIGH,
+    normal-flow: [
+      1. 系统显示商品库存调整页面。
+      2. 管理员输入新的库存数量。
+      3. 系统验证输入数量的有效性（如必须为非负整数）。
+      4. 系统更新数据库中的商品库存数量。
+      5. 系统提示管理员调整成功。
+    ],
+    alt-flow: [
+      - 3a. 如果输入数量无效，系统提示管理员重新输入。
+    ],
+  ),
+  (
     name: "查看所有订单（管理员）",
     actor: Actor.ADMIN,
     trigger: "管理员进入订单管理页面",
@@ -498,12 +498,15 @@
 #table(
   columns: (auto, 1fr),
   [*参与者*], [*用例*],
-  ..use-cases.enumerate().map(((i, case)) => {
-    (
-      combine-actor(case.actor),
-      link(label("user-case" + str(i + 1)))[用例 #(i + 1)：#case.name],
-    )
-  }).flatten()
+  ..use-cases
+    .enumerate()
+    .map(((i, case)) => {
+      (
+        combine-actor(case.actor),
+        link(label("user-case" + str(i + 1)))[用例 #(i + 1)：#case.name],
+      )
+    })
+    .flatten()
 )
 
 = 详细用例描述
