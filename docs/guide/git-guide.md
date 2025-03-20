@@ -143,7 +143,7 @@ git push origin feature/your-feature-name
 
 ```bash
 # 首先更新主分支
-$ git swtich main
+$ git switch main
 $ git pull origin main
 
 # 切回你的分支
