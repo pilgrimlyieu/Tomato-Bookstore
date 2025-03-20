@@ -2,26 +2,6 @@
 
 本指南旨在帮助团队成员了解如何编写和维护项目文档。良好的文档对于项目的可持续发展和新成员的加入至关重要。
 
-## 文档类型
-
-```
-docs/
-├── backend-guide.md
-├── code-review-guide.md
-├── documentation-guide.md
-├── environment-setup.md
-├── frontend-guide.md
-├── git-guide.md
-├── simplepaper.typ
-├── start.public.md
-├── target
-│   └── use-case.pdf
-├── testing-guide.md
-├── use-case.private.md
-└── use-case.typ
-```
-
-
 ## 文档语言基础语法
 
 ### Markdown 语法
