@@ -1,7 +1,13 @@
 server:
   port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+    encoding:
+      charset: UTF-8
+      force: true
 
 spring:
+
   output:
     ansi:
       enabled: always
@@ -13,11 +19,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
         "[format_sql]": true
-        dialect: org.hibernate.dialect.MySQLDialect
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -30,3 +34,12 @@ logging:
     "[com.tomato.bookstore]": debug
     "[org.hibernate]": warn
     "[org.springframework]": warn
+
+application:
+  title: tomato-bookstore
+  version: 0.1.0-dev
+# JWT 配置
+app:
+  jwt:
+    secret: tomatobookstoresecretkeythatissecuretomatobookstoresecretkeythatissecure
+    expiration: 86400000 # 24 小时
