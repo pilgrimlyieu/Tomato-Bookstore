@@ -36,7 +36,7 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Void> register(@Valid @RequestBody RegisterDTO registerDTO) {
         userService.register(registerDTO);
-        return ApiResponse.success("注册成功", null);
+        return ApiResponse.created(null);
     }
 
     /**
