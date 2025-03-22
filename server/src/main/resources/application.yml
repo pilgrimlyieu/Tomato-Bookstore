@@ -38,7 +38,7 @@ logging:
 application:
   title: tomato-bookstore
   version: 0.1.0-dev
-# JWT配置
+# JWT 配置
 app:
   jwt:
     secret: tomatobookstoresecretkeythatissecuretomatobookstoresecretkeythatissecure
