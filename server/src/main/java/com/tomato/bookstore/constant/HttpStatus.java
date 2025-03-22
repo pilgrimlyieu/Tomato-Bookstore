@@ -1,7 +1,7 @@
 package com.tomato.bookstore.constant;
 
 /**
- * HTTP状态码
+ * HTTP 状态码
  */
 public enum HttpStatus {
     OK(200, "操作成功"),
