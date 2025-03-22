@@ -53,7 +53,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     public enum UserRole {
-        CUSTOMER, // 普通用户
+        CUSTOMER, // 顾客
         ADMIN, // 管理员
     }
 }
