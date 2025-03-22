@@ -139,6 +139,6 @@ public class JwtTokenProvider {
      * @return 用户 ID
      */
     public Long extractUserId(String token) {
-        return Long.valueOf(extractClaim(token, claims -> claims.get("userId", Integer.class)).longValue());
+        return Long.valueOf(extractClaim(token, claims -> claims.get("userId", Long.class)).longValue());
     }
 }
