@@ -4,24 +4,23 @@ package com.tomato.bookstore.constant;
  * 业务错误代码枚举
  * 规则：前两位表示模块，后三位表示具体错误
  * 模块划分：
- * 10: 用户模块
- * 20: 商品模块
- * 30: 交易模块
- * 40: 订单模块
- * 50: 书评模块
- * 60: 笔记模块
- * 90: 系统通用
+ * - 10: 用户模块
+ * - 20: 商品模块
+ * - 30: 交易模块
+ * - 40: 订单模块
+ * - 50: 书评模块
+ * - 60: 笔记模块
+ * - 90: 系统通用
  */
 public enum BusinessErrorCode {
     // 用户模块（10xxx）
     USER_NOT_FOUND(10001, "用户不存在"),
-    USER_ALREADY_EXISTS(10002, "用户名已存在"),
-    PASSWORD_INCORRECT(10003, "密码不正确"),
-    USER_ACCOUNT_LOCKED(10004, "账户已被锁定"),
-    USER_UNAUTHORIZED(10005, "用户未授权"),
-    USERNAME_ALREADY_EXISTS(20001, "用户名已存在"),
-    EMAIL_ALREADY_EXISTS(20002, "邮箱已存在"),
-    INCORRECT_PASSWORD(20004, "密码不正确"),
+    USERNAME_ALREADY_EXISTS(10002, "用户名已存在"),
+            EMAIL_ALREADY_EXISTS(10003, "邮箱已存在"),
+    PHONE_ALREADY_EXISTS(10004, "手机号已存在"),
+    PASSWORD_INCORRECT(10005, "密码不正确"),
+    USER_ACCOUNT_LOCKED(10006, "账户已被锁定"),
+    USER_UNAUTHORIZED(10007, "用户未授权"),
 
     // 商品模块（20xxx）
     PRODUCT_NOT_FOUND(20001, "商品不存在"),
