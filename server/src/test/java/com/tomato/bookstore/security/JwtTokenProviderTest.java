@@ -27,7 +27,7 @@ public class JwtTokenProviderTest {
   private UserDetails userDetails;
   private final String secretKey =
       "dG9tYXRvYm9va3N0b3Jlc2VjcmV0a2V5dG9tYXRvYm9va3N0b3Jlc2VjcmV0a2V5";
-  private final long expirationTime = 3600000; // 1小时
+  private final long expirationTime = 3600000; // 1 小时
 
   @BeforeEach
   void setUp() {

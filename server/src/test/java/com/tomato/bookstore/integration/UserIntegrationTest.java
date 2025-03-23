@@ -104,7 +104,7 @@ public class UserIntegrationTest {
             .andExpect(jsonPath("$.data").isString())
             .andReturn();
 
-    // 提取token
+    // 提取 token
     String responseJson = loginResult.getResponse().getContentAsString();
     String token = objectMapper.readTree(responseJson).get("data").asText();
     assertNotNull(token);
