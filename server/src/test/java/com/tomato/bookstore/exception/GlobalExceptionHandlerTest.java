@@ -56,7 +56,7 @@ public class GlobalExceptionHandlerTest {
     ApiResponse<Void> body = response.getBody();
     assertNotNull(body);
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    assertEquals(com.tomato.bookstore.constant.HttpStatus.NOT_FOUND.getCode(), body.getCode());
+    assertEquals(HttpStatus.NOT_FOUND.value(), body.getCode());
     assertEquals("用户不存在", body.getMessage());
   }
 
@@ -75,7 +75,7 @@ public class GlobalExceptionHandlerTest {
     ApiResponse<Void> body = response.getBody();
     assertNotNull(body);
     assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    assertEquals(com.tomato.bookstore.constant.HttpStatus.UNAUTHORIZED.getCode(), body.getCode());
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), body.getCode());
     assertEquals("Bad credentials", body.getMessage());
   }
 
@@ -94,7 +94,7 @@ public class GlobalExceptionHandlerTest {
     ApiResponse<Void> body = response.getBody();
     assertNotNull(body);
     assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    assertEquals(com.tomato.bookstore.constant.HttpStatus.FORBIDDEN.getCode(), body.getCode());
+    assertEquals(HttpStatus.FORBIDDEN.value(), body.getCode());
     assertEquals("Access is denied", body.getMessage());
   }
 
@@ -124,10 +124,8 @@ public class GlobalExceptionHandlerTest {
     ApiResponse<Map<String, String>> body = response.getBody();
     assertNotNull(body);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(com.tomato.bookstore.constant.HttpStatus.BAD_REQUEST.getCode(), body.getCode());
-    assertEquals(
-        com.tomato.bookstore.constant.HttpStatus.BAD_REQUEST.getDefaultMessage(),
-        body.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST.value(), body.getCode());
+    assertEquals(ApiResponse.MESSAGE_BAD_REQUEST, body.getMessage());
 
     assertNotNull(body.getData());
     Map<String, String> errors = body.getData();
@@ -150,8 +148,8 @@ public class GlobalExceptionHandlerTest {
     ApiResponse<Void> body = response.getBody();
     assertNotNull(body);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    assertEquals(
-        com.tomato.bookstore.constant.HttpStatus.INTERNAL_SERVER_ERROR.getCode(), body.getCode());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getCode());
+    assertTrue(body.getMessage().contains(ApiResponse.MESSAGE_SERVER_ERROR));
     assertTrue(body.getMessage().contains("Unexpected error"));
   }
 }

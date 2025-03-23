@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tomato.bookstore.constant.BusinessErrorCode;
-import com.tomato.bookstore.constant.HttpStatus;
 import com.tomato.bookstore.dto.LoginDTO;
 import com.tomato.bookstore.dto.RegisterDTO;
 import com.tomato.bookstore.dto.UserDTO;
@@ -25,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -86,7 +86,7 @@ public class UserIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerDTO)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.code").value(HttpStatus.CREATED.getCode()));
+        .andExpect(jsonPath("$.code").value(HttpStatus.CREATED.value()));
 
     // 验证用户已创建
     assertTrue(userRepository.existsByUsername("integrationtest"));
@@ -99,7 +99,7 @@ public class UserIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginDTO)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value(HttpStatus.OK.getCode()))
+            .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
             .andExpect(jsonPath("$.message").value("登录成功"))
             .andExpect(jsonPath("$.data").isString())
             .andReturn();
