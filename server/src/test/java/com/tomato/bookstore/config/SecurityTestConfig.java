@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
 
 @TestConfiguration
 @EnableWebSecurity
@@ -30,10 +29,5 @@ public class SecurityTestConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
-  }
-
-  @Bean
-  public ResponseStatusExceptionResolver responseStatusExceptionResolver() {
-    return new ResponseStatusExceptionResolver();
   }
 }
