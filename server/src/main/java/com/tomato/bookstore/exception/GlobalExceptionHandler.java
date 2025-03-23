@@ -57,8 +57,7 @@ public class GlobalExceptionHandler {
               errors.put(fieldName, errorMessage);
             });
     ApiResponse<Map<String, String>> response =
-        new ApiResponse<>(
-            com.tomato.bookstore.constant.HttpStatus.BAD_REQUEST.getCode(), "请求参数错误", errors);
+        new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), ApiResponse.MESSAGE_BAD_REQUEST, errors);
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 
@@ -94,6 +93,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
     return new ResponseEntity<>(
-        ApiResponse.serverError("服务器内部错误：" + ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        ApiResponse.serverError(ApiResponse.MESSAGE_SERVER_ERROR + "：" + ex.getMessage()),
+        HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
