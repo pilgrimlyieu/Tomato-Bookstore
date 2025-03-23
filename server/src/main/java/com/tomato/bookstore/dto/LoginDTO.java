@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 /**
  * 登录 DTO
  *
- * 该类用于接收登录请求的数据。
+ * <p>该类用于接收登录请求的数据。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDTO {
-    @NotBlank(message = "用户名不能为空")
-    private String username;
+  @NotBlank(message = "用户名不能为空")
+  private String username;
 
-    @NotBlank(message = "密码不能为空")
-    private String password;
+  @NotBlank(message = "密码不能为空")
+  private String password;
 }
