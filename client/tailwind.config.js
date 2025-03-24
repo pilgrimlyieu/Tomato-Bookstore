@@ -1,13 +1,16 @@
-// tailwind.config.js
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif']
+      },
       colors: {
-        "tomato": {
+        tomato: {
           50: '#fff5f5',
           100: '#ffe3e3',
           200: '#ffc9c9',
@@ -19,10 +22,7 @@ module.exports = {
           800: '#e03131',
           900: '#c92a2a',
           950: '#7d0b0b',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
+        }
       }
     }
   },
