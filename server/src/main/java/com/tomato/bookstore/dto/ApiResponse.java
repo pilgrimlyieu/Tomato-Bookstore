@@ -1,5 +1,6 @@
 package com.tomato.bookstore.dto;
 
+import com.tomato.bookstore.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,11 +43,15 @@ public class ApiResponse<T> {
   }
 
   public static ApiResponse<Void> success() {
-    return new ApiResponse<>(HttpStatus.OK.value(), MESSAGE_SUCCESS, null);
+    return new ApiResponse<Void>(HttpStatus.OK.value(), MESSAGE_SUCCESS, null);
   }
 
   public static ApiResponse<Void> fail(int code, String message) {
     return new ApiResponse<>(code, message, null);
+  }
+
+  public static ApiResponse<Void> fail(BusinessException ex) {
+    return new ApiResponse<>(ex.getErrorCode().getCode(), ex.getMessage(), null);
   }
 
   public static ApiResponse<Void> badRequest(String message) {
