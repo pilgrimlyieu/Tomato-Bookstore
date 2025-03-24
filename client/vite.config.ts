@@ -6,11 +6,11 @@ import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-    resolve: {
+  resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@stores': path.resolve(__dirname, './src/stores')
+      '@': path.resolve(__dirname, 'src'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@stores': path.resolve(__dirname, 'src/stores')
     }
   },
   plugins: [
@@ -26,4 +26,12 @@ export default defineConfig({
       dts: 'src/components.d.ts',
     }),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      }
+    }
+  }
 })
