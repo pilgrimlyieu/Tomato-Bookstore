@@ -43,7 +43,7 @@ public class ApiResponse<T> {
   }
 
   public static ApiResponse<Void> success() {
-    return new ApiResponse<Void>(HttpStatus.OK.value(), MESSAGE_SUCCESS, null);
+    return new ApiResponse<>(HttpStatus.OK.value(), MESSAGE_SUCCESS, null);
   }
 
   public static ApiResponse<Void> fail(int code, String message) {
