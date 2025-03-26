@@ -1,9 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  @apply bg-gray-50 text-gray-900;
+  scroll-behavior: smooth;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -63,8 +71,6 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
@@ -79,5 +85,656 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+/* 定义全局动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes spin3D {
+  0% {
+    transform: rotateY(0);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes gradientBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes borderPulse {
+  0% {
+    border-color: theme("colors.tomato.300");
+  }
+  50% {
+    border-color: theme("colors.tomato.500");
+  }
+  100% {
+    border-color: theme("colors.tomato.300");
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes glowingText {
+  0%,
+  100% {
+    text-shadow: 0 0 5px rgba(255, 107, 107, 0.7);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.9), 0 0 30px
+      rgba(255, 107, 107, 0.6);
+  }
+}
+
+/* 动画类 */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-pulse-custom {
+  animation: pulse 2s infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-spin3D {
+  animation: spin3D 6s linear infinite;
+}
+
+.animate-gradient-bg {
+  background: linear-gradient(270deg, #ff6b6b, #f03e3e, #fa5252);
+  background-size: 600% 600%;
+  animation: gradientBg 10s ease infinite;
+}
+
+.animate-border-pulse {
+  animation: borderPulse 2s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-glow-text {
+  animation: glowingText 2s ease-in-out infinite;
+}
+
+/* 页面过渡动画 */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* 元素悬停效果 */
+.hover-lift {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.hover-lift:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-rotate {
+  transition: transform 0.3s ease;
+}
+.hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+  transform: translateY(-3px);
+}
+
+/* 3D效果 */
+.card-3d {
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+  transform: rotateY(10deg) rotateX(5deg);
+}
+
+/* 玻璃拟态效果 */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+/* 炫光按钮 */
+.shine-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-button::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  background: linear-gradient(
+    to bottom,
+    rgba(229, 172, 142, 0),
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(229, 172, 142, 0)
+  );
+  transform: rotateZ(60deg) translate(-5em, 7.5em);
+}
+
+.shine-button:hover::after {
+  animation: shine 1s forwards;
+}
+
+@keyframes shine {
+  100% {
+    transform: rotateZ(60deg) translate(1em, -9em);
+  }
+}
+
+/* 加载骨架屏效果 */
+.skeleton-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* 粒子背景 */
+.particles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* 滚动条样式 */
+.custom-scrollbar {
+  @apply scrollbar-thin scrollbar-thumb-tomato-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full;
+}
+
+/* Element Plus与Tailwind兼容性优化 */
+.el-button--primary {
+  @apply bg-tomato-500 border-tomato-500 hover:bg-tomato-600 hover:border-tomato-600 transition-all duration-300;
+  box-shadow: 0 4px 15px 0 rgba(255, 107, 107, 0.4);
+  border-radius: 0.75rem;
+}
+
+.el-button--primary.is-round {
+  @apply rounded-full;
+}
+
+.el-button--primary.is-plain {
+  @apply bg-transparent text-tomato-500 border-tomato-300 hover:text-white hover:bg-tomato-500;
+}
+
+.el-button--success {
+  box-shadow: 0 4px 15px 0 rgba(103, 194, 58, 0.4);
+  border-radius: 0.75rem;
+}
+
+.el-button--warning {
+  box-shadow: 0 4px 15px 0 rgba(230, 162, 60, 0.4);
+  border-radius: 0.75rem;
+}
+
+.el-button--danger {
+  box-shadow: 0 4px 15px 0 rgba(245, 108, 108, 0.4);
+  border-radius: 0.75rem;
+}
+
+.el-button--primary:hover,
+.el-button--primary:focus {
+  @apply bg-tomato-600 border-tomato-600;
+  transform: translateY(-2px);
+}
+
+.el-button--primary:active {
+  transform: translateY(0);
+}
+
+.el-button--primary.is-loading::before {
+  @apply backdrop-blur-sm bg-white/30;
+}
+
+.el-input__wrapper {
+  transition: all 0.3s ease;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.el-input__wrapper.is-focus {
+  @apply ring-tomato-500 border-tomato-500;
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.3);
+}
+
+.el-input__inner {
+  transition: all 0.3s ease;
+}
+
+.el-input:hover .el-input__wrapper {
+  @apply border-tomato-300;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* 美化表单 */
+.el-form-item__label {
+  @apply text-gray-700 font-medium text-base;
+}
+
+.el-form--label-top .el-form-item__label {
+  @apply mb-2;
+}
+
+.el-dropdown-menu {
+  @apply rounded-xl shadow-lg border-0 py-1;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.el-card {
+  @apply transition-all duration-300 hover:shadow-lg;
+  border-radius: 1rem !important;
+  border: none !important;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.el-card__header {
+  border-bottom: 2px solid rgba(255, 107, 107, 0.1);
+  @apply py-4 bg-gradient-to-r from-gray-50 to-white;
+}
+
+.el-notification {
+  @apply rounded-xl shadow-lg border-0;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.el-message {
+  @apply rounded-full shadow-md border-0 px-5;
+  min-width: auto !important;
+  backdrop-filter: blur(10px);
+}
+
+.el-message__content {
+  @apply font-medium;
+}
+
+.el-message--success {
+  @apply bg-green-50;
+}
+
+.el-message--warning {
+  @apply bg-yellow-50;
+}
+
+.el-message--error {
+  @apply bg-red-50;
+}
+
+.el-message--info {
+  @apply bg-blue-50;
+}
+
+.el-tag {
+  @apply rounded-full font-medium border-0;
+}
+
+.el-badge__content {
+  @apply rounded-full border-0 shadow-md;
+}
+
+.el-dialog {
+  @apply rounded-2xl overflow-hidden;
+  backdrop-filter: blur(15px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.el-dialog__header {
+  @apply pt-5 pb-3 px-6 m-0 border-b border-gray-100;
+}
+
+.el-dialog__title {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.el-dialog__body {
+  @apply p-6;
+}
+
+.el-dialog__footer {
+  @apply pt-3 pb-5 px-6 m-0 border-t border-gray-100;
+}
+
+.el-carousel__arrow {
+  @apply rounded-full bg-black/30 backdrop-blur-sm hover:bg-tomato-500/90 transition-colors duration-300;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.el-carousel__indicator.is-active .el-carousel__button {
+  @apply bg-tomato-500;
+}
+
+.el-carousel__button {
+  @apply bg-gray-300 rounded-full w-10 transition-all duration-300;
+  height: 4px !important;
+}
+
+.el-carousel__indicators--outside .el-carousel__indicator {
+  @apply mx-1;
+}
+
+.el-select__tags {
+  @apply flex flex-wrap gap-1;
+}
+
+.el-select__tags-text {
+  @apply max-w-[120px] truncate;
+}
+
+.el-select-dropdown__item.selected {
+  @apply text-tomato-500 font-medium;
+}
+
+.el-select-dropdown {
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.el-loading-mask {
+  @apply backdrop-blur-sm;
+}
+
+.el-rate__icon {
+  @apply text-yellow-400;
+}
+
+.el-avatar {
+  @apply flex items-center justify-center;
+}
+
+/* 清除默认样式 */
+.el-menu {
+  border-right: none !important;
+}
+
+/* 美化滚动条 */
+.el-scrollbar__bar {
+  @apply opacity-0 transition-opacity duration-300;
+}
+
+.el-scrollbar:hover .el-scrollbar__bar {
+  @apply opacity-100;
+}
+
+.el-scrollbar__thumb {
+  @apply bg-tomato-300 rounded-full;
+}
+
+.el-tabs__item {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.el-tabs__item.is-active {
+  color: var(--el-color-primary);
+  font-weight: 600;
+}
+
+.el-tabs__active-bar {
+  background-color: var(--el-color-primary);
+  height: 3px;
+  border-radius: 3px;
+}
+
+/* 覆盖element-plus的默认颜色 */
+:root {
+  --el-color-primary: #ff6b6b !important;
+  --el-color-primary-light-3: #ff8787 !important;
+  --el-color-primary-light-5: #ffa8a8 !important;
+  --el-color-primary-light-7: #ffc9c9 !important;
+  --el-color-primary-light-8: #ffe3e3 !important;
+  --el-color-primary-light-9: #fff5f5 !important;
+  --el-color-primary-dark-2: #fa5252 !important;
+}
+
+/* 自定义类组件 */
+@layer components {
+  .btn-gradient {
+    @apply relative overflow-hidden bg-gradient-to-r from-tomato-500 via-tomato-600 to-tomato-500 text-white font-medium py-2 px-6 rounded-lg shadow-md
+    hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-tomato-500 focus:ring-opacity-50
+    bg-[length:200%_auto] hover:bg-[position:right_center];
+  }
+
+  .btn-3d {
+    @apply relative py-2 px-6 rounded-lg font-medium text-white shadow-md
+    bg-tomato-500 border-b-4 border-tomato-700 hover:bg-tomato-600 active:border-b-0
+    active:border-t-4 active:border-tomato-500 active:translate-y-[4px] active:shadow-none
+    transition-all duration-100 focus:outline-none;
+  }
+
+  .btn-shine {
+    @apply relative overflow-hidden bg-tomato-500 text-white font-medium py-2 px-6 rounded-lg shadow-md
+    before:absolute before:top-0 before:left-0 before:w-full before:h-full
+    before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent
+    before:translate-x-[-100%] hover:before:translate-x-[100%] hover:shadow-lg
+    before:transition-transform before:duration-500
+    transition-shadow focus:outline-none;
+  }
+
+  .card-gradient {
+    @apply bg-gradient-to-br from-white to-gray-50 shadow-md rounded-xl p-6 hover:shadow-lg transition-all duration-300;
+  }
+
+  .card-glass {
+    @apply backdrop-blur-lg bg-white/70 shadow-md rounded-xl p-6 hover:shadow-lg transition-all duration-300 border border-white/80;
+  }
+
+  .card-3d-hover {
+    @apply bg-white shadow-md rounded-xl p-6 transition-all duration-300
+    hover:shadow-xl hover:-translate-y-1 hover:rotate-1;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-gray-800 mb-6 relative;
+  }
+
+  .section-title:after {
+    content: "";
+    @apply absolute bottom-0 left-0 w-16 h-1 bg-tomato-500 rounded-full;
+  }
+
+  .section-title-centered {
+    @apply text-3xl font-bold text-gray-800 mb-6 relative flex flex-col items-center;
+  }
+
+  .section-title-centered:after {
+    content: "";
+    @apply h-1 bg-tomato-500 rounded-full w-20 mt-3;
+  }
+
+  .heading-accent {
+    @apply relative inline-block;
+  }
+
+  .heading-accent:before {
+    content: "";
+    @apply absolute -bottom-2 left-0 w-full h-1 bg-tomato-400 rounded-full transform scale-x-100 origin-bottom;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-tomato-100 text-tomato-800;
+  }
+
+  .badge-secondary {
+    @apply bg-mint-100 text-mint-800;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-danger {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .tag {
+    @apply inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium;
+  }
+
+  .tag-primary {
+    @apply bg-tomato-100 text-tomato-800;
+  }
+
+  .tag-secondary {
+    @apply bg-gray-100 text-gray-800;
+  }
+
+  .divider {
+    @apply flex items-center;
+  }
+
+  .divider:before,
+  .divider:after {
+    content: "";
+    @apply flex-1 bg-gray-200 h-px;
+  }
+
+  .divider > span {
+    @apply px-3 text-gray-500 text-sm;
+  }
+
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-tomato-500 to-tomato-700;
+  }
+
+  .shadow-box {
+    @apply bg-white p-6 rounded-xl shadow-lg;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border-gray-300 shadow-sm focus:border-tomato-500 focus:ring focus:ring-tomato-200 focus:ring-opacity-50 transition ease-in-out duration-150;
+  }
+
+  .shining-bg {
+    @apply relative overflow-hidden [background-size:200%_100%] animate-background-shine bg-[linear-gradient(to_right,theme(colors.tomato.50)_30%,theme(colors.tomato.200)_50%,theme(colors.tomato.50)_70%)] text-tomato-600 font-semibold;
   }
 }
