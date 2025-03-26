@@ -91,6 +91,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    * @return 是否在公开路径列表中
    */
   private boolean isPublicPath(String currentPath) {
-    return PUBLIC_PATHS.stream().anyMatch(publicPath -> currentPath.startsWith(publicPath));
+    return PUBLIC_PATHS.stream().anyMatch(publicPath -> currentPath.equals(publicPath));
   }
 }
