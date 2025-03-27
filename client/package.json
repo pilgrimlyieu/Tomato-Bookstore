@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "dev": "bunx vite",
+    "build": "bunx vue-tsc -b && bunx  vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,26 +19,29 @@
     "element-plus": "^2.9.6",
     "install": "^0.13.0",
     "pinia": "^3.0.1",
-    "tailwindcss": "^4.0.14",
     "vee-validate": "^4.5.8",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.16",
     "@types/node": "^22.13.10",
     "@typescript-eslint/parser": "^8.26.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9.22.0",
     "eslint-plugin-vue": "^10.0.0",
+    "postcss": "^8.5.3",
     "prettier": "^3.5.3",
+    "tailwindcss": "^4.0.16",
     "typescript": "~5.7.2",
     "unplugin-auto-import": "^19.1.1",
     "unplugin-vue-components": "^28.4.1",
     "vite": "^6.2.0",
     "vite-plugin-pages": "^0.32.5",
     "vitest": "^3.0.9",
-    "vue-tsc": "^2.2.4"
+    "vue-tsc": "^2.2.8"
   }
 }
