@@ -31,7 +31,7 @@ public interface UserService {
   /**
    * 获取当前登录用户信息
    *
-   * @param userId 用户ID
+   * @param userId 用户 ID
    * @return 当前登录用户信息
    * @throws ResourceNotFoundException 用户不存在
    */
@@ -40,7 +40,7 @@ public interface UserService {
   /**
    * 更新用户信息
    *
-   * @param userId 用户ID
+   * @param userId 用户 ID
    * @param userDTO 用户信息
    * @return 更新后的用户信息
    * @throws ResourceNotFoundException 用户不存在

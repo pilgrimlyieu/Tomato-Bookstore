@@ -7,7 +7,8 @@ server:
       force: true
 
 spring:
-
+  profiles:
+    active: dev
   output:
     ansi:
       enabled: always
@@ -35,11 +36,3 @@ logging:
     "[org.hibernate]": warn
     "[org.springframework]": warn
 
-application:
-  title: tomato-bookstore
-  version: 0.1.0-dev
-# JWT 配置
-app:
-  jwt:
-    secret: tomatobookstoresecretkeythatissecuretomatobookstoresecretkeythatissecure
-    expiration: 86400000 # 24 小时
