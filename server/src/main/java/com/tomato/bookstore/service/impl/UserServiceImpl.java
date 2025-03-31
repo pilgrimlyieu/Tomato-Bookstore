@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByEmail(registerDTO.getEmail())) {
       throw new BusinessException(BusinessErrorCode.EMAIL_ALREADY_EXISTS);
     }
+    if (userRepository.existsByPhone(registerDTO.getPhone())) {
+      throw new BusinessException(BusinessErrorCode.PHONE_ALREADY_EXISTS);
+    }
     // 创建用户实体
     LocalDateTime now = LocalDateTime.now();
     User user =
