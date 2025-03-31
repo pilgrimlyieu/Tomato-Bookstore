@@ -1,120 +1,68 @@
-// src/router/index.ts
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-// import Home from '@/views/Home.vue'
-// import BookList from '@/views/BookList.vue'
-// import BookDetail from '@/views/BookDetail.vue'
-// import Cart from '@/views/Cart.vue'
-// import UserRegister from '@/views/User/Register.vue'
-// import NotFound from '@/views/NotFound.vue'
+import { Routes } from "@/constants/routes";
+import { useUserStore } from "@/stores/user";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      redirect: '/login'
+      path: Routes.HOME,
+      name: "home",
+      component: () => import("@/views/Home.vue"),
+      meta: { title: "首页" },
     },
     {
-      path: '/Home',
-      name: 'Home',
-      component: () => import('../views/Home.vue'),
-      meta: {title: '主页'}
-    },
-    // {
-    //   path: '/books',
-    //   name: 'books',
-    //   component: BookList
-    // },
-    // {
-    //   path: '/books/:id',
-    //   name: 'book-detail',
-    //   component: BookDetail,
-    //   props: true
-    // },
-    // {
-    //   path: '/cart',
-    //   name: 'cart',
-    //   component: Cart
-    // },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/user/Login.vue'),
-      meta: {title: '用户登录'}
+      path: Routes.USER_LOGIN,
+      name: "login",
+      component: () => import("@/views/Login.vue"),
+      meta: { title: "登录", guest: true },
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/user/Register.vue'),
-      meta: {title: '用户注册'}
+      path: Routes.USER_REGISTER,
+      name: "register",
+      component: () => import("@/views/Register.vue"),
+      meta: { title: "注册", guest: true },
     },
     {
-      path: '/404',
-      name: '404',
-      component: () => import('../views/NotFound.vue'),
-      meta: {title: '404'}
-    }, {
-      path: '/:catchAll(.*)',
-      redirect: '/404'
-    }]
-})
+      path: Routes.USER_PROFILE,
+      name: "userProfile",
+      component: () => import("@/views/User/Profile.vue"),
+      meta: { title: "个人信息", requiresAuth: true },
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "notFound",
+      component: () => import("@/views/NotFound.vue"),
+      meta: { title: "页面不存在" },
+    },
+  ],
+});
 
-// export default router
-// router.beforeEach((to, _, next) => {
-//   const token = sessionStorage.getItem('token')
-//   const role: string | null = sessionStorage.getItem('role')
-//   if (to.meta.title) {
-//     document.title = to.meta.title;
-//   }
-//   if (token) {
-//     if (to.meta.permission) {
-//       if (to.meta.permission.includes(role!)) {
-//         next();
-//       } else {
-//         next('/404');
-//       }
-//     } else {
-//       next();
-//     }
-//   }
-//   else {
-//     if (to.path === '/login') {
-//       next();
-//     } else if (to.path === '/register') {
-//       next();
-//     } else {
-//       next('/login');
-//     }
-//   }
-//
-// })
-// import { useAuthStore } from '@/stores/auth'
-//
-// router.beforeEach((to, _, next) => {
-//   const authStore = useAuthStore()
-//
-//   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-//     next({ name: 'login', query: { redirect: to.fullPath } })
-//   } else {
-//     next()
-//   }
-// })
-router.beforeEach((to, _, next) => {
-  const authStore = useAuthStore()
+// 路由守卫
+router.beforeEach(async (to, from, next) => {
+  // 设置页面标题
+  document.title = `${to.meta.title || "首页"} - 番茄商城`;
 
-  console.log('[导航守卫] to:', to.fullPath)
-  console.log('[导航守卫] isLoggedIn:', authStore.isLoggedIn)
+  const userStore = useUserStore();
 
-  if (to.meta.title) {
-    document.title = to.meta.title
+  // 如果用户已登录但没有用户信息，则获取用户信息
+  if (userStore.token && !userStore.user) {
+    await userStore.fetchUserInfo();
   }
-  next()
-  // if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-  //   next({ name: 'login', query: { redirect: to.fullPath } })
-  // } else {
-  //   next()
-  // }
-})
 
-export default router
+  // 判断页面是否需要登录权限
+  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+    next({ name: "login", query: { redirect: to.fullPath } });
+    return;
+  }
+
+  // 如果用户已登录，则不允许访问登录和注册页面
+  if (to.meta.guest && userStore.isLoggedIn) {
+    next({ name: "home" });
+    return;
+  }
+
+  next();
+});
+
+export default router;

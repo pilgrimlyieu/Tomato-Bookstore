@@ -79,9 +79,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
       }
     } catch (Exception e) {
-      logger.error("JWT 处理过程中出现错误：" + e.getMessage());
+      logger.error("Error occurs when processing JWT token: " + e.getMessage());
+    } finally {
+      filterChain.doFilter(request, response);
     }
-    filterChain.doFilter(request, response);
   }
 
   /**
@@ -91,6 +92,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    * @return 是否在公开路径列表中
    */
   private boolean isPublicPath(String currentPath) {
-    return PUBLIC_PATHS.stream().anyMatch(publicPath -> currentPath.startsWith(publicPath));
+    return PUBLIC_PATHS.stream().anyMatch(publicPath -> currentPath.equals(publicPath));
   }
 }

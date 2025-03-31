@@ -1,53 +1,36 @@
-<!--<script setup lang="ts">-->
-<!--import HelloWorld from './components/HelloWorld.vue'-->
-<!--</script>-->
-
-<!--<template>-->
-<!--  <div>-->
-<!--    <a href="https://vite.dev" target="_blank">-->
-<!--      <img src="/vite.svg" class="logo" alt="Vite logo" />-->
-<!--    </a>-->
-<!--    <a href="https://vuejs.org/" target="_blank">-->
-<!--      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />-->
-<!--    </a>-->
-<!--  </div>-->
-<!--  <HelloWorld msg="Vite + Vue" />-->
-<!--</template>-->
-
-<!--<style scoped>-->
-<!--.logo {-->
-<!--  height: 6em;-->
-<!--  padding: 1.5em;-->
-<!--  will-change: filter;-->
-<!--  transition: filter 300ms;-->
-<!--}-->
-<!--.logo:hover {-->
-<!--  filter: drop-shadow(0 0 2em #646cffaa);-->
-<!--}-->
-<!--.logo.vue:hover {-->
-<!--  filter: drop-shadow(0 0 2em #42b883aa);-->
-<!--}-->
-<!--</style>-->
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <el-container
-    direction="vertical"
-    style="width: 100vw; height: 100vh; overflow: hidden;"
-  >
-    <router-view />
-  </el-container>
+  <div class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-grow">
+      <PageTransition type="fade" mode="out-in">
+        <router-view />
+      </PageTransition>
+    </main>
+    <Footer />
+  </div>
 </template>
 
+<script setup lang="ts">
+import Footer from "@/components/layout/Footer.vue";
+import Header from "@/components/layout/Header.vue";
+import PageTransition from "@/components/shared/PageTransition.vue";
+import { useUserStore } from "@/stores/user";
+import { applyRoundedStyle, setCSSVariables } from "@/utils/theme";
+import { onMounted } from "vue";
 
-<style>
-html, body, #app {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-</style>
+const userStore = useUserStore();
+
+// 页面加载时自动获取用户信息并设置主题
+onMounted(() => {
+  // 设置 CSS 变量主题
+  setCSSVariables();
+
+  // 应用圆角风格
+  applyRoundedStyle("lg");
+
+  // 获取用户信息
+  if (userStore.token && !userStore.user) {
+    userStore.fetchUserInfo();
+  }
+});
+</script>
