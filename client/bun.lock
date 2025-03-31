@@ -40,7 +40,7 @@
         "autoprefixer": "^10.4.21",
         "postcss": "^8.5.3",
         "typescript": "~5.7.3",
-        "unplugin-auto-import": "^19.1.1",
+        "unplugin-auto-import": "^19.1.2",
         "unplugin-vue-components": "^28.4.1",
         "vite": "^6.2.3",
         "vite-plugin-pages": "^0.32.5",
@@ -224,7 +224,7 @@
 
     "@types/ms": ["@types/ms@2.1.0", "https://registry.npmmirror.com/@types/ms/-/ms-2.1.0.tgz", {}, "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="],
 
-    "@types/node": ["@types/node@22.13.13", "https://registry.npmmirror.com/@types/node/-/node-22.13.13.tgz", { "dependencies": { "undici-types": "~6.20.0" } }, "sha512-ClsL5nMwKaBRwPcCvH8E7+nU4GxHVx1axNvMZTFHMEfNI7oahimt26P5zjVCRrjiIWj6YFXfE1v3dEp94wLcGQ=="],
+    "@types/node": ["@types/node@22.13.14", "https://registry.npmmirror.com/@types/node/-/node-22.13.14.tgz", { "dependencies": { "undici-types": "~6.20.0" } }, "sha512-Zs/Ollc1SJ8nKUAgc7ivOEdIBM8JAKgrqqUYi2J997JuKO7/tpQC+WCetQ1sypiKCQWHdvdg9wBNpUPEWZae7w=="],
 
     "@types/stats.js": ["@types/stats.js@0.17.3", "https://registry.npmmirror.com/@types/stats.js/-/stats.js-0.17.3.tgz", {}, "sha512-pXNfAD3KHOdif9EQXZ9deK82HVNaXP5ZIF5RP2QG6OQFNTaY2YIetfrE9t528vEreGQvEPRDDc8muaoYeK0SxQ=="],
 
