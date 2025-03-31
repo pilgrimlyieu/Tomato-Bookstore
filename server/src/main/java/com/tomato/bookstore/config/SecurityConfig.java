@@ -1,5 +1,6 @@
 package com.tomato.bookstore.config;
 
+import com.tomato.bookstore.security.JwtAuthenticationEntryPoint;
 import com.tomato.bookstore.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +27,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
-
   private final UserDetailsService userDetailsService;
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
   /**
    * 创建密码编码器
@@ -66,6 +67,8 @@ public class SecurityConfig {
                     .authenticated())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
         .userDetailsService(userDetailsService)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .build();

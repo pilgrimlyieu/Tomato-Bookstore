@@ -80,8 +80,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
     } catch (Exception e) {
       logger.error("Error occurs when processing JWT token: " + e.getMessage());
+    } finally {
+      filterChain.doFilter(request, response);
     }
-    filterChain.doFilter(request, response);
   }
 
   /**
