@@ -76,7 +76,7 @@
 
             <el-form-item label="密码" prop="password">
               <el-input v-model="registerForm.password" type="password" placeholder="设置登录密码" :prefix-icon="Lock"
-                show-password @input="checkPasswordStrength" />
+                show-password @input="checkPasswordStrengthHandler" />
               <div class="mt-1 flex items-center">
                 <span class="text-xs text-gray-500 mr-2">密码强度:</span>
                 <el-progress :percentage="passwordStrength.percentage" :status="passwordStrength.status"
@@ -165,6 +165,14 @@ import ConfettiButton from "@/components/shared/ConfettiButton.vue";
 import { Routes } from "@/constants/routes";
 import { useUserStore } from "@/stores/user";
 import {
+  checkPasswordStrength,
+  confirmPasswordRules,
+  emailRules,
+  passwordRules,
+  phoneRules,
+  usernameRules,
+} from "@/utils/validators";
+import {
   CircleCheck,
   Discount,
   Lock,
@@ -207,7 +215,7 @@ const benefits = [
     icon: Discount,
     title: "会员折扣",
     description:
-      "享受图书独家优惠价格，参与限时特价活动，比普通渠道至少低10%。",
+      "享受图书独家优惠价格，参与限时特价活动，比普通渠道至少低 10%。",
   },
   {
     icon: Present,
@@ -216,65 +224,15 @@ const benefits = [
   },
 ];
 
-// 验证两次输入的密码是否一致
-const validateConfirmPassword = (rule: any, value: string, callback: any) => {
-  if (value === "") {
-    callback(new Error("请再次输入密码"));
-  } else if (value !== registerForm.password) {
-    callback(new Error("两次输入的密码不一致"));
-  } else {
-    callback();
-  }
-};
-
-// 验证手机号格式
-const validatePhone = (rule: any, value: string, callback: any) => {
-  const phoneRegex = /^1[3-9]\d{9}$/;
-  if (value === "") {
-    callback(new Error("请输入手机号"));
-  } else if (!phoneRegex.test(value)) {
-    callback(new Error("请输入有效的 11 位手机号"));
-  } else {
-    callback();
-  }
-};
-
-// 表单验证规则 - 账号信息
 const accountRules: FormRules = {
-  username: [
-    { required: true, message: "请输入用户名", trigger: "blur" },
-    {
-      min: 3,
-      max: 20,
-      message: "用户名长度必须在 3-20 个字符之间",
-      trigger: "blur",
-    },
-  ],
-  password: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    {
-      min: 6,
-      max: 50,
-      message: "密码长度必须在 6-50 个字符之间",
-      trigger: "blur",
-    },
-  ],
-  confirmPassword: [
-    { required: true, message: "请再次输入密码", trigger: "blur" },
-    { validator: validateConfirmPassword, trigger: "blur" },
-  ],
+  username: usernameRules,
+  password: passwordRules,
+  confirmPassword: confirmPasswordRules(),
 };
 
-// 表单验证规则 - 个人资料
 const profileRules: FormRules = {
-  email: [
-    { required: true, message: "请输入邮箱", trigger: "blur" },
-    { type: "email", message: "请输入有效的邮箱地址", trigger: "blur" },
-  ],
-  phone: [
-    { required: true, message: "请输入手机号", trigger: "blur" },
-    { validator: validatePhone, trigger: "blur" },
-  ],
+  email: emailRules,
+  phone: phoneRules,
 };
 
 // 密码强度状态对象
@@ -284,38 +242,10 @@ const passwordStrength = reactive({
 });
 
 // 检查密码强度的函数
-const checkPasswordStrength = () => {
-  const password = registerForm.password;
-
-  if (!password) {
-    passwordStrength.percentage = 0;
-    passwordStrength.status = "exception";
-    return;
-  }
-
-  // 密码强度评估标准
-  let strength = 0;
-
-  // 长度检查
-  if (password.length >= 6) strength += 20;
-  if (password.length >= 10) strength += 10;
-
-  // 复杂度检查
-  if (/[A-Z]/.test(password)) strength += 20; // 大写字母
-  if (/[a-z]/.test(password)) strength += 15; // 小写字母
-  if (/[0-9]/.test(password)) strength += 15; // 数字
-  if (/[^A-Za-z0-9]/.test(password)) strength += 20; // 特殊字符
-
-  // 设置强度状态
-  passwordStrength.percentage = Math.min(100, strength);
-
-  if (strength < 40) {
-    passwordStrength.status = "exception";
-  } else if (strength < 70) {
-    passwordStrength.status = "warning";
-  } else {
-    passwordStrength.status = "success";
-  }
+const checkPasswordStrengthHandler = () => {
+  const result = checkPasswordStrength(registerForm.password);
+  passwordStrength.percentage = result.percentage;
+  passwordStrength.status = result.status;
 };
 
 // 下一步
@@ -346,7 +276,6 @@ const submitRegistration = async () => {
       }
 
       try {
-        // 去掉确认密码字段
         const { confirmPassword, ...registerData } = registerForm;
 
         const success = await userStore.register(registerData);
@@ -355,7 +284,7 @@ const submitRegistration = async () => {
           activeStep.value++;
         }
       } catch (error) {
-        console.error("注册失败:", error);
+        console.error("注册失败：", error);
       }
     }
   });
@@ -383,7 +312,7 @@ const goToLogin = () => {
   animation: slideUp 0.5s ease-out forwards;
 }
 
-/* 粒子背景的CSS替代方案 */
+/* 粒子背景的 CSS 替代方案 */
 .particles-bg {
   background-image: radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 20%),
     radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 20%),

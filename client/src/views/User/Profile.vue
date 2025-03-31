@@ -173,15 +173,9 @@
 <script setup lang="ts">
 import ProfileForm from "@/components/user/ProfileForm.vue";
 import { useUserStore } from "@/stores/user";
-import {
-  Calendar,
-  Lock,
-  Plus,
-  Star,
-  Upload,
-  User,
-} from "@element-plus/icons-vue";
-import type { FormInstance, FormRules, UploadFile } from "element-plus";
+import { getChangePasswordRules } from "@/utils/validators";
+import { Lock, Plus, Upload, User } from "@element-plus/icons-vue";
+import type { FormInstance, UploadFile } from "element-plus";
 import { ElMessage } from "element-plus";
 import gsap from "gsap";
 import { ref } from "vue";
@@ -197,32 +191,8 @@ const passwordForm = ref({
 });
 const changingPassword = ref(false);
 
-// 验证确认密码是否一致
-const validateConfirmPassword = (rule: any, value: string, callback: any) => {
-  if (value === "") {
-    callback(new Error("请再次输入新密码"));
-  } else if (value !== passwordForm.value.newPassword) {
-    callback(new Error("两次输入的密码不一致"));
-  } else {
-    callback();
-  }
-};
-
-// 密码表单验证规则
-const passwordRules: FormRules = {
-  currentPassword: [
-    { required: true, message: "请输入当前密码", trigger: "blur" },
-    { min: 6, message: "密码长度必须至少为6个字符", trigger: "blur" },
-  ],
-  newPassword: [
-    { required: true, message: "请输入新密码", trigger: "blur" },
-    { min: 6, message: "密码长度必须至少为6个字符", trigger: "blur" },
-  ],
-  confirmPassword: [
-    { required: true, message: "请再次输入新密码", trigger: "blur" },
-    { validator: validateConfirmPassword, trigger: "blur" },
-  ],
-};
+// 使用统一的密码修改验证规则
+const passwordRules = getChangePasswordRules();
 
 // 修改密码处理函数
 const handleChangePassword = async () => {
@@ -318,15 +288,6 @@ const handleUploadAvatar = async () => {
   } finally {
     uploadingAvatar.value = false;
   }
-};
-
-// 格式化日期
-const formatDate = (date: Date): string => {
-  return new Date(date).toLocaleDateString("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
 };
 </script>
 

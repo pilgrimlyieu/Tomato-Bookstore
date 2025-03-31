@@ -30,9 +30,9 @@
 
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
+import { getProfileRules } from "@/utils/validators";
 import { Location, Message, Phone, User } from "@element-plus/icons-vue";
-import type { FormInstance, FormRules } from "element-plus";
-import { ElMessage } from "element-plus";
+import type { FormInstance } from "element-plus";
 import { gsap } from "gsap";
 import { onMounted, ref } from "vue";
 
@@ -44,35 +44,7 @@ const profileForm = ref({
   address: "",
 });
 
-// 验证手机号格式
-const validatePhone = (rule: any, value: string, callback: any) => {
-  if (!value) {
-    callback();
-    return;
-  }
-
-  const phoneRegex = /^1[3-9]\d{9}$/;
-  if (!phoneRegex.test(value)) {
-    callback(new Error("请输入有效的 11 位手机号"));
-  } else {
-    callback();
-  }
-};
-
-// 表单验证规则
-const rules: FormRules = {
-  email: [
-    { required: true, message: "请输入邮箱", trigger: "blur" },
-    { type: "email", message: "请输入有效的邮箱地址", trigger: "blur" },
-  ],
-  phone: [
-    { required: true, message: "请输入手机号", trigger: "blur" },
-    { validator: validatePhone, trigger: "blur" },
-  ],
-  address: [
-    { max: 100, message: "地址长度不能超过 100 个字符", trigger: "blur" },
-  ],
-};
+const rules = getProfileRules();
 
 // 初始化表单数据
 onMounted(() => {
