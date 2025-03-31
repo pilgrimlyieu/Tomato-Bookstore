@@ -96,8 +96,8 @@ public class UserServiceImpl implements UserService {
     if (userDTO.getPhone() != null) {
       user.setPhone(userDTO.getPhone());
     }
-    if (userDTO.getAvatar() != null) {
-      user.setAvatar(userDTO.getAvatar());
+    if (userDTO.getAddress() != null) {
+      user.setAddress(userDTO.getAddress());
     }
     user.setUpdatedAt(LocalDateTime.now());
 

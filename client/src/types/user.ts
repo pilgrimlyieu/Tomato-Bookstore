@@ -43,6 +43,5 @@ export interface RegisterParams {
 export interface UpdateUserParams {
   email?: string;
   phone?: string;
-  avatar?: string;
   address?: string;
 }

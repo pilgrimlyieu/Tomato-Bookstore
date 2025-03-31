@@ -122,11 +122,8 @@ const handleSubmit = async () => {
             },
           );
         }
-
-        ElMessage.success("个人资料更新成功");
       } catch (error) {
         console.error("更新个人资料失败：", error);
-        ElMessage.error("更新个人资料失败，请重试");
       }
     } else {
       // 错误提示动画
