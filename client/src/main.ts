@@ -43,7 +43,7 @@ app.use(VueTippy, {
   },
 });
 
-// 全局GSAP配置
+// 全局 GSAP 配置
 gsap.defaults({
   ease: "power2.out",
   duration: 0.5,

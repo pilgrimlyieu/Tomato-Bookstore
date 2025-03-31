@@ -234,7 +234,7 @@ const validatePhone = (rule: any, value: string, callback: any) => {
   if (value === "") {
     callback(new Error("请输入手机号"));
   } else if (!phoneRegex.test(value)) {
-    callback(new Error("请输入有效的11位手机号"));
+    callback(new Error("请输入有效的 11 位手机号"));
   } else {
     callback();
   }
@@ -247,7 +247,7 @@ const accountRules: FormRules = {
     {
       min: 3,
       max: 20,
-      message: "用户名长度必须在3-20个字符之间",
+      message: "用户名长度必须在 3-20 个字符之间",
       trigger: "blur",
     },
   ],
@@ -256,7 +256,7 @@ const accountRules: FormRules = {
     {
       min: 6,
       max: 50,
-      message: "密码长度必须在6-50个字符之间",
+      message: "密码长度必须在 6-50 个字符之间",
       trigger: "blur",
     },
   ],

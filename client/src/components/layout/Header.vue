@@ -11,9 +11,9 @@
           </router-link>
         </div>
 
-        <!-- 搜索框 (中等屏幕以上显示) -->
+        <!-- 搜索框（中等屏幕以上显示） -->
         <div class="hidden md:block mx-4 flex-grow max-w-md relative">
-          <el-input v-model="searchQuery" placeholder="搜索图书、作者..." class="modern-search w-full" :prefix-icon="Search"
+          <el-input v-model="searchQuery" placeholder="搜索图书、作者…" class="modern-search w-full" :prefix-icon="Search"
             @keyup.enter="handleSearch" clearable>
             <template #append>
               <el-button :icon="Search" @click="handleSearch" class="search-button" />
@@ -21,7 +21,7 @@
           </el-input>
         </div>
 
-        <!-- 导航链接 (中等屏幕以上显示) -->
+        <!-- 导航链接（中等屏幕以上显示） -->
         <nav class="hidden md:flex space-x-1">
           <router-link v-for="(item, index) in navItems" :key="index" :to="item.path"
             class="text-gray-700 hover:text-tomato-500 px-3 py-2 rounded-md transition-colors relative overflow-hidden group"
@@ -174,7 +174,8 @@ const isMobileMenuOpen = ref(false);
 
 // 导航项目
 const navItems = [
-  { path: "/", label: "首页" },
+  // TODO: REMOVE redundant
+  { path: Routes.HOME, label: "首页" },
   { path: "/books", label: "图书" },
   { path: "/categories", label: "分类" },
   { path: "/new-releases", label: "新书" },
@@ -183,8 +184,8 @@ const navItems = [
 
 // 检查路由是否激活
 const isActiveRoute = (path: string) => {
-  if (path === "/") {
-    return route.path === "/";
+  if (path === Routes.HOME) {
+    return route.path === Routes.HOME;
   }
   return route.path.startsWith(path);
 };
@@ -192,7 +193,7 @@ const isActiveRoute = (path: string) => {
 // 搜索处理
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
-    router.push({ path: "/search", query: { q: searchQuery.value } });
+    router.push({ path: "/search", query: { q: searchQuery.value } }); // TODO: Search
     searchQuery.value = "";
   }
 };
@@ -200,7 +201,7 @@ const handleSearch = () => {
 // 退出登录
 const handleLogout = () => {
   userStore.logout();
-  router.push("/");
+  router.push(Routes.HOME);
 };
 
 // 监听滚动事件

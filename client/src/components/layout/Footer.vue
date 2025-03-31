@@ -152,7 +152,7 @@ const handleScroll = () => {
 
 // 回到顶部
 const scrollToTop = () => {
-  // 使用原生滚动API，避免GSAP ScrollToPlugin的依赖问题
+  // 使用原生滚动 API，避免 GSAP ScrollToPlugin 的依赖问题
   window.scrollTo({
     top: 0,
     behavior: "smooth",
@@ -177,7 +177,13 @@ const handleSubscribe = () => {
       gsap.fromTo(
         inputEl,
         { x: 0 },
-        { x: [-5, 5, -3, 3, 0], duration: 0.4, ease: "power2.out" },
+        {
+          x: (i, _) => {
+            return [0, -5, 5, -3, 3, 0][i % 6];
+          },
+          duration: 0.4,
+          ease: "power2.out",
+        },
       );
     }
     return;

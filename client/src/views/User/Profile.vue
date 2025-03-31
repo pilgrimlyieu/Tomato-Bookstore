@@ -16,7 +16,7 @@
               </el-avatar>
 
               <h2 class="text-xl font-semibold text-gray-800 mb-1">{{ userStore.username }}</h2>
-              <p class="text-gray-500 mb-4">{{ userStore.isAdmin ? '管理员' : '普通会员' }}</p>
+              <p class="text-gray-500 mb-4">{{ userStore.isAdmin ? '管理员' : '普通顾客' }}</p>
 
               <el-button size="small" class="rounded-full" @click="visibleUploadAvatar = true">
                 <el-icon class="mr-1">
@@ -32,22 +32,8 @@
                     <el-icon class="text-tomato-500 mr-2">
                       <User />
                     </el-icon>
-                    <span class="text-gray-600">会员等级: </span>
-                    <span class="ml-auto font-medium">普通会员</span>
-                  </li>
-                  <li class="flex items-center">
-                    <el-icon class="text-tomato-500 mr-2">
-                      <Calendar />
-                    </el-icon>
-                    <span class="text-gray-600">注册时间: </span>
-                    <span class="ml-auto font-medium">{{ formatDate(userStore.user?.createdAt || new Date()) }}</span>
-                  </li>
-                  <li class="flex items-center">
-                    <el-icon class="text-tomato-500 mr-2">
-                      <Star />
-                    </el-icon>
-                    <span class="text-gray-600">积分: </span>
-                    <span class="ml-auto font-medium">{{ userStore.user?.points || 0 }}</span>
+                    <span class="text-gray-600">用户等级：</span>
+                    <span class="ml-auto font-medium">普通顾客</span>
                   </li>
                 </ul>
               </div>
@@ -247,10 +233,10 @@ const handleChangePassword = async () => {
       changingPassword.value = true;
       try {
         // 调用API修改密码
-        await userStore.changePassword({
-          currentPassword: passwordForm.value.currentPassword,
-          newPassword: passwordForm.value.newPassword,
-        });
+        // await userStore.changePassword({
+        //   currentPassword: passwordForm.value.currentPassword,
+        //   newPassword: passwordForm.value.newPassword,
+        // }); // TODO
 
         ElMessage.success("密码修改成功");
         passwordForm.value = {
