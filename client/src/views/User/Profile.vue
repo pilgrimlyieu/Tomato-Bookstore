@@ -232,7 +232,6 @@ const handleChangePassword = async () => {
     if (valid) {
       changingPassword.value = true;
       try {
-        // 调用API修改密码
         // await userStore.changePassword({
         //   currentPassword: passwordForm.value.currentPassword,
         //   newPassword: passwordForm.value.newPassword,
@@ -245,7 +244,7 @@ const handleChangePassword = async () => {
           confirmPassword: "",
         };
       } catch (error) {
-        console.error("修改密码失败:", error);
+        console.error("修改密码失败：", error);
         ElMessage.error("修改密码失败，请重试");
       } finally {
         changingPassword.value = false;
@@ -271,11 +270,11 @@ const handleAvatarChange = (file: UploadFile) => {
   const isLt2M = file.raw && file.raw.size / 1024 / 1024 < 2;
 
   if (!isImage) {
-    ElMessage.error("上传头像图片只能是 JPG/PNG/GIF 格式!");
+    ElMessage.error("上传头像图片只能是 JPG/PNG/GIF 格式！");
     return false;
   }
   if (!isLt2M) {
-    ElMessage.error("上传头像图片大小不能超过 2MB!");
+    ElMessage.error("上传头像图片大小不能超过 2MB！");
     return false;
   }
 
@@ -285,7 +284,7 @@ const handleAvatarChange = (file: UploadFile) => {
   reader.onload = () => {
     avatarPreview.value = reader.result as string;
 
-    // 使用GSAP添加简单动画
+    // 使用 GSAP 添加简单动画
     const avatar = document.querySelector(".el-avatar");
     if (avatar) {
       gsap.from(avatar, {
@@ -308,12 +307,13 @@ const handleUploadAvatar = async () => {
   uploadingAvatar.value = true;
   try {
     // 调用API上传头像
-    await userStore.updateUserProfile({ avatar: avatarPreview.value });
+    // await userStore.updateUserProfile({ avatar: avatarPreview.value });
+    // TODO: image service
 
     visibleUploadAvatar.value = false;
     ElMessage.success("头像上传成功");
   } catch (error) {
-    console.error("上传头像失败:", error);
+    console.error("上传头像失败：", error);
     ElMessage.error("上传头像失败，请重试");
   } finally {
     uploadingAvatar.value = false;

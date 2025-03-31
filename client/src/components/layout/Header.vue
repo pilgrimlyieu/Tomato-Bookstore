@@ -120,7 +120,7 @@
 
       <!-- 移动端搜索框 -->
       <div class="md:hidden mt-3">
-        <el-input v-model="searchQuery" placeholder="搜索图书、作者..." class="modern-search w-full" :prefix-icon="Search"
+        <el-input v-model="searchQuery" placeholder="搜索图书、作者…" class="modern-search w-full" :prefix-icon="Search"
           clearable>
           <template #append>
             <el-button :icon="Search" @click="handleSearch" class="search-button" />

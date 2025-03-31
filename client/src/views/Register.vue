@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen flex flex-col md:flex-row-reverse py-0">
-    <!-- 右侧图片背景区域 (中等尺寸以上显示) -->
+    <!-- 右侧图片背景区域（中等尺寸以上显示） -->
     <div
       class="hidden md:flex md:w-1/2 bg-gradient-to-br from-tomato-500 to-tomato-700 items-center justify-center relative overflow-hidden">
-      <!-- 粒子背景 - 替换为纯CSS效果 -->
+      <!-- 粒子背景 - 替换为纯 CSS 效果 -->
       <div class="particles-bg absolute inset-0"></div>
 
       <div class="text-white max-w-lg relative z-10 p-8 animate-fade-in">
@@ -170,7 +170,6 @@ import {
   Lock,
   Message,
   Phone,
-  // Gift icon is not available, using Present instead
   Present,
   Reading,
   User,
