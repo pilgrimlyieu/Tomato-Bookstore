@@ -173,6 +173,6 @@ public class UserIntegrationTest {
   @Test
   @DisplayName("未认证用户不能访问受保护的资源")
   void unauthenticatedAccessDenied() throws Exception {
-    mockMvc.perform(get("/user/profile")).andExpect(status().isForbidden());
+    mockMvc.perform(get("/user/profile")).andExpect(status().isUnauthorized());
   }
 }
