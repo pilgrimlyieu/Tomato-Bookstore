@@ -66,14 +66,15 @@ const rules = getRegisterRules();
 const handleSubmit = async () => {
   if (!registerFormRef.value) return;
 
-  await registerFormRef.value.validate(async (valid) => {
-    if (valid) {
-      const { confirmPassword, ...registerData } = registerForm.value;
-      const success = await userStore.register(registerData);
-      if (success) {
-        router.push(Routes.USER_LOGIN);
-      }
+  try {
+    await registerFormRef.value.validate();
+    const { confirmPassword, ...registerData } = registerForm.value;
+    const success = await userStore.register(registerData);
+    if (success) {
+      router.push(Routes.USER_LOGIN);
     }
-  });
+  } catch (error) {
+    console.error("表单验证失败：", error);
+  }
 };
 </script>
