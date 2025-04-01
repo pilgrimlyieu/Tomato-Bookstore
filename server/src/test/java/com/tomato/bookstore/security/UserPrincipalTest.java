@@ -3,6 +3,7 @@ package com.tomato.bookstore.security;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.tomato.bookstore.constant.RoleConstants;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ public class UserPrincipalTest {
     String username = "testuser";
     String password = "password";
     Collection<GrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+    authorities.add(new SimpleGrantedAuthority(RoleConstants.ROLE_CUSTOMER));
     Long userId = 1L;
 
     // 执行
@@ -29,7 +30,9 @@ public class UserPrincipalTest {
     assertEquals(password, userPrincipal.getPassword());
     assertEquals(authorities.size(), userPrincipal.getAuthorities().size());
     assertTrue(
-        userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER")));
+        userPrincipal
+            .getAuthorities()
+            .contains(new SimpleGrantedAuthority(RoleConstants.ROLE_CUSTOMER)));
     assertEquals(userId, userPrincipal.getUserId());
   }
 }
