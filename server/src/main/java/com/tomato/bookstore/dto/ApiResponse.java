@@ -18,8 +18,8 @@ public class ApiResponse<T> {
   private T data;
   private String msg;
 
-  static final String MESSAGE_SUCCESS = "操作成功";
-  static final String MESSAGE_CREATED = "创建成功";
+  public static final String MESSAGE_SUCCESS = "操作成功";
+  public static final String MESSAGE_CREATED = "创建成功";
 
   /**
    * 成功响应
