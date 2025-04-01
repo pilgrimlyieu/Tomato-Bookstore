@@ -29,7 +29,7 @@ spring:
 
 logging:
   pattern:
-    console: "%clr(%d{HH:mm:ss.SSS}){blue} %highlight{%-5level} %clr([%thread]){red} %cyan{%logger{15}} : %msg%n"
+    console: "%clr(%d{HH:mm:ss}){faint} %highlight(%5p) %clr([%thread]){magenta} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
   level:
     root: info
     "[com.tomato.bookstore]": debug
