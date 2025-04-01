@@ -1,6 +1,11 @@
 package com.tomato.bookstore.constant;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** 业务错误代码枚举 规则：前两位表示模块，后三位表示具体错误 */
+@Getter
+@RequiredArgsConstructor
 public enum BusinessErrorCode {
   // 用户模块（10xxx）
   USER_NOT_FOUND(10001, "用户不存在"),
@@ -16,6 +21,10 @@ public enum BusinessErrorCode {
   PRODUCT_OUT_OF_STOCK(20002, "商品库存不足"),
   PRODUCT_OFFLINE(20003, "商品已下架"),
   PRODUCT_PRICE_CHANGED(20004, "商品价格已变更"),
+  PRODUCT_TITLE_ALREADY_EXISTS(20005, "商品名称已存在"),
+  PRODUCT_STOCK_NOT_FOUND(20006, "商品库存记录不存在"),
+  PRODUCT_INVALID_PARAMETER(20007, "商品参数无效"),
+  PRODUCT_STOCK_INSUFFICIENT(20008, "商品库存不足"),
 
   // 交易模块（30xxx）
   CART_EMPTY(30001, "购物车为空"),
@@ -46,17 +55,4 @@ public enum BusinessErrorCode {
 
   private final int code;
   private final String message;
-
-  BusinessErrorCode(int code, String message) {
-    this.code = code;
-    this.message = message;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
 }

@@ -1,5 +1,6 @@
 package com.tomato.bookstore.controller;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.dto.ApiResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HomeController {
-  @GetMapping("/")
+  @GetMapping(ApiConstants.HOME)
   public ApiResponse<Map<String, String>> home() {
     Map<String, String> response = new HashMap<>();
     response.put("message", "番茄商城 API");

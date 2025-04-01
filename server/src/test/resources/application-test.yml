@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -9,7 +9,8 @@ spring:
       ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
+        '[globally_quoted_identifiers]': true
 
 jwt:
   secret: testsecretkeytestsecretkeytestsecretkeytestsecretkey

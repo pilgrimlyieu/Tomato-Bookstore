@@ -33,7 +33,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
     ApiResponse<Void> apiResponse =
-        new ApiResponse<>(BusinessErrorCode.USER_UNAUTHORIZED.getCode(), "JWT 令牌无效或已过期", null);
+        ApiResponse.error(BusinessErrorCode.USER_UNAUTHORIZED.getCode(), "JWT 令牌无效或已过期", null);
 
     response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
   }

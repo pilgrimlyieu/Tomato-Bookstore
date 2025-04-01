@@ -1,5 +1,6 @@
 package com.tomato.bookstore.config;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.security.JwtAuthenticationFilter;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,10 @@ public class SecurityTestConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("/user/login", "/user/register", "/")
+                    .requestMatchers(
+                        ApiConstants.USER_LOGIN_PATH,
+                        ApiConstants.USER_REGISTER_PATH,
+                        ApiConstants.HOME)
                     .permitAll()
                     .anyRequest()
                     .authenticated())

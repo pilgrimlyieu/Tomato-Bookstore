@@ -1,5 +1,6 @@
 package com.tomato.bookstore.config;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.security.JwtAuthenticationEntryPoint;
 import com.tomato.bookstore.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
@@ -59,10 +62,11 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/user/register", "/user/login", "/")
+                    .requestMatchers(
+                        ApiConstants.USER_REGISTER_PATH,
+                        ApiConstants.USER_LOGIN_PATH,
+                        ApiConstants.HOME)
                     .permitAll()
-                    .requestMatchers("/admin/**")
-                    .hasRole("ADMIN")
                     .anyRequest()
                     .authenticated())
         .sessionManagement(
