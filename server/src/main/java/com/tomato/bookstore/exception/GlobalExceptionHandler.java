@@ -1,54 +1,72 @@
 package com.tomato.bookstore.exception;
 
 import com.tomato.bookstore.dto.ApiResponse;
+import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * 全局异常处理器
+ *
+ * <p>该类用于处理所有控制器抛出的异常，并返回统一格式的响应。
+ */
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-  /**
-   * 处理业务异常
-   *
-   * @param ex 业务异常
-   * @return 响应实体
-   */
-  @ExceptionHandler(BusinessException.class)
-  public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException ex) {
-    ApiResponse<Void> response = ApiResponse.fail(ex);
-    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-  }
-
   /**
    * 处理资源不存在异常
    *
-   * @param ex 资源不存在异常
-   * @return 响应实体
+   * <p>该异常通常用于表示请求的资源不存在，例如用户、商品等。
+   *
+   * @param e 资源不存在异常
+   * @return ApiResponse 统一格式的响应
    */
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException(
-      ResourceNotFoundException ex) {
-    return new ResponseEntity<>(ApiResponse.notFound(ex.getMessage()), HttpStatus.NOT_FOUND);
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ApiResponse<Void> handleResourceNotFoundException(ResourceNotFoundException e) {
+    log.warn("资源不存在：{}", e.getMessage());
+    return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), e.getMessage());
   }
 
   /**
-   * 处理请求参数验证异常
+   * 处理业务异常
    *
-   * @param ex 请求参数验证异常
-   * @return 响应实体
+   * <p>该异常通常用于表示业务逻辑错误，例如参数不合法、操作不允许等。
+   *
+   * @param e 业务异常
+   * @return ApiResponse 统一格式的响应
+   */
+  @ExceptionHandler(BusinessException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ApiResponse<Void> handleBusinessException(BusinessException e) {
+    log.warn("业务异常：{} - {}", e.getCode(), e.getMessage());
+    return ApiResponse.error(e.getCode(), e.getMessage());
+  }
+
+  /**
+   * 处理参数校验异常（表单提交）
+   *
+   * <p>该异常通常用于表示表单提交时的参数校验错误。例如：必填字段未填写、格式不正确等。
+   *
+   * @param e 参数校验异常
+   * @return ApiResponse 统一格式的响应
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(
-      MethodArgumentNotValidException ex) {
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ApiResponse<Map<String, String>> handleValidationExceptions(
+      MethodArgumentNotValidException e) {
     Map<String, String> errors = new HashMap<>();
-    ex.getBindingResult()
+    e.getBindingResult()
         .getAllErrors()
         .forEach(
             (error) -> {
@@ -56,44 +74,71 @@ public class GlobalExceptionHandler {
               String errorMessage = error.getDefaultMessage();
               errors.put(fieldName, errorMessage);
             });
-    ApiResponse<Map<String, String>> response =
-        new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), ApiResponse.MESSAGE_BAD_REQUEST, errors);
-    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    log.warn("参数校验不通过：{}", errors);
+    return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), "参数校验不通过", errors);
+  }
+
+  /**
+   * 处理参数校验异常（路径参数）
+   *
+   * <p>该异常通常用于表示路径参数的校验错误。例如：ID 格式不正确等。
+   *
+   * @param e 参数校验异常
+   * @return ApiResponse 统一格式的响应
+   */
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ApiResponse<Void> handleConstraintViolationException(ConstraintViolationException e) {
+    String message =
+        e.getConstraintViolations().stream()
+            .map(violation -> violation.getMessage())
+            .collect(Collectors.joining(", "));
+    log.warn("参数校验不通过：{}", message);
+    return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), message);
+  }
+
+  /**
+   * 处理权限不足异常
+   *
+   * <p>该异常通常用于表示用户没有权限访问请求的资源。例如：访问受保护的 API 接口等。
+   *
+   * @param e 权限不足异常
+   * @return ApiResponse 统一格式的响应
+   */
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public ApiResponse<Void> handleAccessDeniedException(AccessDeniedException e) {
+    log.warn("权限不足：{}", e.getMessage());
+    return ApiResponse.error(HttpStatus.FORBIDDEN.value(), "权限不足，无法访问");
   }
 
   /**
    * 处理认证异常
    *
-   * @param ex 认证异常
-   * @return 响应实体
+   * <p>该异常通常用于表示用户认证失败，例如：JWT 过期、无效等。
+   *
+   * @param e 认证异常
+   * @return ApiResponse 统一格式的响应
    */
   @ExceptionHandler(AuthenticationException.class)
-  public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(
-      AuthenticationException ex) {
-    return new ResponseEntity<>(ApiResponse.unauthorized(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ApiResponse<Void> handleAuthenticationException(AuthenticationException e) {
+    log.warn("认证失败：{}", e.getMessage());
+    return ApiResponse.error(HttpStatus.UNAUTHORIZED.value(), "认证失败：" + e.getMessage());
   }
 
   /**
-   * 处理授权异常
+   * 处理其他所有异常
    *
-   * @param ex 授权异常
-   * @return 响应实体
-   */
-  @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException ex) {
-    return new ResponseEntity<>(ApiResponse.forbidden(ex.getMessage()), HttpStatus.FORBIDDEN);
-  }
-
-  /**
-   * 处理所有其他未捕获的异常
+   * <p>该异常通常用于表示系统内部错误，例如：数据库连接失败、网络异常等。
    *
-   * @param ex 未捕获的异常
-   * @return 响应实体
+   * @param e 其他异常
+   * @return ApiResponse 统一格式的响应
    */
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
-    return new ResponseEntity<>(
-        ApiResponse.serverError(ApiResponse.MESSAGE_SERVER_ERROR + "：" + ex.getMessage()),
-        HttpStatus.INTERNAL_SERVER_ERROR);
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ApiResponse<Void> handleException(Exception e) {
+    log.error("系统异常", e);
+    return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "系统异常，请稍后再试");
   }
 }

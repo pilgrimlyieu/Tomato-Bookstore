@@ -1,15 +1,12 @@
 package com.tomato.bookstore.dto;
 
-import com.tomato.bookstore.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 /**
- * API 响应
- *
- * <p>该类用于封装 API 的响应结果。
+ * API 响应封装类
  *
  * @param <T> 数据类型
  */
@@ -18,59 +15,68 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public class ApiResponse<T> {
   private int code;
-  private String message;
   private T data;
+  private String msg;
 
-  // 标准消息常量
-  public static final String MESSAGE_SUCCESS = "操作成功";
-  public static final String MESSAGE_CREATED = "创建成功";
-  public static final String MESSAGE_BAD_REQUEST = "请求参数错误";
-  public static final String MESSAGE_UNAUTHORIZED = "未授权访问";
-  public static final String MESSAGE_FORBIDDEN = "禁止访问";
-  public static final String MESSAGE_NOT_FOUND = "资源不存在";
-  public static final String MESSAGE_SERVER_ERROR = "服务器内部错误";
+  static final String MESSAGE_SUCCESS = "操作成功";
+  static final String MESSAGE_CREATED = "创建成功";
 
+  /**
+   * 成功响应
+   *
+   * @param data 数据
+   * @param <T> 数据类型
+   * @return API 响应对象
+   */
   public static <T> ApiResponse<T> success(T data) {
-    return new ApiResponse<>(HttpStatus.OK.value(), MESSAGE_SUCCESS, data);
+    return new ApiResponse<>(HttpStatus.OK.value(), data, MESSAGE_SUCCESS);
   }
 
+  /**
+   * 带消息的成功响应
+   *
+   * @param message 成功消息
+   * @param data 数据
+   * @param <T> 数据类型
+   * @return API 响应对象
+   */
   public static <T> ApiResponse<T> success(String message, T data) {
-    return new ApiResponse<>(HttpStatus.OK.value(), message, data);
+    return new ApiResponse<>(HttpStatus.OK.value(), data, message);
   }
 
+  /**
+   * 创建成功响应
+   *
+   * @param data 数据
+   * @param <T> 数据类型
+   * @return API 响应对象
+   */
   public static <T> ApiResponse<T> created(T data) {
-    return new ApiResponse<>(HttpStatus.CREATED.value(), MESSAGE_CREATED, data);
+    return new ApiResponse<>(HttpStatus.CREATED.value(), data, MESSAGE_CREATED);
   }
 
-  public static ApiResponse<Void> success() {
-    return new ApiResponse<>(HttpStatus.OK.value(), MESSAGE_SUCCESS, null);
+  /**
+   * 错误响应
+   *
+   * @param code 错误码
+   * @param message 错误消息
+   * @param <T> 数据类型
+   * @return API 响应对象
+   */
+  public static <T> ApiResponse<T> error(int code, String message) {
+    return new ApiResponse<>(code, null, message);
   }
 
-  public static ApiResponse<Void> fail(int code, String message) {
-    return new ApiResponse<>(code, message, null);
-  }
-
-  public static ApiResponse<Void> fail(BusinessException ex) {
-    return new ApiResponse<>(ex.getErrorCode().getCode(), ex.getMessage(), null);
-  }
-
-  public static ApiResponse<Void> badRequest(String message) {
-    return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), message, null);
-  }
-
-  public static ApiResponse<Void> unauthorized(String message) {
-    return new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), message, null);
-  }
-
-  public static ApiResponse<Void> forbidden(String message) {
-    return new ApiResponse<>(HttpStatus.FORBIDDEN.value(), message, null);
-  }
-
-  public static ApiResponse<Void> notFound(String message) {
-    return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), message, null);
-  }
-
-  public static ApiResponse<Void> serverError(String message) {
-    return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
+  /**
+   * 带数据的错误响应
+   *
+   * @param code 错误码
+   * @param message 错误消息
+   * @param data 错误数据
+   * @param <T> 数据类型
+   * @return API 响应对象
+   */
+  public static <T> ApiResponse<T> error(int code, String message, T data) {
+    return new ApiResponse<>(code, data, message);
   }
 }
