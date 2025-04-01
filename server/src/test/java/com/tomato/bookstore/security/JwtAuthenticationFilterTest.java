@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.tomato.bookstore.config.SecurityTestConfig;
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.controller.AuthController;
 import com.tomato.bookstore.controller.HomeController;
 import com.tomato.bookstore.controller.UserController;
@@ -59,7 +60,8 @@ public class JwtAuthenticationFilterTest {
 
     // 执行与验证
     mockMvc
-        .perform(get("/user/profile").header("Authorization", "Bearer " + validToken))
+        .perform(
+            get(ApiConstants.USER_PROFILE_PATH).header("Authorization", "Bearer " + validToken))
         .andExpect(status().isOk());
 
     verify(jwtTokenProvider).extractUsername(validToken);
@@ -81,7 +83,8 @@ public class JwtAuthenticationFilterTest {
 
     // 执行与验证
     mockMvc
-        .perform(get("/user/profile").header("Authorization", "Bearer " + invalidToken))
+        .perform(
+            get(ApiConstants.USER_PROFILE_PATH).header("Authorization", "Bearer " + invalidToken))
         .andExpect(status().isForbidden());
 
     verify(jwtTokenProvider).extractUsername(invalidToken);
@@ -94,7 +97,7 @@ public class JwtAuthenticationFilterTest {
   @DisplayName("没有 JWT 令牌的请求")
   void requestWithoutToken() throws Exception {
     // 执行与验证
-    mockMvc.perform(get("/user/profile")).andExpect(status().isForbidden());
+    mockMvc.perform(get(ApiConstants.USER_PROFILE_PATH)).andExpect(status().isForbidden());
 
     verify(jwtTokenProvider, never()).extractUsername(anyString());
     verify(userDetailsService, never()).loadUserByUsername(anyString());
@@ -104,7 +107,7 @@ public class JwtAuthenticationFilterTest {
   @DisplayName("公共路径无需认证")
   void publicPathNoAuthentication() throws Exception {
     // 执行与验证
-    mockMvc.perform(get("/")).andExpect(status().isOk());
+    mockMvc.perform(get(ApiConstants.HOME)).andExpect(status().isOk());
 
     verify(jwtTokenProvider, never()).extractUsername(anyString());
     verify(userDetailsService, never()).loadUserByUsername(anyString());

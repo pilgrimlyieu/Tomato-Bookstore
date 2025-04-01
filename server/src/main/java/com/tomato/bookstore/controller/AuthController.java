@@ -1,5 +1,6 @@
 package com.tomato.bookstore.controller;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.dto.ApiResponse;
 import com.tomato.bookstore.dto.LoginDTO;
 import com.tomato.bookstore.dto.RegisterDTO;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>该类包含用户认证相关的接口。
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping(ApiConstants.USER)
 @RequiredArgsConstructor
 public class AuthController {
   private final UserService userService;
@@ -30,7 +31,7 @@ public class AuthController {
    * @param registerDTO 注册信息
    * @return 注册结果
    */
-  @PostMapping("/register")
+  @PostMapping(ApiConstants.USER_REGISTER)
   @ResponseStatus(HttpStatus.CREATED)
   public ApiResponse<Void> register(@Valid @RequestBody RegisterDTO registerDTO) {
     userService.register(registerDTO);
@@ -43,7 +44,7 @@ public class AuthController {
    * @param loginDTO 登录信息
    * @return 登录结果
    */
-  @PostMapping("/login")
+  @PostMapping(ApiConstants.USER_LOGIN)
   public ApiResponse<String> login(@Valid @RequestBody LoginDTO loginDTO) {
     String token = userService.login(loginDTO);
     return ApiResponse.success("登录成功", token);

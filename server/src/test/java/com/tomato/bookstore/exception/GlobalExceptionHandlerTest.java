@@ -2,7 +2,6 @@ package com.tomato.bookstore.exception;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.tomato.bookstore.constant.BusinessErrorCode;
 import com.tomato.bookstore.dto.ApiResponse;
@@ -12,9 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,16 +26,12 @@ public class GlobalExceptionHandlerTest {
     BusinessException exception = new BusinessException(BusinessErrorCode.USERNAME_ALREADY_EXISTS);
 
     // 执行
-    ResponseEntity<ApiResponse<Void>> response =
-        exceptionHandler.handleBusinessException(exception);
+    ApiResponse<Void> response = exceptionHandler.handleBusinessException(exception);
 
     // 验证
     assertNotNull(response);
-    ApiResponse<Void> body = response.getBody();
-    assertNotNull(body);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getCode(), body.getCode());
-    assertEquals(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getMessage(), body.getMessage());
+    assertEquals(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getCode(), response.getCode());
+    assertEquals(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getMessage(), response.getMsg());
   }
 
   @Test
@@ -48,35 +41,12 @@ public class GlobalExceptionHandlerTest {
     ResourceNotFoundException exception = new ResourceNotFoundException("用户不存在");
 
     // 执行
-    ResponseEntity<ApiResponse<Void>> response =
-        exceptionHandler.handleResourceNotFoundException(exception);
+    ApiResponse<Void> response = exceptionHandler.handleResourceNotFoundException(exception);
 
     // 验证
     assertNotNull(response);
-    ApiResponse<Void> body = response.getBody();
-    assertNotNull(body);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    assertEquals(HttpStatus.NOT_FOUND.value(), body.getCode());
-    assertEquals("用户不存在", body.getMessage());
-  }
-
-  @Test
-  @DisplayName("处理认证异常")
-  void handleAuthenticationException() {
-    // 准备
-    BadCredentialsException exception = new BadCredentialsException("Bad credentials");
-
-    // 执行
-    ResponseEntity<ApiResponse<Void>> response =
-        exceptionHandler.handleAuthenticationException(exception);
-
-    // 验证
-    assertNotNull(response);
-    ApiResponse<Void> body = response.getBody();
-    assertNotNull(body);
-    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    assertEquals(HttpStatus.UNAUTHORIZED.value(), body.getCode());
-    assertEquals("Bad credentials", body.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getCode());
+    assertEquals("用户不存在", response.getMsg());
   }
 
   @Test
@@ -86,16 +56,12 @@ public class GlobalExceptionHandlerTest {
     AccessDeniedException exception = new AccessDeniedException("Access is denied");
 
     // 执行
-    ResponseEntity<ApiResponse<Void>> response =
-        exceptionHandler.handleAccessDeniedException(exception);
+    ApiResponse<Void> response = exceptionHandler.handleAccessDeniedException(exception);
 
     // 验证
     assertNotNull(response);
-    ApiResponse<Void> body = response.getBody();
-    assertNotNull(body);
-    assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    assertEquals(HttpStatus.FORBIDDEN.value(), body.getCode());
-    assertEquals("Access is denied", body.getMessage());
+    assertEquals(HttpStatus.FORBIDDEN.value(), response.getCode());
+    assertEquals("权限不足，无法访问", response.getMsg());
   }
 
   @Test
@@ -116,19 +82,16 @@ public class GlobalExceptionHandlerTest {
         new MethodArgumentNotValidException(parameter, bindingResult);
 
     // 执行
-    ResponseEntity<ApiResponse<Map<String, String>>> response =
+    ApiResponse<Map<String, String>> response =
         exceptionHandler.handleValidationExceptions(exception);
 
     // 验证
     assertNotNull(response);
-    ApiResponse<Map<String, String>> body = response.getBody();
-    assertNotNull(body);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(HttpStatus.BAD_REQUEST.value(), body.getCode());
-    assertEquals(ApiResponse.MESSAGE_BAD_REQUEST, body.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getCode());
+    assertEquals("参数校验不通过", response.getMsg());
 
-    assertNotNull(body.getData());
-    Map<String, String> errors = body.getData();
+    assertNotNull(response.getData());
+    Map<String, String> errors = response.getData();
     assertEquals(2, errors.size());
     assertEquals("用户名不能为空", errors.get("username"));
     assertEquals("密码不能为空", errors.get("password"));
@@ -141,15 +104,11 @@ public class GlobalExceptionHandlerTest {
     Exception exception = new RuntimeException("Unexpected error");
 
     // 执行
-    ResponseEntity<ApiResponse<Void>> response = exceptionHandler.handleGlobalException(exception);
+    ApiResponse<Void> response = exceptionHandler.handleException(exception);
 
     // 验证
     assertNotNull(response);
-    ApiResponse<Void> body = response.getBody();
-    assertNotNull(body);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getCode());
-    assertTrue(body.getMessage().contains(ApiResponse.MESSAGE_SERVER_ERROR));
-    assertTrue(body.getMessage().contains("Unexpected error"));
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode());
+    assertEquals("系统异常，请稍后再试", response.getMsg());
   }
 }

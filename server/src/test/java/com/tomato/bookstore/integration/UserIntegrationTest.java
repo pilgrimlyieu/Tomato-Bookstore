@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.constant.BusinessErrorCode;
 import com.tomato.bookstore.dto.LoginDTO;
 import com.tomato.bookstore.dto.RegisterDTO;
@@ -82,7 +83,7 @@ public class UserIntegrationTest {
     // 1. 注册
     mockMvc
         .perform(
-            post("/user/register")
+            post(ApiConstants.USER_REGISTER_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerDTO)))
         .andExpect(status().isCreated())
@@ -95,12 +96,12 @@ public class UserIntegrationTest {
     MvcResult loginResult =
         mockMvc
             .perform(
-                post("/user/login")
+                post(ApiConstants.USER_LOGIN_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginDTO)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
-            .andExpect(jsonPath("$.message").value("登录成功"))
+            .andExpect(jsonPath("$.msg").value("登录成功"))
             .andExpect(jsonPath("$.data").isString())
             .andReturn();
 
@@ -111,7 +112,7 @@ public class UserIntegrationTest {
 
     // 3. 获取用户信息
     mockMvc
-        .perform(get("/user/profile").header("Authorization", "Bearer " + token))
+        .perform(get(ApiConstants.USER_PROFILE_PATH).header("Authorization", "Bearer " + token))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.username").value("integrationtest"))
         .andExpect(jsonPath("$.data.email").value("integration@example.com"));
@@ -123,7 +124,7 @@ public class UserIntegrationTest {
 
     mockMvc
         .perform(
-            put("/user/profile")
+            put(ApiConstants.USER_PROFILE_PATH)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDTO)))
@@ -145,13 +146,12 @@ public class UserIntegrationTest {
 
     mockMvc
         .perform(
-            post("/user/register")
+            post(ApiConstants.USER_REGISTER_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerDTO)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.code").value(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getCode()))
-        .andExpect(
-            jsonPath("$.message").value(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getMessage()));
+        .andExpect(jsonPath("$.msg").value(BusinessErrorCode.USERNAME_ALREADY_EXISTS.getMessage()));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class UserIntegrationTest {
 
     mockMvc
         .perform(
-            post("/user/login")
+            post(ApiConstants.USER_LOGIN_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wrongLoginDTO)))
         .andExpect(status().isUnauthorized());
@@ -173,6 +173,6 @@ public class UserIntegrationTest {
   @Test
   @DisplayName("未认证用户不能访问受保护的资源")
   void unauthenticatedAccessDenied() throws Exception {
-    mockMvc.perform(get("/user/profile")).andExpect(status().isUnauthorized());
+    mockMvc.perform(get(ApiConstants.USER_PROFILE_PATH)).andExpect(status().isUnauthorized());
   }
 }
