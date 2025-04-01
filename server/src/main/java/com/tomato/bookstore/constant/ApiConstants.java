@@ -1,6 +1,6 @@
 package com.tomato.bookstore.constant;
 
-/** API常量类 */
+/** API 常量类 */
 public class ApiConstants {
   // 基础路径
   public static final String HOME = "/";
