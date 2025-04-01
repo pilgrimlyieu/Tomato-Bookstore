@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** 商品DTO */
+/** 商品 DTO */
 @Data
 @Builder
 @NoArgsConstructor
