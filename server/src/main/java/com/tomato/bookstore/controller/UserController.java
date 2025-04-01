@@ -1,5 +1,6 @@
 package com.tomato.bookstore.controller;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.dto.ApiResponse;
 import com.tomato.bookstore.dto.UserDTO;
 import com.tomato.bookstore.security.UserPrincipal;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>该类包含用户相关的接口。
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping(ApiConstants.USER)
 @RequiredArgsConstructor
 public class UserController {
   private final UserService userService;
@@ -30,7 +31,7 @@ public class UserController {
    * @param principal 当前用户
    * @return 用户信息
    */
-  @GetMapping("/profile")
+  @GetMapping(ApiConstants.USER_PROFILE)
   public ApiResponse<UserDTO> getProfile(@AuthenticationPrincipal UserPrincipal principal) {
     UserDTO userDTO = userService.getCurrentUser(principal.getUserId());
     return ApiResponse.success(userDTO);
@@ -43,7 +44,7 @@ public class UserController {
    * @param userDTO 用户信息
    * @return 更新后的用户信息
    */
-  @PutMapping("/profile")
+  @PutMapping(ApiConstants.USER_PROFILE)
   public ApiResponse<UserDTO> updateProfile(
       @AuthenticationPrincipal UserPrincipal principal, @Valid @RequestBody UserDTO userDTO) {
     UserDTO updatedUser = userService.updateUser(principal.getUserId(), userDTO);

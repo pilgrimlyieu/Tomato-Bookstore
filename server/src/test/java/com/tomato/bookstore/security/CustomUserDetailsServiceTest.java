@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.tomato.bookstore.constant.RoleConstants;
 import com.tomato.bookstore.model.User;
 import com.tomato.bookstore.model.User.UserRole;
 import com.tomato.bookstore.repository.UserRepository;
@@ -60,7 +61,7 @@ public class CustomUserDetailsServiceTest {
     assertEquals("password", userDetails.getPassword());
     assertTrue(
         userDetails.getAuthorities().stream()
-            .anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER")));
+            .anyMatch(a -> a.getAuthority().equals(RoleConstants.ROLE_CUSTOMER)));
     assertTrue(userDetails instanceof UserPrincipal);
     assertEquals(1L, ((UserPrincipal) userDetails).getUserId());
 
@@ -97,7 +98,8 @@ public class CustomUserDetailsServiceTest {
 
     // 验证
     assertTrue(
-        userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+        userDetails.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals(RoleConstants.ROLE_ADMIN)));
     verify(userRepository).findByUsername("admin");
   }
 }
