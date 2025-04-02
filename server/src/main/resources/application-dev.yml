@@ -7,3 +7,10 @@ app:
   jwt:
     secret: tomatobookstoresecretkeythatissecuretomatobookstoresecretkeythatissecure
     expiration: 86400000 # 24 小时
+
+spring:
+  jpa:
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
