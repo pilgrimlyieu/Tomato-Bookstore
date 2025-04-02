@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenProvider {
-  @Value("${jwt.secret:tomatobookstoresecretkeytomatobookstoresecretkey}")
+  @Value("${app.jwt.secret:tomatobookstoresecretkeytomatobookstoresecretkey}")
   private String jwtSecret;
 
-  @Value("${jwt.expiration:86400000}") // 默认 24 小时
+  @Value("${app.jwt.expiration:86400000}") // 默认 24 小时
   private long jwtExpiration;
 
   /**
