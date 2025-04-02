@@ -3,6 +3,7 @@ import AutoImport from "unplugin-auto-import/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
 import { defineConfig } from "vite";
+import vueDevTools from "vite-plugin-vue-devtools";
 
 export default defineConfig({
   resolve: {
@@ -12,6 +13,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    ...(process.env.NODE_ENV === "development" ? [vueDevTools()] : []),
     AutoImport({
       imports: ["vue", "vue-router"],
       resolvers: [ElementPlusResolver()],

@@ -23,16 +23,21 @@ spring:
     properties:
       hibernate:
         "[format_sql]": true
+        "[show_sql]": false
+    open-in-view: false
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+    default-property-inclusion: NON_NULL
 
 logging:
   pattern:
-    console: "%clr(%d{HH:mm:ss}){faint} %highlight(%5p) %clr([%thread]){magenta} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+    console: "%clr(%d{HH:mm:ss}){faint} %highlight(%5p) %clr([%-40.40logger{39}]){cyan} %clr(:){faint} %m%n%wEx"
   level:
     root: info
     "[com.tomato.bookstore]": debug
     "[org.hibernate]": warn
     "[org.springframework]": warn
+    "[org.hibernate.SQL]": debug
+    "[org.hibernate.type.descriptor.sql.BasicBinder]": trace
 

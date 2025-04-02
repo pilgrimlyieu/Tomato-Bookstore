@@ -16,7 +16,9 @@ import com.tomato.bookstore.repository.StockpileRepository;
 import com.tomato.bookstore.service.ProductService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
   private final StockpileRepository stockpileRepository;
 
   @Override
+  @Transactional(readOnly = true)
   public List<ProductDTO> getAllProducts() {
     log.info("获取所有商品");
     List<Product> products = productRepository.findAllByOrderByCreatedAtDesc();
@@ -40,18 +43,10 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ProductDTO getProductById(Long id) {
     log.info("获取商品 id={}", id);
-    Product product =
-        productRepository
-            .findById(id)
-            .orElseThrow(
-                () -> {
-                  log.warn("商品不存在 id={}", id);
-                  return new ResourceNotFoundException(
-                      String.format(ExceptionMessages.PRODUCT_NOT_FOUND, id));
-                });
-    return convertToDTO(product);
+    return convertToDTO(findProductById(id));
   }
 
   @Override
@@ -116,15 +111,7 @@ public class ProductServiceImpl implements ProductService {
     log.info("更新商品 id={}", productDTO.getId());
 
     // 检查商品是否存在
-    Product product =
-        productRepository
-            .findById(productDTO.getId())
-            .orElseThrow(
-                () -> {
-                  log.warn("商品不存在 id={}", productDTO.getId());
-                  return new ResourceNotFoundException(
-                      String.format(ExceptionMessages.PRODUCT_NOT_FOUND, productDTO.getId()));
-                });
+    Product product = findProductById(productDTO.getId());
 
     // 检查商品名称是否已被其他商品使用
     if (productRepository.existsByTitleAndIdNot(productDTO.getTitle(), product.getId())) {
@@ -141,30 +128,7 @@ public class ProductServiceImpl implements ProductService {
     product.setDetail(productDTO.getDetail());
     product.setUpdatedAt(LocalDateTime.now());
 
-    // 更新商品规格：先清除旧规格
-    if (product.getSpecifications() != null) {
-      specificationRepository.deleteAll(product.getSpecifications());
-      product.getSpecifications().clear();
-    } else {
-      product.setSpecifications(new ArrayList<>());
-    }
-
-    // 添加新规格
-    if (!CollectionUtils.isEmpty(productDTO.getSpecifications())) {
-      List<Specification> specifications =
-          productDTO.getSpecifications().stream()
-              .map(
-                  specDTO ->
-                      Specification.builder()
-                          .id(specDTO.getId())
-                          .item(specDTO.getItem())
-                          .value(specDTO.getValue())
-                          .product(product)
-                          .build())
-              .collect(Collectors.toList());
-
-      product.getSpecifications().addAll(specifications);
-    }
+    updateProductSpecifications(product, productDTO);
 
     // 保存商品
     productRepository.save(product);
@@ -175,10 +139,8 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public void deleteProduct(Long id) {
     log.info("删除商品 id={}", id);
-    if (!productRepository.existsById(id)) {
-      log.warn("商品不存在 id={}", id);
-      throw new ResourceNotFoundException(String.format(ExceptionMessages.PRODUCT_NOT_FOUND, id));
-    }
+    // 商品存在性验证
+    findProductById(id);
 
     try {
       // 删除关联的规格和库存
@@ -199,11 +161,7 @@ public class ProductServiceImpl implements ProductService {
     log.info("获取商品库存 productId={}", productId);
 
     // 检查商品是否存在
-    if (!productRepository.existsById(productId)) {
-      log.warn("商品不存在 id={}", productId);
-      throw new ResourceNotFoundException(
-          String.format(ExceptionMessages.PRODUCT_NOT_FOUND, productId));
-    }
+    findProductById(productId);
 
     // 获取库存信息
     Stockpile stockpile =
@@ -229,27 +187,114 @@ public class ProductServiceImpl implements ProductService {
         stockpileDTO.getFrozen());
 
     // 检查商品是否存在
-    if (!productRepository.existsById(productId)) {
-      log.warn("商品不存在 id={}", productId);
-      throw new ResourceNotFoundException(
-          String.format(ExceptionMessages.PRODUCT_NOT_FOUND, productId));
-    }
+    findProductById(productId);
 
     // 获取并更新库存
     Stockpile stockpile =
         stockpileRepository
             .findByProductId(productId)
-            .orElseGet(
-                () -> {
-                  log.debug("商品库存记录不存在，创建新的记录 productId={}", productId);
-                  Product product = productRepository.getReferenceById(productId);
-                  return Stockpile.builder().product(product).amount(0).frozen(0).build();
-                });
+            .orElseGet(() -> createNewStockpile(productId));
 
     stockpile.setAmount(stockpileDTO.getAmount());
     stockpile.setFrozen(stockpileDTO.getFrozen());
     stockpileRepository.save(stockpile);
     log.info("商品库存更新成功 productId={}", productId);
+  }
+
+  /**
+   * 更新商品规格
+   *
+   * @param product 商品实体
+   * @param productDTO 商品数据传输对象
+   */
+  private void updateProductSpecifications(Product product, ProductDTO productDTO) {
+    if (product.getSpecifications() == null) {
+      product.setSpecifications(new ArrayList<>());
+    }
+
+    // 构建当前规格的 ID 映射，便于快速查找
+    Map<Long, Specification> existingSpecsMap = buildSpecificationsMap(product.getSpecifications());
+
+    // 处理新的规格列表
+    List<Specification> updatedSpecs = new ArrayList<>();
+    if (!CollectionUtils.isEmpty(productDTO.getSpecifications())) {
+      for (SpecificationDTO specDTO : productDTO.getSpecifications()) {
+        if (specDTO.getId() != null && existingSpecsMap.containsKey(specDTO.getId())) {
+          // 更新已存在的规格
+          Specification existingSpec = existingSpecsMap.get(specDTO.getId());
+          existingSpec.setItem(specDTO.getItem());
+          existingSpec.setValue(specDTO.getValue());
+          updatedSpecs.add(existingSpec);
+          existingSpecsMap.remove(specDTO.getId()); // 从映射中移除，剩下的将被删除
+        } else {
+          // 创建新规格
+          Specification newSpec =
+              Specification.builder()
+                  .item(specDTO.getItem())
+                  .value(specDTO.getValue())
+                  .product(product)
+                  .build();
+          updatedSpecs.add(newSpec);
+        }
+      }
+    }
+
+    // 删除不再使用的旧规格
+    if (!existingSpecsMap.isEmpty()) {
+      specificationRepository.deleteAll(existingSpecsMap.values());
+    }
+
+    // 更新规格列表
+    product.getSpecifications().clear();
+    product.getSpecifications().addAll(updatedSpecs);
+  }
+
+  /**
+   * 构建规格 ID 到规格实体的映射
+   *
+   * @param specifications 规格列表
+   * @return 规格 ID 到规格实体的映射
+   */
+  private Map<Long, Specification> buildSpecificationsMap(List<Specification> specifications) {
+    Map<Long, Specification> specsMap = new HashMap<>();
+    if (specifications != null && !specifications.isEmpty()) {
+      for (Specification spec : specifications) {
+        if (spec.getId() != null) {
+          specsMap.put(spec.getId(), spec);
+        }
+      }
+    }
+    return specsMap;
+  }
+
+  /**
+   * 根据 ID 查找商品，如果不存在则抛出异常
+   *
+   * @param id 商品 ID
+   * @return 商品实体
+   * @throws ResourceNotFoundException 当商品不存在时抛出
+   */
+  private Product findProductById(Long id) {
+    return productRepository
+        .findById(id)
+        .orElseThrow(
+            () -> {
+              log.warn("商品不存在 id={}", id);
+              return new ResourceNotFoundException(
+                  String.format(ExceptionMessages.PRODUCT_NOT_FOUND, id));
+            });
+  }
+
+  /**
+   * 创建新的库存记录
+   *
+   * @param productId 商品ID
+   * @return 新的库存记录
+   */
+  private Stockpile createNewStockpile(Long productId) {
+    log.debug("商品库存记录不存在，创建新的记录 productId={}", productId);
+    Product product = productRepository.getReferenceById(productId);
+    return Stockpile.builder().product(product).amount(0).frozen(0).build();
   }
 
   /**
@@ -259,15 +304,6 @@ public class ProductServiceImpl implements ProductService {
    * @return 商品 DTO
    */
   private ProductDTO convertToDTO(Product product) {
-    List<SpecificationDTO> specificationDTOs = new ArrayList<>();
-
-    if (product.getSpecifications() != null && !product.getSpecifications().isEmpty()) {
-      specificationDTOs =
-          product.getSpecifications().stream()
-              .map(this::convertToSpecDTO)
-              .collect(Collectors.toList());
-    }
-
     return ProductDTO.builder()
         .id(product.getId())
         .title(product.getTitle())
@@ -276,8 +312,22 @@ public class ProductServiceImpl implements ProductService {
         .description(product.getDescription())
         .cover(product.getCover())
         .detail(product.getDetail())
-        .specifications(specificationDTOs)
+        .specifications(convertSpecificationsToDTO(product.getSpecifications()))
         .build();
+  }
+
+  /**
+   * 将规格列表转换为 DTO 列表
+   *
+   * @param specifications 规格列表
+   * @return 规格 DTO 列表
+   */
+  private List<SpecificationDTO> convertSpecificationsToDTO(List<Specification> specifications) {
+    if (specifications == null || specifications.isEmpty()) {
+      return new ArrayList<>();
+    }
+
+    return specifications.stream().map(this::convertToSpecDTO).collect(Collectors.toList());
   }
 
   /**

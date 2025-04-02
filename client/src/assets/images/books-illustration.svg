@@ -1,0 +1,26 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="800" height="600" fill="none"/>
+
+  <!-- 书架 -->
+  <rect x="100" y="150" width="600" height="20" rx="2" fill="#8B4513"/>
+  <rect x="100" y="350" width="600" height="20" rx="2" fill="#8B4513"/>
+  <rect x="140" y="170" width="20" height="180" fill="#A0522D"/>
+  <rect x="640" y="170" width="20" height="180" fill="#A0522D"/>
+
+  <!-- 书本 -->
+  <rect x="180" y="180" width="40" height="150" rx="2" fill="#FF6B6B"/>
+  <rect x="230" y="190" width="35" height="140" rx="2" fill="#4ECDC4"/>
+  <rect x="275" y="175" width="45" height="155" rx="2" fill="#FFE66D"/>
+  <rect x="330" y="185" width="38" height="145" rx="2" fill="#1A535C"/>
+  <rect x="378" y="165" width="42" height="165" rx="2" fill="#FF9F1C"/>
+  <rect x="430" y="190" width="30" height="140" rx="2" fill="#2EC4B6"/>
+  <rect x="470" y="180" width="36" height="150" rx="2" fill="#E71D36"/>
+  <rect x="516" y="170" width="44" height="160" rx="2" fill="#662E9B"/>
+  <rect x="570" y="200" width="32" height="130" rx="2" fill="#43AA8B"/>
+
+  <!-- 装饰 -->
+  <circle cx="400" cy="100" r="40" fill="#FFCDB2" opacity="0.6"/>
+  <circle cx="450" cy="80" r="25" fill="#FFB4A2" opacity="0.5"/>
+  <circle cx="350" cy="90" r="30" fill="#E5989B" opacity="0.4"/>
+</svg>

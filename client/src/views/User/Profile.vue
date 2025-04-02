@@ -24,19 +24,6 @@
                 </el-icon>
                 更换头像
               </el-button>
-
-              <div class="mt-8 w-full">
-                <h3 class="text-lg font-medium text-gray-700 mb-4">账户信息</h3>
-                <ul class="space-y-3">
-                  <li class="flex items-center">
-                    <el-icon class="text-tomato-500 mr-2">
-                      <User />
-                    </el-icon>
-                    <span class="text-gray-600">用户等级：</span>
-                    <span class="ml-auto font-medium">普通顾客</span>
-                  </li>
-                </ul>
-              </div>
             </div>
           </div>
 

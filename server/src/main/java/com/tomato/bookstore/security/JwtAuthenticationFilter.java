@@ -1,15 +1,14 @@
 package com.tomato.bookstore.security;
 
-import com.tomato.bookstore.constant.ApiConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,9 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final UserDetailsService userDetailsService;
 
   /** 不需要认证的公共路径列表 */
-  private final List<String> PUBLIC_PATHS =
-      Arrays.asList(
-          ApiConstants.HOME, ApiConstants.USER_LOGIN_PATH, ApiConstants.USER_REGISTER_PATH);
+  @Value("${app.security.public-paths}")
+  private List<String> PUBLIC_PATHS;
 
   /**
    * 过滤请求，检查 JWT 并设置用户认证信息

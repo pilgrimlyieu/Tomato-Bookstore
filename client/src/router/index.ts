@@ -29,6 +29,46 @@ const router = createRouter({
       component: () => import("@/views/User/Profile.vue"),
       meta: { title: "个人信息", requiresAuth: true },
     },
+    // 新增商品相关路由
+    {
+      path: Routes.PRODUCT_LIST,
+      name: "products",
+      component: () => import("@/views/Product/List.vue"),
+      meta: { title: "商品列表" },
+    },
+    {
+      path: Routes.PRODUCT_DETAIL,
+      name: "productDetail",
+      component: () => import("@/views/Product/Detail.vue"),
+      meta: { title: "商品详情" },
+    },
+    // 管理员路由
+    {
+      path: Routes.ADMIN,
+      name: "admin",
+      component: () => import("@/views/Admin/Dashboard.vue"),
+      meta: { title: "管理后台", requiresAuth: true, requiresAdmin: true },
+      children: [
+        {
+          path: Routes.ADMIN_PRODUCTS,
+          name: "adminProducts",
+          component: () => import("@/views/Admin/Product/List.vue"),
+          meta: { title: "商品管理", requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: Routes.ADMIN_PRODUCT_CREATE,
+          name: "adminProductCreate",
+          component: () => import("@/views/Admin/Product/Edit.vue"),
+          meta: { title: "创建商品", requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: Routes.ADMIN_PRODUCT_EDIT,
+          name: "adminProductEdit",
+          component: () => import("@/views/Admin/Product/Edit.vue"),
+          meta: { title: "编辑商品", requiresAuth: true, requiresAdmin: true },
+        },
+      ],
+    },
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
@@ -48,6 +88,12 @@ router.beforeEach(async (to, from, next) => {
   // 如果用户已登录但没有用户信息，则获取用户信息
   if (userStore.token && !userStore.user) {
     await userStore.fetchUserInfo();
+  }
+
+  // 判断页面是否需要管理员权限
+  if (to.meta.requiresAdmin === true && !userStore.isAdmin) {
+    next({ name: "home" });
+    return;
   }
 
   // 判断页面是否需要登录权限
