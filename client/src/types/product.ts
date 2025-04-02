@@ -11,7 +11,7 @@ export interface Specification {
  * 商品接口
  */
 export interface Product {
-  id?: number;
+  id: number;
   title: string;
   price: number;
   rate: number;

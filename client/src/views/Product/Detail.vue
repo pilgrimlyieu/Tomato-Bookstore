@@ -11,7 +11,7 @@
         sub-title="找不到该商品或已被删除"
       >
         <template #extra>
-          <el-button type="primary" @click="router.push('/products')" class="rounded-lg">
+          <el-button type="primary" @click="router.push(Routes.PRODUCT_LIST)" class="rounded-lg">
             查看所有商品
           </el-button>
         </template>
@@ -21,8 +21,8 @@
     <div v-else class="max-w-6xl mx-auto">
       <!-- 面包屑导航 -->
       <el-breadcrumb separator="/" class="mb-6">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/products' }">商品列表</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: Routes.HOME }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: Routes.PRODUCT_LIST }">商品列表</el-breadcrumb-item>
         <el-breadcrumb-item>{{ product.title }}</el-breadcrumb-item>
       </el-breadcrumb>
 
@@ -113,6 +113,7 @@
 </template>
 
 <script setup lang="ts">
+import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import { ShoppingCart, Star } from "@element-plus/icons-vue";
 import { computed, onMounted, watch } from "vue";

@@ -48,7 +48,9 @@
 </template>
 
 <script setup lang="ts">
+import { Routes } from "@/constants/routes";
 import type { Product } from "@/types/product";
+import { buildRoute } from "@/utils/routeHelper";
 import { View } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 
@@ -60,6 +62,6 @@ const router = useRouter();
 
 // 查看商品详情方法
 const viewDetail = () => {
-  router.push(`/products/${props.product.id}`);
+  router.push(buildRoute(Routes.PRODUCT_DETAIL, { id: props.product.id }));
 };
 </script>

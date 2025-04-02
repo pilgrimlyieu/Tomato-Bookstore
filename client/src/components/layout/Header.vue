@@ -100,7 +100,7 @@ const logout = () => {
   })
     .then(() => {
       userStore.logout();
-      router.push("/");
+      router.push(Routes.HOME);
     })
     .catch(() => {});
 };

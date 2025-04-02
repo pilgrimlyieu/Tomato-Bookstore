@@ -2,7 +2,7 @@
   <div>
     <div class="mb-6 flex justify-between items-center">
       <h3 class="text-xl font-medium">商品列表</h3>
-      <el-button type="primary" class="rounded-lg" @click="router.push('/admin/products/create')">
+      <el-button type="primary" class="rounded-lg" @click="router.push(Routes.ADMIN_PRODUCT_CREATE)">
         <el-icon class="mr-1"><Plus /></el-icon>
         添加商品
       </el-button>
@@ -72,7 +72,7 @@
           </el-button>
           <el-button
             size="small"
-            @click="router.push(`/products/${scope.row.id}`)"
+            @click="router.push(buildRoute(Routes.PRODUCT_DETAIL, { id: scope.row.id }))"
             class="rounded-md"
             type="success"
             plain
@@ -81,7 +81,7 @@
           </el-button>
           <el-button
             size="small"
-            @click="router.push(`/admin/products/${scope.row.id}`)"
+            @click="router.push(buildRoute(Routes.ADMIN_PRODUCT_EDIT, { id: scope.row.id }))"
             class="rounded-md"
           >
             编辑
@@ -162,8 +162,10 @@
 </template>
 
 <script setup lang="ts">
+import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import type { Product } from "@/types/product";
+import { buildRoute } from "@/utils/routeHelper";
 import { Plus, Search } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance } from "element-plus";
