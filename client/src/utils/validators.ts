@@ -211,3 +211,75 @@ export const getChangePasswordRules = (): FormRules => {
     confirmPassword: confirmPasswordRules("newPassword"),
   };
 };
+
+/**
+ * 商品名称验证规则
+ */
+export const titleRules: FormItemRule[] = [
+  { required: true, message: "请输入商品名称", trigger: "blur" },
+  {
+    min: 1,
+    max: 100,
+    message: "长度应在 1 到 100 个字符之间",
+    trigger: "blur",
+  },
+];
+
+/**
+ * 商品价格验证规则
+ */
+export const priceRules: FormItemRule[] = [
+  { required: true, message: "请输入商品价格", trigger: "blur" },
+  { type: "number", min: 0, message: "价格不能小于 0", trigger: "blur" },
+];
+
+/**
+ * 商品评分验证规则
+ */
+export const rateRules: FormItemRule[] = [
+  { required: true, message: "请设置商品评分", trigger: "change" },
+  {
+    type: "number",
+    min: 0,
+    max: 10,
+    message: "评分应在 0 到 10 之间",
+    trigger: "blur",
+  },
+];
+
+/**
+ * 商品规格验证规则生成函数
+ *
+ * @param {number} index 规格项的索引
+ * @returns {Object} 包含 item 和 value 验证规则的对象
+ */
+export const getSpecificationRules = (index: number) => {
+  return {
+    [`specifications.${index}.item`]: [
+      { required: true, message: "请输入规格名称", trigger: "blur" },
+    ],
+    [`specifications.${index}.value`]: [
+      { required: true, message: "请输入规格值", trigger: "blur" },
+    ],
+  };
+};
+
+/**
+ * 获取商品表单验证规则
+ */
+export const getProductRules = (): FormRules => {
+  return {
+    title: titleRules,
+    price: priceRules,
+    rate: rateRules,
+    cover: [
+      { max: 255, message: "URL长度不能超过 255 个字符", trigger: "blur" },
+    ],
+    description: [
+      { max: 500, message: "描述长度不能超过 500 个字符", trigger: "blur" },
+    ],
+    detail: [
+      { max: 5000, message: "详情长度不能超过 5000 个字符", trigger: "blur" },
+    ],
+  };
+};
