@@ -163,11 +163,12 @@ const rules = reactive<FormRules>(getProductRules());
 // 监听规格数组变化，动态添加验证规则
 watch(
   () => form.specifications.length,
-  (newLength) => {
-    for (let i = 0; i < newLength; i++) {
+  () => {
+    Object.assign(rules, getProductRules());
+    form.specifications.forEach((_, i) => {
       const specRules = getSpecificationRules(i);
       Object.assign(rules, specRules);
-    }
+    });
   },
   { immediate: true },
 );
