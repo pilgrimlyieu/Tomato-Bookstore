@@ -13,7 +13,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    vueDevTools(),
+    ...(process.env.NODE_ENV === "development" ? [vueDevTools()] : []),
     AutoImport({
       imports: ["vue", "vue-router"],
       resolvers: [ElementPlusResolver()],
