@@ -62,6 +62,6 @@ const router = useRouter();
 
 // 查看商品详情方法
 const viewDetail = () => {
-  router.push(buildRoute(Routes.PRODUCT_DETAIL, { id: props.product.id }));
+  router.push(buildRoute(Routes.PRODUCT_DETAIL, { id: props.product.id ?? "" }));
 };
 </script>

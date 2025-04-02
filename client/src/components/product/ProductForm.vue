@@ -34,7 +34,7 @@
     </div>
 
     <el-form-item label="商品封面" prop="cover">
-      <el-input v-model="form.cover" placeholder="请输入封面图片URL" />
+      <el-input v-model="form.cover" placeholder="请输入封面图片 URL" />
       <div class="mt-2 flex items-center gap-4">
         <div v-if="form.cover" class="w-24 h-32 rounded overflow-hidden bg-gray-100 shadow-md">
           <img :src="form.cover" class="w-full h-full object-cover object-center" />
@@ -102,7 +102,7 @@
         placeholder="请输入商品详情，支持 HTML 格式"
       />
       <div class="text-gray-500 text-sm mt-1">
-        提示：支持HTML格式，可以添加丰富的商品详情描述。
+        提示：支持 HTML 格式，可以添加丰富的商品详情描述。
       </div>
     </el-form-item>
 

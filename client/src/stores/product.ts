@@ -110,7 +110,7 @@ export const useProductStore = defineStore("product", {
         }
         return false;
       } catch (error) {
-        console.error("创建商品失败:", error);
+        console.error("创建商品失败：", error);
         return false;
       } finally {
         this.adminLoading = false;

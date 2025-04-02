@@ -84,11 +84,11 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const userStore = useUserStore();
-const cartItemCount = ref(0); // 这将来自购物车store
+const cartItemCount = ref(0); // 这将来自购物车 store
 
 // 打开搜索框
 const openSearch = () => {
-  // 实现搜索功能
+  // TODO: 实现搜索功能
 };
 
 // 退出登录
