@@ -1,5 +1,5 @@
 /**
- * HTTP状态码常量
+ * HTTP 状态码常量
  */
 export const HttpStatusCode = {
   // 2xx 成功

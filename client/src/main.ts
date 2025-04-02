@@ -2,7 +2,6 @@ import ElementPlus from "element-plus";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import "element-plus/dist/index.css";
-// 移除 animate.css 导入
 import gsap from "gsap";
 import "./style.css";
 import { Icon } from "@iconify/vue";
