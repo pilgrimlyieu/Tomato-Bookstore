@@ -99,23 +99,22 @@ const userStore = useUserStore();
 
 // 根据当前路由获取页面标题
 const pageTitle = computed(() => {
-  switch (route.path) {
-    case Routes.ADMIN_PRODUCTS:
-      return "商品管理";
-    case Routes.ADMIN_PRODUCT_CREATE:
-      return "创建商品";
-    case route.path.includes(Routes.ADMIN_PRODUCTS) ? route.path : "":
-      return "编辑商品";
-    case Routes.ADMIN_ORDERS:
-      return "订单管理";
-    case Routes.ADMIN_USERS:
-      return "用户管理";
-    case Routes.ADMIN_REVIEWS:
-      return "评价管理";
-    case Routes.ADMIN_SETTINGS:
-      return "系统设置";
-    default:
-      return "管理后台";
+  if (route.path === Routes.ADMIN_PRODUCTS) {
+    return "商品管理";
+  } else if (route.path === Routes.ADMIN_PRODUCT_CREATE) {
+    return "创建商品";
+  } else if (route.path.includes(Routes.ADMIN_PRODUCTS)) {
+    return "编辑商品";
+  } else if (route.path === Routes.ADMIN_ORDERS) {
+    return "订单管理";
+  } else if (route.path === Routes.ADMIN_USERS) {
+    return "用户管理";
+  } else if (route.path === Routes.ADMIN_REVIEWS) {
+    return "评价管理";
+  } else if (route.path === Routes.ADMIN_SETTINGS) {
+    return "系统设置";
+  } else {
+    return "管理后台";
   }
 });
 
