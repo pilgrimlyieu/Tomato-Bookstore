@@ -1,6 +1,6 @@
-import { HttpStatusCode } from "@/constants/httpStatusCode";
 import productService from "@/services/product-service";
 import type { Product, ProductParams, StockpileParams } from "@/types/product";
+import { HttpStatusCode } from "axios";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 
@@ -39,7 +39,7 @@ export const useProductStore = defineStore("product", {
         this.loading = true;
         const response = await productService.getAllProducts();
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           this.products = response.data;
         }
       } catch (error) {
@@ -61,7 +61,7 @@ export const useProductStore = defineStore("product", {
         this.loading = true;
         const response = await productService.getProductById(id);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           this.currentProduct = response.data;
         }
       } catch (error) {
@@ -83,7 +83,7 @@ export const useProductStore = defineStore("product", {
         this.loading = true;
         const response = await productService.getStockpile(productId);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           this.currentStockpile = response.data;
         }
       } catch (error) {
@@ -104,7 +104,7 @@ export const useProductStore = defineStore("product", {
         this.adminLoading = true;
         const response = await productService.createProduct(product);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           ElMessage.success("商品创建成功");
           return true;
         }
@@ -127,7 +127,7 @@ export const useProductStore = defineStore("product", {
         this.adminLoading = true;
         const response = await productService.updateProduct(product);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           // 更新本地商品列表
           const index = this.products.findIndex((p) => p.id === product.id);
           if (index !== -1) {
@@ -154,7 +154,7 @@ export const useProductStore = defineStore("product", {
         this.adminLoading = true;
         const response = await productService.deleteProduct(id);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           // 从本地列表移除
           this.products = this.products.filter((p) => p.id !== id);
           ElMessage.success("商品删除成功");
@@ -186,7 +186,7 @@ export const useProductStore = defineStore("product", {
           params,
         );
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           if (
             this.currentStockpile &&
             this.currentStockpile.productId === productId
