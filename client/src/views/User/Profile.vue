@@ -263,7 +263,7 @@ const handleUploadAvatar = async () => {
 
   uploadingAvatar.value = true;
   try {
-    // 调用API上传头像
+    // 调用 API 上传头像
     // await userStore.updateUserProfile({ avatar: avatarPreview.value });
     // TODO: image service
 

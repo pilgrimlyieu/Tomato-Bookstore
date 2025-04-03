@@ -17,7 +17,7 @@ public class UserPrincipal extends User {
    * @param username 用户名
    * @param password 密码
    * @param authorities 权限集合
-   * @param userId 用户ID
+   * @param userId 用户 ID
    */
   public UserPrincipal(
       String username,
@@ -38,7 +38,7 @@ public class UserPrincipal extends User {
    * @param credentialsNonExpired 凭证是否未过期
    * @param accountNonLocked 账号是否未锁定
    * @param authorities 权限集合
-   * @param userId 用户ID
+   * @param userId 用户 ID
    */
   public UserPrincipal(
       String username,

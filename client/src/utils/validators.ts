@@ -273,7 +273,7 @@ export const getProductRules = (): FormRules => {
     price: priceRules,
     rate: rateRules,
     cover: [
-      { max: 255, message: "URL长度不能超过 255 个字符", trigger: "blur" },
+      { max: 255, message: "URL 长度不能超过 255 个字符", trigger: "blur" },
     ],
     description: [
       { max: 500, message: "描述长度不能超过 500 个字符", trigger: "blur" },
