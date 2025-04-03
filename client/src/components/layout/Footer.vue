@@ -69,7 +69,7 @@
           <ul class="space-y-2">
             <li class="flex items-start">
               <el-icon class="mt-1 mr-2"><Location /></el-icon>
-              <span class="text-gray-600">中国上海市闵行区东川路800号</span>
+              <span class="text-gray-600">中国上海市闵行区东川路 800 号</span>
             </li>
             <li class="flex items-center">
               <el-icon class="mr-2"><Phone /></el-icon>

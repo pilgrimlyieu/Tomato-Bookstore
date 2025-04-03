@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "@/constants/httpStatusCode";
 import userService from "@/services/user-service";
 import {
   type LoginParams,
@@ -7,6 +6,7 @@ import {
   type User,
   UserRole,
 } from "@/types/user";
+import { HttpStatusCode } from "axios";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 
@@ -46,7 +46,7 @@ export const useUserStore = defineStore("user", {
         this.loading = true;
         const response = await userService.login(params);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           this.setToken(response.data);
           await this.fetchUserInfo();
           ElMessage.success("登录成功");
@@ -71,7 +71,7 @@ export const useUserStore = defineStore("user", {
       try {
         this.loading = true;
         const response = await userService.register(params);
-        if (response.code === HttpStatusCode.CREATED) {
+        if (response.code === HttpStatusCode.Created) {
           ElMessage.success("注册成功，请登录");
           return true;
         }
@@ -96,13 +96,13 @@ export const useUserStore = defineStore("user", {
         this.loading = true;
         const response = await userService.getCurrentUser();
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           this.user = response.data;
         }
       } catch (error: any) {
         console.error("获取用户信息失败：", error);
-        // 如果获取用户信息失败，可能 token 无效，清除登录状态
-        if (error.response?.status === HttpStatusCode.UNAUTHORIZED) {
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          // 如果获取用户信息失败，可能 token 无效，清除登录状态
           this.logout();
         }
       } finally {
@@ -121,7 +121,7 @@ export const useUserStore = defineStore("user", {
         this.loading = true;
         const response = await userService.updateUserProfile(params);
 
-        if (response.code === HttpStatusCode.OK) {
+        if (response.code === HttpStatusCode.Ok) {
           this.user = response.data;
           ElMessage.success("个人信息更新成功");
           return true;

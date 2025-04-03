@@ -134,7 +134,7 @@ public class ProductServiceImplTest {
   }
 
   @Test
-  @DisplayName("根据ID获取商品成功")
+  @DisplayName("根据 ID 获取商品成功")
   void getProductByIdSuccess() {
     // 准备
     when(productRepository.findById(1L)).thenReturn(Optional.of(product));
@@ -150,7 +150,7 @@ public class ProductServiceImplTest {
   }
 
   @Test
-  @DisplayName("根据ID获取商品失败 - 商品不存在")
+  @DisplayName("根据 ID 获取商品失败 - 商品不存在")
   void getProductByIdFailsWhenProductNotFound() {
     // 准备
     when(productRepository.findById(1L)).thenReturn(Optional.empty());

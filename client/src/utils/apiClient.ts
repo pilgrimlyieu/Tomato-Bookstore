@@ -1,8 +1,7 @@
-import { BusinessErrorMessages } from "@/constants/businessErrorCode";
-import { HttpStatusCode } from "@/constants/httpStatusCode";
+import { ErrorMessages } from "@/constants/errorCode";
 import { Routes } from "@/constants/routes";
 import { useUserStore } from "@/stores/user";
-import { ErrorMessages } from "@/types/api";
+import { HttpStatusCode } from "axios";
 import axios from "axios";
 import { ElMessage } from "element-plus";
 
@@ -43,7 +42,7 @@ apiClient.interceptors.response.use(
       const { status, data } = error.response;
 
       // 处理 401 未授权错误（token 过期或无效）
-      if (status == HttpStatusCode.UNAUTHORIZED) {
+      if (status === HttpStatusCode.Unauthorized) {
         const userStore = useUserStore();
         userStore.logout();
         ElMessage.error("登录已过期，请重新登录");
@@ -54,7 +53,7 @@ apiClient.interceptors.response.use(
       // 显示错误信息，优先使用业务错误码对应的消息
       const errorMsg =
         data?.message ||
-        (data?.code ? BusinessErrorMessages[data.code] : null) ||
+        (data?.code ? ErrorMessages[data.code] : null) ||
         ErrorMessages[status] ||
         "请求失败";
       ElMessage.error(errorMsg);

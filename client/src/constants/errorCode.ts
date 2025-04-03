@@ -1,3 +1,5 @@
+import { HttpStatusCode } from "axios";
+
 /**
  * 业务错误代码常量
  * 规则：前两位表示模块，后三位表示具体错误
@@ -17,6 +19,10 @@ export const BusinessErrorCode = {
   PRODUCT_OUT_OF_STOCK: 20002,
   PRODUCT_OFFLINE: 20003,
   PRODUCT_PRICE_CHANGED: 20004,
+  PRODUCT_TITLE_ALREADY_EXISTS: 20005,
+  PRODUCT_STOCK_NOT_FOUND: 20006,
+  PRODUCT_INVALID_PARAMETER: 20007,
+  PRODUCT_STOCK_INSUFFICIENT: 20008,
 
   // 交易模块（30xxx）
   CART_EMPTY: 30001,
@@ -47,6 +53,17 @@ export const BusinessErrorCode = {
 } as const;
 
 /**
+ * HTTP 状态码对应的错误消息
+ */
+export const HttpErrorMessages: Record<number, string> = {
+  [HttpStatusCode.BadRequest]: "请求参数错误",
+  [HttpStatusCode.Unauthorized]: "未授权访问",
+  [HttpStatusCode.Forbidden]: "禁止访问",
+  [HttpStatusCode.NotFound]: "资源不存在",
+  [HttpStatusCode.InternalServerError]: "服务器内部错误",
+};
+
+/**
  * 业务错误描述映射
  */
 export const BusinessErrorMessages: Record<number, string> = {
@@ -64,6 +81,10 @@ export const BusinessErrorMessages: Record<number, string> = {
   [BusinessErrorCode.PRODUCT_OUT_OF_STOCK]: "商品库存不足",
   [BusinessErrorCode.PRODUCT_OFFLINE]: "商品已下架",
   [BusinessErrorCode.PRODUCT_PRICE_CHANGED]: "商品价格已变更",
+  [BusinessErrorCode.PRODUCT_TITLE_ALREADY_EXISTS]: "商品名称已存在",
+  [BusinessErrorCode.PRODUCT_STOCK_NOT_FOUND]: "商品库存记录不存在",
+  [BusinessErrorCode.PRODUCT_INVALID_PARAMETER]: "商品参数无效",
+  [BusinessErrorCode.PRODUCT_STOCK_INSUFFICIENT]: "商品库存不足",
 
   // 交易模块（30xxx）
   [BusinessErrorCode.CART_EMPTY]: "购物车为空",
@@ -94,7 +115,9 @@ export const BusinessErrorMessages: Record<number, string> = {
 };
 
 /**
- * 业务错误码类型
+ * 统一的错误消息映射
  */
-export type BusinessErrorCodeType =
-  (typeof BusinessErrorCode)[keyof typeof BusinessErrorCode];
+export const ErrorMessages: Record<number, string> = {
+  ...BusinessErrorMessages,
+  ...HttpErrorMessages,
+};

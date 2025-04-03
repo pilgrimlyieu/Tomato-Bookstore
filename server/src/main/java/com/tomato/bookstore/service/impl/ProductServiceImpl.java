@@ -96,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
       log.debug("商品规格已保存，规格数量：{}", specifications.size());
     }
 
-    // 创建初始库存，默认为0
+    // 创建初始库存，默认为 0
     Stockpile stockpile = Stockpile.builder().product(savedProduct).amount(0).frozen(0).build();
     savedProduct.setStockpile(stockpileRepository.save(stockpile));
     log.debug("商品库存已初始化");
@@ -288,7 +288,7 @@ public class ProductServiceImpl implements ProductService {
   /**
    * 创建新的库存记录
    *
-   * @param productId 商品ID
+   * @param productId 商品 ID
    * @return 新的库存记录
    */
   private Stockpile createNewStockpile(Long productId) {

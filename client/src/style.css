@@ -288,7 +288,7 @@ button:focus-visible {
   transform: translateY(-3px);
 }
 
-/* 3D效果 */
+/* 3D 效果 */
 .card-3d {
   transition: transform 0.5s ease;
   transform-style: preserve-3d;
@@ -359,7 +359,6 @@ button:focus-visible {
   @apply scrollbar-thin scrollbar-thumb-tomato-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full;
 }
 
-/* Element Plus与Tailwind兼容性优化 */
 .el-button--primary {
   @apply bg-tomato-500 border-tomato-500 hover:bg-tomato-600 hover:border-tomato-600 transition-all duration-300;
   box-shadow: 0 4px 15px 0 rgba(255, 107, 107, 0.4);
@@ -598,7 +597,6 @@ button:focus-visible {
   border-radius: 3px;
 }
 
-/* 覆盖element-plus的默认颜色 */
 :root {
   --el-color-primary: #ff6b6b !important;
   --el-color-primary-light-3: #ff8787 !important;
