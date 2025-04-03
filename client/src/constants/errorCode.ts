@@ -19,6 +19,10 @@ export const BusinessErrorCode = {
   PRODUCT_OUT_OF_STOCK: 20002,
   PRODUCT_OFFLINE: 20003,
   PRODUCT_PRICE_CHANGED: 20004,
+  PRODUCT_TITLE_ALREADY_EXISTS: 20005,
+  PRODUCT_STOCK_NOT_FOUND: 20006,
+  PRODUCT_INVALID_PARAMETER: 20007,
+  PRODUCT_STOCK_INSUFFICIENT: 20008,
 
   // 交易模块（30xxx）
   CART_EMPTY: 30001,
@@ -77,6 +81,10 @@ export const BusinessErrorMessages: Record<number, string> = {
   [BusinessErrorCode.PRODUCT_OUT_OF_STOCK]: "商品库存不足",
   [BusinessErrorCode.PRODUCT_OFFLINE]: "商品已下架",
   [BusinessErrorCode.PRODUCT_PRICE_CHANGED]: "商品价格已变更",
+  [BusinessErrorCode.PRODUCT_TITLE_ALREADY_EXISTS]: "商品名称已存在",
+  [BusinessErrorCode.PRODUCT_STOCK_NOT_FOUND]: "商品库存记录不存在",
+  [BusinessErrorCode.PRODUCT_INVALID_PARAMETER]: "商品参数无效",
+  [BusinessErrorCode.PRODUCT_STOCK_INSUFFICIENT]: "商品库存不足",
 
   // 交易模块（30xxx）
   [BusinessErrorCode.CART_EMPTY]: "购物车为空",
