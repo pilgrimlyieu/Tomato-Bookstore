@@ -42,7 +42,7 @@ apiClient.interceptors.response.use(
       const { status, data } = error.response;
 
       // 处理 401 未授权错误（token 过期或无效）
-      if (status == HttpStatusCode.Unauthorized) {
+      if (status === HttpStatusCode.Unauthorized) {
         const userStore = useUserStore();
         userStore.logout();
         ElMessage.error("登录已过期，请重新登录");
