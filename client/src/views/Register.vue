@@ -78,7 +78,7 @@
               <el-input v-model="registerForm.password" type="password" placeholder="设置登录密码" :prefix-icon="Lock"
                 show-password @input="checkPasswordStrengthHandler" />
               <div class="mt-1 flex items-center">
-                <span class="text-xs text-gray-500 mr-2">密码强度:</span>
+                <span class="text-xs text-gray-500 mr-2">密码强度：</span>
                 <el-progress :percentage="passwordStrength.percentage" :status="passwordStrength.status"
                   :stroke-width="6" :show-text="false" class="flex-grow" />
                 <span class="text-xs ml-2" :class="{

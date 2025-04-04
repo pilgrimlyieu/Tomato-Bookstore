@@ -12,7 +12,7 @@
     <div class="mb-6">
       <el-input
         v-model="searchQuery"
-        placeholder="搜索商品名称..."
+        placeholder="搜索商品名称……"
         class="w-60"
         :prefix-icon="Search"
         clearable

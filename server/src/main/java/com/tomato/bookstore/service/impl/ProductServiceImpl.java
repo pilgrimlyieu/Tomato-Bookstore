@@ -151,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
       productRepository.deleteById(id);
       log.info("商品已删除 id={}", id);
     } catch (Exception e) {
-      log.error("删除商品失败 id={}，原因: {}", id, e.getMessage());
+      log.error("删除商品失败 id={}，原因：{}", id, e.getMessage());
       throw e;
     }
   }

@@ -67,7 +67,7 @@
             <!-- 库存信息 -->
             <div v-if="stockpile" class="mb-6">
               <p class="text-gray-700 mb-1">
-                <span class="font-medium">库存:</span> {{ stockpile.amount }}
+                <span class="font-medium">库存：</span> {{ stockpile.amount }}
               </p>
             </div>
 

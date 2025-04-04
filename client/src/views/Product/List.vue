@@ -9,7 +9,7 @@
           <div class="flex-grow">
             <el-input
               v-model="searchQuery"
-              placeholder="搜索商品名称..."
+              placeholder="搜索商品名称……"
               class="w-full"
               :prefix-icon="Search"
               clearable
