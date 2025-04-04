@@ -8,7 +8,7 @@ app:
     secret: tomatobookstoresecretkeythatissecuretomatobookstoresecretkeythatissecure
     expiration: 86400000 # 24 小时
   security:
-    public-paths: /,/api,/api/user/login,/api/user/register
+    public-paths: /,/api,/api/user/login,/api/user/register,/api/orders/notify
 
 spring:
   jpa:
