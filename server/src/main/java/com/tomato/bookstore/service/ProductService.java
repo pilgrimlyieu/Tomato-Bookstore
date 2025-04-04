@@ -5,7 +5,6 @@ import com.tomato.bookstore.dto.StockpileDTO;
 import com.tomato.bookstore.exception.BusinessException;
 import com.tomato.bookstore.exception.ResourceNotFoundException;
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductService {
   /**
@@ -31,7 +30,6 @@ public interface ProductService {
    * @return 创建成功的商品
    * @throws BusinessException 商品名称已存在
    */
-  @Transactional
   ProductDTO createProduct(ProductDTO productDTO) throws BusinessException;
 
   /**
@@ -41,7 +39,6 @@ public interface ProductService {
    * @throws ResourceNotFoundException 商品不存在
    * @throws BusinessException 商品名称已存在
    */
-  @Transactional
   void updateProduct(ProductDTO productDTO) throws ResourceNotFoundException, BusinessException;
 
   /**
@@ -50,7 +47,6 @@ public interface ProductService {
    * @param id 商品 ID
    * @throws ResourceNotFoundException 商品不存在
    */
-  @Transactional
   void deleteProduct(Long id) throws ResourceNotFoundException;
 
   /**
@@ -69,6 +65,5 @@ public interface ProductService {
    * @param stockpileDTO 库存信息
    * @throws ResourceNotFoundException 商品不存在
    */
-  @Transactional
   void updateStockpile(Long productId, StockpileDTO stockpileDTO) throws ResourceNotFoundException;
 }

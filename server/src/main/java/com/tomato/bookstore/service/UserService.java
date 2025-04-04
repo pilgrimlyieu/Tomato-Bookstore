@@ -6,7 +6,6 @@ import com.tomato.bookstore.dto.UserDTO;
 import com.tomato.bookstore.exception.BusinessException;
 import com.tomato.bookstore.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public interface UserService {
@@ -16,7 +15,6 @@ public interface UserService {
    * @param registerDTO 注册信息
    * @throws BusinessException 用户名或邮箱已存在
    */
-  @Transactional
   public void register(RegisterDTO registerDTO);
 
   /**
@@ -45,6 +43,5 @@ public interface UserService {
    * @return 更新后的用户信息
    * @throws ResourceNotFoundException 用户不存在
    */
-  @Transactional
   public UserDTO updateUser(Long userId, UserDTO userDTO);
 }
