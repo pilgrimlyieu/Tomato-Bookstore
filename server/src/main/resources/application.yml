@@ -41,3 +41,11 @@ logging:
     "[org.hibernate.SQL]": debug
     "[org.hibernate.type.descriptor.sql.BasicBinder]": trace
 
+
+alipay:
+  appId: ${ALIPAY_APP_ID}
+  appPrivateKey: ${ALIPAY_PRIVATE_KEY}
+  alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
+  notifyUrl: ${ALIPAY_TUNNEL_URL}${server.servlet.context-path}/orders/notify
+  returnUrl: ${ALIPAY_TUNNEL_URL}${server.servlet.context-path}/orders/return
+  serverUrl: ${ALIPAY_SERVER_URL:https://openapi-sandbox.dl.alipaydev.com/gateway.do}
