@@ -268,13 +268,13 @@ public class ProductServiceImplTest {
   @DisplayName("删除商品成功")
   void deleteProductSuccess() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(true);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
 
     // 执行
     productService.deleteProduct(1L);
 
     // 验证
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(specificationRepository).deleteByProductId(1L);
     verify(stockpileRepository).deleteByProductId(1L);
     verify(productRepository).deleteById(1L);
@@ -284,7 +284,7 @@ public class ProductServiceImplTest {
   @DisplayName("删除商品失败 - 商品不存在")
   void deleteProductFailsWhenProductNotFound() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(false);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     // 执行和验证
     ResourceNotFoundException exception =
@@ -295,7 +295,7 @@ public class ProductServiceImplTest {
             });
 
     assertTrue(exception.getMessage().contains(PRODUCT_NOT_FOUND_MESSAGE));
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(productRepository, never()).deleteById(anyLong());
   }
 
@@ -303,7 +303,7 @@ public class ProductServiceImplTest {
   @DisplayName("获取商品库存成功")
   void getStockpileSuccess() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(true);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
     when(stockpileRepository.findByProductId(anyLong())).thenReturn(Optional.of(stockpile));
 
     // 执行
@@ -313,7 +313,7 @@ public class ProductServiceImplTest {
     assertNotNull(result);
     assertEquals(stockpile.getAmount(), result.getAmount());
     assertEquals(stockpile.getFrozen(), result.getFrozen());
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(stockpileRepository).findByProductId(1L);
   }
 
@@ -321,7 +321,7 @@ public class ProductServiceImplTest {
   @DisplayName("获取商品库存失败 - 商品不存在")
   void getStockpileFailsWhenProductNotFound() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(false);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     // 执行和验证
     ResourceNotFoundException exception =
@@ -332,7 +332,7 @@ public class ProductServiceImplTest {
             });
 
     assertTrue(exception.getMessage().contains(PRODUCT_NOT_FOUND_MESSAGE));
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(stockpileRepository, never()).findByProductId(anyLong());
   }
 
@@ -340,7 +340,7 @@ public class ProductServiceImplTest {
   @DisplayName("获取商品库存失败 - 库存记录不存在")
   void getStockpileFailsWhenStockpileNotFound() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(true);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
     when(stockpileRepository.findByProductId(anyLong())).thenReturn(Optional.empty());
 
     // 执行和验证
@@ -352,7 +352,7 @@ public class ProductServiceImplTest {
             });
 
     assertEquals(BusinessErrorCode.PRODUCT_STOCK_NOT_FOUND, exception.getErrorCode());
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(stockpileRepository).findByProductId(1L);
   }
 
@@ -360,7 +360,7 @@ public class ProductServiceImplTest {
   @DisplayName("更新商品库存成功 - 已存在库存记录")
   void updateStockpileSuccessWithExistingStockpile() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(true);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
     when(stockpileRepository.findByProductId(anyLong())).thenReturn(Optional.of(stockpile));
     when(stockpileRepository.save(any(Stockpile.class))).thenReturn(stockpile);
 
@@ -368,7 +368,7 @@ public class ProductServiceImplTest {
     productService.updateStockpile(1L, stockpileDTO);
 
     // 验证
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(stockpileRepository).findByProductId(1L);
     verify(stockpileRepository).save(any(Stockpile.class));
   }
@@ -377,7 +377,7 @@ public class ProductServiceImplTest {
   @DisplayName("更新商品库存成功 - 新建库存记录")
   void updateStockpileSuccessWithNewStockpile() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(true);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
     when(stockpileRepository.findByProductId(anyLong())).thenReturn(Optional.empty());
     when(productRepository.getReferenceById(anyLong())).thenReturn(product);
     when(stockpileRepository.save(any(Stockpile.class))).thenReturn(stockpile);
@@ -386,7 +386,7 @@ public class ProductServiceImplTest {
     productService.updateStockpile(1L, stockpileDTO);
 
     // 验证
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(stockpileRepository).findByProductId(1L);
     verify(productRepository).getReferenceById(1L);
     verify(stockpileRepository).save(any(Stockpile.class));
@@ -396,7 +396,7 @@ public class ProductServiceImplTest {
   @DisplayName("更新商品库存失败 - 商品不存在")
   void updateStockpileFailsWhenProductNotFound() {
     // 准备
-    when(productRepository.existsById(anyLong())).thenReturn(false);
+    when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     // 执行和验证
     ResourceNotFoundException exception =
@@ -407,7 +407,7 @@ public class ProductServiceImplTest {
             });
 
     assertTrue(exception.getMessage().contains(PRODUCT_NOT_FOUND_MESSAGE));
-    verify(productRepository).existsById(1L);
+    verify(productRepository).findById(1L);
     verify(stockpileRepository, never()).save(any(Stockpile.class));
   }
 }
