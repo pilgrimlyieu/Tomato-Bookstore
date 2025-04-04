@@ -11,7 +11,21 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         '[globally_quoted_identifiers]': true
+  sql:
+    init:
+      mode: never
 
-jwt:
-  secret: testsecretkeytestsecretkeytestsecretkeytestsecretkey
-  expiration: 3600000
+app:
+  jwt:
+    secret: testsecretkeytestsecretkeytestsecretkeytestsecretkey
+    expiration: 3600000
+  security:
+    public-paths: /,/api,/api/user/login,/api/user/register,/api/orders/notify
+
+alipay:
+  appId: test_app_id
+  appPrivateKey: test_private_key
+  alipayPublicKey: test_public_key
+  notifyUrl: http://example.com/api/orders/notify
+  returnUrl: http://example.com/api/orders/return
+  serverUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
