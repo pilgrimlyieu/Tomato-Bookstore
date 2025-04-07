@@ -2,6 +2,8 @@ package com.tomato.bookstore.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,4 +36,8 @@ public class Cart {
   private LocalDateTime createdAt;
 
   private LocalDateTime updatedAt;
+
+  @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  private List<CartsOrdersRelation> cartOrderRelations = new ArrayList<>();
 }
