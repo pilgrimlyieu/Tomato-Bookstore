@@ -716,27 +716,36 @@ WHERE
 
 -- 添加购物车测试数据
 INSERT INTO
-    carts (user_id, product_id, quantity, created_at, updated_at)
-SELECT
-    u.id,
-    p.id,
-    FLOOR(RAND() * 5) + 1,
-    NOW(),
-    NOW()
-FROM
-    users u
-    CROSS JOIN products p
-WHERE
-    u.username IN ('customer_user', 'customer_user_1', 'customer_user_2', 'cartuser', 'orderuser')
-    AND p.id IN (
-        SELECT id FROM products
+    carts (
+        user_id,
+        product_id,
+        quantity,
+        created_at,
+        updated_at
+    )
+SELECT u.id, p.id, FLOOR(RAND() * 5) + 1, NOW(), NOW()
+FROM users u
+    CROSS JOIN (
+        SELECT id
+        FROM products
         ORDER BY RAND()
         LIMIT 3
+    ) p
+WHERE
+    u.username IN (
+        'customer_user',
+        'customer_user_1',
+        'customer_user_2',
+        'cartuser',
+        'orderuser'
     )
     AND @cart_count = 0
     AND NOT EXISTS (
-        SELECT 1 FROM carts
-        WHERE user_id = u.id AND product_id = p.id
+        SELECT 1
+        FROM carts
+        WHERE
+            user_id = u.id
+            AND product_id = p.id
     );
 
 -- 添加订单测试数据
