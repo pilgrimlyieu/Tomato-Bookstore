@@ -41,3 +41,17 @@ logging:
     "[org.hibernate.SQL]": debug
     "[org.hibernate.type.descriptor.sql.BasicBinder]": trace
 
+app:
+  jwt:
+    secret: ${JWT_SECRET:tomatobookstoresecretkeyiswhatyouguess}
+    expiration: 86400000 # 24 小时
+  security:
+    public-paths: /,/api,/api/user/login,/api/user/register,/api/orders/notify
+
+alipay:
+  appId: ${ALIPAY_APP_ID}
+  appPrivateKey: ${ALIPAY_PRIVATE_KEY}
+  alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
+  notifyUrl: ${ALIPAY_TUNNEL_URL}${server.servlet.context-path}/orders/notify
+  returnUrl: ${ALIPAY_TUNNEL_URL}${server.servlet.context-path}/orders/return
+  serverUrl: ${ALIPAY_SERVER_URL:https://openapi-sandbox.dl.alipaydev.com/gateway.do}

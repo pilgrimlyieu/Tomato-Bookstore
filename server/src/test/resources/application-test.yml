@@ -9,9 +9,7 @@ spring:
       ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
         '[globally_quoted_identifiers]': true
-
-jwt:
-  secret: testsecretkeytestsecretkeytestsecretkeytestsecretkey
-  expiration: 3600000
+  sql:
+    init:
+      mode: never

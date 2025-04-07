@@ -4,8 +4,10 @@ import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.security.JwtAuthenticationEntryPoint;
 import com.tomato.bookstore.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -32,6 +34,9 @@ public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final UserDetailsService userDetailsService;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+  @Value("${app.security.public-paths}")
+  private String[] publicPaths;
 
   /**
    * 创建密码编码器
@@ -60,15 +65,22 @@ public class SecurityConfig {
     return http.csrf(AbstractHttpConfigurer::disable)
         .cors(cors -> cors.configure(http))
         .authorizeHttpRequests(
-            authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers(
-                        ApiConstants.USER_REGISTER_PATH,
-                        ApiConstants.USER_LOGIN_PATH,
-                        ApiConstants.HOME)
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
+            authorizeRequests -> {
+              authorizeRequests.requestMatchers(publicPaths).permitAll();
+              authorizeRequests
+                  .requestMatchers(
+                      ApiConstants.USER_REGISTER_PATH,
+                      ApiConstants.USER_LOGIN_PATH,
+                      ApiConstants.HOME)
+                  .permitAll();
+              authorizeRequests
+                  .requestMatchers(HttpMethod.POST, ApiConstants.ORDER_NOTIFY_PATH)
+                  .permitAll();
+              authorizeRequests
+                  .requestMatchers(HttpMethod.GET, ApiConstants.ORDER_RETURN_PATH)
+                  .permitAll();
+              authorizeRequests.anyRequest().authenticated();
+            })
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .exceptionHandling(

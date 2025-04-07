@@ -29,6 +29,7 @@ import com.tomato.bookstore.repository.ProductRepository;
 import com.tomato.bookstore.repository.SpecificationRepository;
 import com.tomato.bookstore.repository.StockpileRepository;
 import com.tomato.bookstore.repository.UserRepository;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +61,9 @@ public class ProductIntegrationTest {
   @Autowired private StockpileRepository stockpileRepository;
   @Autowired private UserRepository userRepository;
   @Autowired private PasswordEncoder passwordEncoder;
+
+  @MockitoBean
+  private Clock clock;
 
   private Product testProduct;
   private ProductDTO productDTO;

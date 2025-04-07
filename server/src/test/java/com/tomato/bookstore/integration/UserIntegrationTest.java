@@ -18,6 +18,7 @@ import com.tomato.bookstore.dto.UserDTO;
 import com.tomato.bookstore.model.User;
 import com.tomato.bookstore.model.User.UserRole;
 import com.tomato.bookstore.repository.UserRepository;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +40,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserIntegrationTest {
   @Autowired private MockMvc mockMvc;
-
   @Autowired private ObjectMapper objectMapper;
-
   @Autowired private UserRepository userRepository;
+
+  @MockitoBean private Clock clock;
 
   private RegisterDTO registerDTO;
   private LoginDTO loginDTO;

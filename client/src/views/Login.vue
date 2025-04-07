@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col md:flex-row py-12">
-    <!-- 左侧图片区域 (仅在中等尺寸以上显示) -->
+    <!-- 左侧图片区域（仅在中等尺寸以上显示） -->
     <div class="hidden md:flex md:w-1/2 bg-tomato-600 items-center justify-center p-8 animate-fade-in">
       <div class="text-white max-w-lg">
         <div class="text-5xl mb-6">📚</div>
