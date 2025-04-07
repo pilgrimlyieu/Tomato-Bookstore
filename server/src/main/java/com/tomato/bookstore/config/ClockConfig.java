@@ -7,8 +7,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 时钟配置类
  *
- * <p>
- * 提供系统时钟实例，用于日期和时间操作
+ * <p>提供系统时钟实例，用于日期和时间操作
  */
 @Configuration
 public class ClockConfig {
