@@ -203,7 +203,7 @@ public class CartServiceImpl implements CartService {
   /**
    * 找到用户
    *
-   * @param userId 用户ID
+   * @param userId 用户 ID
    * @return User 用户对象
    */
   private User findUser(Long userId) {
@@ -220,7 +220,7 @@ public class CartServiceImpl implements CartService {
   /**
    * 找到商品
    *
-   * @param productId 商品ID
+   * @param productId 商品 ID
    * @return Product 商品对象
    */
   private Product findProduct(Long productId) {
@@ -237,7 +237,7 @@ public class CartServiceImpl implements CartService {
   /**
    * 找到商品库存
    *
-   * @param productId 商品ID
+   * @param productId 商品 ID
    * @return Stockpile 商品库存对象
    */
   private Stockpile findStockpile(Long productId) {

@@ -62,8 +62,7 @@ public class ProductIntegrationTest {
   @Autowired private UserRepository userRepository;
   @Autowired private PasswordEncoder passwordEncoder;
 
-  @MockitoBean
-  private Clock clock;
+  @MockitoBean private Clock clock;
 
   private Product testProduct;
   private ProductDTO productDTO;
