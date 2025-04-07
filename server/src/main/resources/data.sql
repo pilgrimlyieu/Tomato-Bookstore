@@ -3,6 +3,10 @@ SET @user_count = ( SELECT COUNT(*) FROM users );
 
 SET @product_count = ( SELECT COUNT(*) FROM products );
 
+SET @cart_count = ( SELECT COUNT(*) FROM carts );
+
+SET @order_count = ( SELECT COUNT(*) FROM orders );
+
 -- 只有在没有数据时才插入
 -- 用户数据
 -- 初始密码：password123
@@ -29,11 +33,19 @@ FROM (
         SELECT 'customer_user_2', '$2a$10$C/TgJT0E./j3ltVhuzDWheDO0bvxbz6f2MDfeLJL6evs0r5HMNufK', 'customer2@tomato.com', '13800000003', 'https://i.pravatar.cc/150?img=4', '深圳市南山区', 'CUSTOMER', NOW(), NOW()
         UNION ALL
         SELECT 'customer_user_3', '$2a$10$C/TgJT0E./j3ltVhuzDWheDO0bvxbz6f2MDfeLJL6evs0r5HMNufK', 'customer3@tomato.com', '13800000004', 'https://i.pravatar.cc/150?img=5', '成都市高新区', 'CUSTOMER', NOW(), NOW()
+        UNION ALL
+        SELECT 'cartuser', '$2a$10$C/TgJT0E./j3ltVhuzDWheDO0bvxbz6f2MDfeLJL6evs0r5HMNufK', 'cartuser@tomato.com', '13800000007', 'https://i.pravatar.cc/150?img=8', '武汉市洪山区', 'CUSTOMER', NOW(), NOW()
+        UNION ALL
+        SELECT 'orderuser', '$2a$10$C/TgJT0E./j3ltVhuzDWheDO0bvxbz6f2MDfeLJL6evs0r5HMNufK', 'orderuser@tomato.com', '13800000008', 'https://i.pravatar.cc/150?img=9', '西安市雁塔区', 'CUSTOMER', NOW(), NOW()
     ) AS new_users (
         username, password, email, phone, avatar, address, role, created_at, updated_at
     )
 WHERE
-    @user_count = 0;
+    @user_count = 0 AND NOT EXISTS (
+        SELECT 1
+        FROM users
+        WHERE username IN ('cartuser', 'orderuser')
+    );
 
 -- 插入商品数据
 INSERT INTO
@@ -701,3 +713,167 @@ SET
     updated_at = NOW()
 WHERE
     created_at IS NULL;
+
+-- 添加购物车测试数据
+INSERT INTO
+    carts (user_id, product_id, quantity, created_at, updated_at)
+SELECT
+    u.id,
+    p.id,
+    FLOOR(RAND() * 5) + 1,
+    NOW(),
+    NOW()
+FROM
+    users u
+    CROSS JOIN products p
+WHERE
+    u.username IN ('customer_user', 'customer_user_1', 'customer_user_2', 'cartuser', 'orderuser')
+    AND p.id IN (
+        SELECT id FROM products
+        ORDER BY RAND()
+        LIMIT 3
+    )
+    AND @cart_count = 0
+    AND NOT EXISTS (
+        SELECT 1 FROM carts
+        WHERE user_id = u.id AND product_id = p.id
+    );
+
+-- 添加订单测试数据
+-- 1. 首先创建未支付订单
+INSERT INTO
+    orders (user_id, total_amount, payment_method, status, shipping_address, created_at, updated_at)
+SELECT
+    u.id,
+    p.price * FLOOR(RAND() * 3) + 1,
+    'ALIPAY',
+    'PENDING',
+    CASE
+        WHEN u.username = 'customer_user' THEN '北京市海淀区清华大学'
+        WHEN u.username = 'customer_user_1' THEN '上海市浦东新区张江高科技园区'
+        WHEN u.username = 'customer_user_2' THEN '广州市天河区体育中心'
+        WHEN u.username = 'orderuser' THEN '西安市雁塔区大唐西市'
+        ELSE '默认地址'
+    END,
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 10) DAY),
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 10) DAY)
+FROM
+    users u
+    CROSS JOIN products p
+WHERE
+    u.username IN ('customer_user', 'customer_user_1', 'orderuser')
+    AND p.id = (SELECT id FROM products ORDER BY RAND() LIMIT 1)
+    AND @order_count = 0
+LIMIT 3;
+
+-- 2. 创建已支付订单
+INSERT INTO
+    orders (user_id, total_amount, payment_method, status, shipping_address, trade_no, payment_time, created_at, updated_at)
+SELECT
+    u.id,
+    p.price * FLOOR(RAND() * 3) + 1,
+    'ALIPAY',
+    'PAID',
+    CASE
+        WHEN u.username = 'customer_user' THEN '北京市海淀区清华大学'
+        WHEN u.username = 'customer_user_1' THEN '上海市浦东新区张江高科技园区'
+        WHEN u.username = 'customer_user_2' THEN '广州市天河区体育中心'
+        WHEN u.username = 'orderuser' THEN '西安市雁塔区大唐西市'
+        ELSE '默认地址'
+    END,
+    CONCAT('2023112722001', FLOOR(RAND() * 1000000000)),
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 5) DAY),
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 10) DAY),
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 5) DAY)
+FROM
+    users u
+    CROSS JOIN products p
+WHERE
+    u.username IN ('customer_user_1', 'customer_user_2', 'orderuser')
+    AND p.id = (SELECT id FROM products ORDER BY RAND() LIMIT 1)
+    AND @order_count = 0
+LIMIT 3;
+
+-- 3. 创建已取消订单
+INSERT INTO
+    orders (user_id, total_amount, payment_method, status, shipping_address, created_at, updated_at)
+SELECT
+    u.id,
+    p.price * FLOOR(RAND() * 3) + 1,
+    'ALIPAY',
+    'CANCELLED',
+    CASE
+        WHEN u.username = 'customer_user' THEN '北京市海淀区清华大学'
+        WHEN u.username = 'customer_user_1' THEN '上海市浦东新区张江高科技园区'
+        WHEN u.username = 'customer_user_2' THEN '广州市天河区体育中心'
+        WHEN u.username = 'orderuser' THEN '西安市雁塔区大唐西市'
+        ELSE '默认地址'
+    END,
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 15) DAY),
+    DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 14) DAY)
+FROM
+    users u
+    CROSS JOIN products p
+WHERE
+    u.username IN ('customer_user', 'customer_user_2', 'orderuser')
+    AND p.id = (SELECT id FROM products ORDER BY RAND() LIMIT 1)
+    AND @order_count = 0
+LIMIT 2;
+
+-- 4. 为订单创建订单项关联
+-- 首先获取已创建的订单和购物车项
+INSERT INTO
+    carts_orders_relation (cart_id, order_id, quantity)
+SELECT
+    c.id,
+    o.id,
+    c.quantity
+FROM
+    orders o
+    JOIN users u ON o.user_id = u.id
+    JOIN carts c ON c.user_id = u.id
+WHERE
+    o.id IN (SELECT id FROM orders)
+    AND NOT EXISTS (
+        SELECT 1 FROM carts_orders_relation cor
+        WHERE cor.order_id = o.id
+    )
+LIMIT 10;  -- 限制关联数量，避免数据过多
+
+-- 更新订单总金额以匹配实际订单项
+UPDATE orders o
+SET o.total_amount = (
+    SELECT COALESCE(SUM(p.price * cor.quantity), o.total_amount)
+    FROM carts_orders_relation cor
+    JOIN carts c ON cor.cart_id = c.id
+    JOIN products p ON c.product_id = p.id
+    WHERE cor.order_id = o.id
+)
+WHERE EXISTS (
+    SELECT 1 FROM carts_orders_relation cor
+    WHERE cor.order_id = o.id
+);
+
+-- 5. 创建已超时订单
+INSERT INTO
+    orders (user_id, total_amount, payment_method, status, shipping_address, created_at, updated_at)
+SELECT
+    u.id,
+    p.price * FLOOR(RAND() * 2) + 1,
+    'ALIPAY',
+    'TIMEOUT',
+    CASE
+        WHEN u.username = 'customer_user' THEN '北京市海淀区清华大学'
+        WHEN u.username = 'customer_user_1' THEN '上海市浦东新区张江高科技园区'
+        ELSE '默认地址'
+    END,
+    DATE_SUB(NOW(), INTERVAL 2 DAY),
+    DATE_SUB(NOW(), INTERVAL 1 DAY)
+FROM
+    users u
+    CROSS JOIN products p
+WHERE
+    u.username IN ('customer_user', 'customer_user_1')
+    AND p.id = (SELECT id FROM products ORDER BY RAND() LIMIT 1)
+    AND @order_count = 0
+LIMIT 2;
