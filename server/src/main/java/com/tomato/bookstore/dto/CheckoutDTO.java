@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckoutDTO {
-  @NotNull(message = "用户 ID 不能为空")
   private Long userId;
 
   @NotEmpty(message = "请选择要结算的商品")
