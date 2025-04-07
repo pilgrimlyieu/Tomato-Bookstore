@@ -103,7 +103,7 @@ public class OrderController {
     if (gmtPayment != null && !gmtPayment.isEmpty()) {
       try {
         paymentTime =
-          LocalDateTime.parse(gmtPayment, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime.parse(gmtPayment, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
       } catch (Exception e) {
         log.error("解析支付时间失败：", e);
       }
