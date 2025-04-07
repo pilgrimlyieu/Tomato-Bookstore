@@ -189,11 +189,11 @@ public class TestDataFactory {
   }
 
   /**
-   * 获取用户JWT令牌
+   * 获取用户 JWT 令牌
    *
    * @param username 用户名
    * @param password 密码
-   * @return JWT令牌
+   * @return JWT 令牌
    */
   public String getUserToken(String username, String password) {
     try {
@@ -214,7 +214,7 @@ public class TestDataFactory {
       JsonNode root = objectMapper.readTree(responseJson);
       return root.path("data").asText();
     } catch (Exception e) {
-      throw new RuntimeException("获取用户Token失败", e);
+      throw new RuntimeException("获取用户 Token 失败", e);
     }
   }
 }

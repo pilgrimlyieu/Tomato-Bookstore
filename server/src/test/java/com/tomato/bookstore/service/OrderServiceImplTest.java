@@ -147,7 +147,7 @@ public class OrderServiceImplTest {
     orderItems.add(orderItem);
     order.setOrderItems(orderItems);
 
-    // 准备结账DTO
+    // 准备结账 DTO
     cartItemIds = Collections.singletonList(CART_ITEM_ID);
     checkoutDTO = new CheckoutDTO();
     checkoutDTO.setUserId(USER_ID);
@@ -308,7 +308,7 @@ public class OrderServiceImplTest {
     when(alipayConfig.getNotifyUrl()).thenReturn("http://localhost:8080/api/orders/notify");
     when(alipayConfig.getReturnUrl()).thenReturn("http://localhost:8080/api/orders/return");
 
-    // Mock支付宝响应
+    // Mock 支付宝响应
     when(alipayResponse.isSuccess()).thenReturn(true);
     when(alipayResponse.getBody()).thenReturn(PAYMENT_FORM);
     when(alipayClient.pageExecute(any(AlipayTradePagePayRequest.class))).thenReturn(alipayResponse);
@@ -355,7 +355,7 @@ public class OrderServiceImplTest {
     when(alipayConfig.getNotifyUrl()).thenReturn("http://localhost:8080/api/orders/notify");
     when(alipayConfig.getReturnUrl()).thenReturn("http://localhost:8080/api/orders/return");
 
-    // Mock支付宝响应失败
+    // Mock 支付宝响应失败
     when(alipayResponse.isSuccess()).thenReturn(false);
     when(alipayClient.pageExecute(any(AlipayTradePagePayRequest.class))).thenReturn(alipayResponse);
 

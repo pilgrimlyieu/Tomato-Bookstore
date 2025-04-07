@@ -99,7 +99,7 @@ public class CartServiceImplTest {
     cart.setCreatedAt(now);
     cart.setUpdatedAt(now);
 
-    // 创建购物车DTO
+    // 创建购物车 DTO
     cartDTO = new CartDTO();
     cartDTO.setProductId(PRODUCT_ID);
     cartDTO.setQuantity(QUANTITY);

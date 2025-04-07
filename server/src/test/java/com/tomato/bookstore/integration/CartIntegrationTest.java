@@ -239,7 +239,7 @@ public class CartIntegrationTest {
     CheckoutDTO checkoutDTO = new CheckoutDTO();
     checkoutDTO.setCartItemIds(Collections.singletonList(cart.getId()));
     checkoutDTO.setUserId(testUser.getId());
-    checkoutDTO.setShippingAddress("测试地址，测试街道123号");
+    checkoutDTO.setShippingAddress("测试地址，测试街道 123 号");
     checkoutDTO.setPaymentMethod(PaymentMethod.ALIPAY);
 
     // 结算购物车
@@ -256,7 +256,7 @@ public class CartIntegrationTest {
             .andExpect(
                 jsonPath("$.data.totalAmount")
                     .value(testProduct.getPrice().multiply(new BigDecimal(2)).doubleValue()))
-            .andExpect(jsonPath("$.data.shippingAddress").value("测试地址，测试街道123号"))
+            .andExpect(jsonPath("$.data.shippingAddress").value("测试地址，测试街道 123 号"))
             .andReturn();
 
     // 验证返回的订单
@@ -276,7 +276,7 @@ public class CartIntegrationTest {
   void checkoutCartFailsWhenCartEmpty() throws Exception {
     // 准备结算数据，但不添加商品
     CheckoutDTO checkoutDTO = new CheckoutDTO();
-    checkoutDTO.setCartItemIds(Collections.singletonList(999L)); // 不存在的ID
+    checkoutDTO.setCartItemIds(Collections.singletonList(999L)); // 不存在的 ID
     checkoutDTO.setUserId(testUser.getId());
     checkoutDTO.setShippingAddress("测试地址");
     checkoutDTO.setPaymentMethod(PaymentMethod.ALIPAY);

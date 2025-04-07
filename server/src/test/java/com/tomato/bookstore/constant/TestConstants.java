@@ -48,7 +48,7 @@ public class TestConstants {
 
   // 订单模块常量
   public static final String TEST_ORDER_USERNAME = "orderuser";
-  public static final String TEST_SHIPPING_ADDRESS = "测试地址，测试街道123号";
+  public static final String TEST_SHIPPING_ADDRESS = "测试地址，测试街道 123 号";
   public static final Integer TEST_ORDER_QUANTITY = 3;
   public static final String TEST_ALIPAY_TRADE_NO = "2023112822001123456789";
 }

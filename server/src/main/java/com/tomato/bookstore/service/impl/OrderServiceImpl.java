@@ -360,7 +360,7 @@ public class OrderServiceImpl implements OrderService {
   /**
    * 锁定商品库存
    *
-   * @param productId 商品ID
+   * @param productId 商品 ID
    * @param quantity 锁定数量
    */
   private void lockStock(Long productId, Integer quantity) {

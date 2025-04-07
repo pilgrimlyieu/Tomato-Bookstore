@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 订单集成测试
  *
- * <p>测试订单相关API接口的功能
+ * <p>测试订单相关 API 接口的功能
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -128,7 +128,7 @@ public class OrderIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200))
         .andExpect(jsonPath("$.data.orderId").value(testOrder.getId()))
-        // 使用字符串比较避免BigDecimal格式问题
+        // 使用字符串比较避免 BigDecimal 格式问题
         .andExpect(
             jsonPath("$.data.totalAmount")
                 .value(
@@ -329,7 +329,7 @@ public class OrderIntegrationTest {
             .andExpect(jsonPath("$.data.status").value(OrderStatus.PENDING.name()))
             .andReturn();
 
-    // 提取新订单ID
+    // 提取新订单 ID
     String createJson = createResult.getResponse().getContentAsString();
     Long newOrderId = objectMapper.readTree(createJson).get("data").get("orderId").asLong();
 
