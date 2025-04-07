@@ -26,10 +26,15 @@ public enum BusinessErrorCode {
   PRODUCT_INVALID_PARAMETER(20007, "商品参数无效"),
   PRODUCT_STOCK_INSUFFICIENT(20008, "商品库存不足"),
 
-  // 交易模块（30xxx）
+  // 购物车模块（30xxx）
   CART_EMPTY(30001, "购物车为空"),
   CART_ITEM_NOT_FOUND(30002, "购物车商品不存在"),
   CART_ITEM_MAX_LIMIT(30003, "已达购买数量上限"),
+  CART_ITEM_ADD_FAILED(30004, "添加商品到购物车失败"),
+  CART_ITEM_UPDATE_FAILED(30005, "更新购物车商品失败"),
+  CART_ITEM_DELETE_FAILED(30006, "删除购物车商品失败"),
+  CART_ITEM_INVALID_QUANTITY(30007, "商品数量无效"),
+  CART_ITEM_EXCEED_STOCK(30008, "商品数量超过库存"),
 
   // 订单模块（40xxx）
   ORDER_NOT_FOUND(40001, "订单不存在"),
@@ -37,6 +42,15 @@ public enum BusinessErrorCode {
   ORDER_ALREADY_CANCELLED(40003, "订单已取消"),
   ORDER_CANNOT_CANCEL(40004, "订单无法取消"),
   ORDER_STATUS_ERROR(40005, "订单状态错误"),
+  ORDER_CREATE_FAILED(40006, "创建订单失败"),
+  ORDER_PAY_FAILED(40007, "支付订单失败"),
+  ORDER_VERIFY_FAILED(40008, "订单验证失败"),
+  ORDER_EXPIRED(40009, "订单已过期"),
+  ORDER_EMPTY_CART_ITEMS(40010, "未选择任何商品"),
+  ORDER_INVALID_PAYMENT_METHOD(40011, "无效的支付方式"),
+  ORDER_INVALID_ADDRESS(40012, "无效的收货地址"),
+  ORDER_NOTIFY_VERIFY_FAILED(40013, "支付通知验证失败"),
+  ORDER_PAYMENT_AMOUNT_ERROR(40014, "支付金额错误"),
 
   // 书评模块（50xxx）
   REVIEW_NOT_FOUND(50001, "书评不存在"),
