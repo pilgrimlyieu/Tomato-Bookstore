@@ -101,8 +101,12 @@ public class OrderController {
     // 构建支付通知对象
     LocalDateTime paymentTime = null;
     if (gmtPayment != null && !gmtPayment.isEmpty()) {
-      paymentTime =
+      try {
+        paymentTime =
           LocalDateTime.parse(gmtPayment, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      } catch (Exception e) {
+        log.error("解析支付时间失败：{}", e.getMessage());
+      }
     }
 
     PaymentNotifyDTO notifyDTO =
