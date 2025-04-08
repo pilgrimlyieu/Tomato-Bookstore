@@ -4,9 +4,9 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- 网站信息 -->
         <div>
-          <h3 class="text-lg font-bold text-gray-800 mb-4">番茄商城</h3>
+          <h3 class="text-lg font-bold text-gray-800 mb-4">{{ appConfig.APP_NAME }}</h3>
           <p class="text-gray-600 mb-4">
-            番茄商城是一个专注于图书销售的电商平台，提供多种类型的图书以满足不同读者的阅读需求。
+            {{ appConfig.APP_DESCRIPTION }}
           </p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-500 hover:text-tomato-600">
@@ -69,15 +69,15 @@
           <ul class="space-y-2">
             <li class="flex items-start">
               <el-icon class="mt-1 mr-2"><Location /></el-icon>
-              <span class="text-gray-600">中国上海市闵行区东川路 800 号</span>
+              <span class="text-gray-600">{{ appConfig.CONTACT_ADDRESS }}</span>
             </li>
             <li class="flex items-center">
               <el-icon class="mr-2"><Phone /></el-icon>
-              <span class="text-gray-600">400-123-4567</span>
+              <span class="text-gray-600">{{ appConfig.CONTACT_PHONE }}</span>
             </li>
             <li class="flex items-center">
               <el-icon class="mr-2"><Message /></el-icon>
-              <span class="text-gray-600">contact@tomatobookstore.com</span>
+              <span class="text-gray-600">{{ appConfig.CONTACT_EMAIL }}</span>
             </li>
           </ul>
         </div>
@@ -85,7 +85,7 @@
 
       <div class="mt-8 pt-6 border-t border-gray-200">
         <p class="text-center text-gray-500 text-sm">
-          © {{ new Date().getFullYear() }} 番茄商城 保留所有权利
+          © {{ appConfig.COPYRIGHT_YEAR }} {{ appConfig.APP_NAME }} 保留所有权利
         </p>
       </div>
     </div>
@@ -93,6 +93,9 @@
 </template>
 
 <script setup lang="ts">
+import { AppConfig } from "@/constants/config";
 import { Routes } from "@/constants/routes";
 import { Location, Message, Phone } from "@element-plus/icons-vue";
+
+const appConfig = AppConfig;
 </script>
