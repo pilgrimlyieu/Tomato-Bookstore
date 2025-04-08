@@ -38,8 +38,6 @@ logging:
     "[com.tomato.bookstore]": debug
     "[org.hibernate]": warn
     "[org.springframework]": warn
-    "[org.hibernate.SQL]": debug
-    "[org.hibernate.type.descriptor.sql.BasicBinder]": trace
 
 app:
   jwt:
