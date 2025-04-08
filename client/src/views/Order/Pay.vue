@@ -45,7 +45,7 @@
         <div class="bg-white/90 backdrop-blur-md rounded-xl shadow-md p-6 mb-6">
           <div class="flex justify-between items-center border-b pb-4 mb-4">
             <div>
-              <div class="text-lg font-medium">订单号： {{ order.orderId }}</div>
+              <div class="text-lg font-medium">订单号：{{ order.orderId }}</div>
               <div class="text-sm text-gray-500">请在 30 分钟内完成支付，超时订单将自动取消</div>
             </div>
             <div class="text-xl font-bold text-tomato-600">
