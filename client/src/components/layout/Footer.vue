@@ -26,7 +26,7 @@
           <h3 class="text-lg font-bold text-gray-800 mb-4">快速链接</h3>
           <ul class="space-y-2">
             <li>
-              <router-link to="/" class="text-gray-600 hover:text-tomato-600">首页</router-link>
+              <router-link :to="Routes.HOME" class="text-gray-600 hover:text-tomato-600">首页</router-link>
             </li>
             <li>
               <router-link :to="Routes.PRODUCT_LIST" class="text-gray-600 hover:text-tomato-600">
@@ -52,7 +52,7 @@
               </router-link>
             </li>
             <li>
-              <router-link to="/orders" class="text-gray-600 hover:text-tomato-600">订单查询</router-link>
+              <router-link :to="Routes.ORDER_LIST" class="text-gray-600 hover:text-tomato-600">订单查询</router-link>
             </li>
             <li>
               <router-link to="/faq" class="text-gray-600 hover:text-tomato-600">常见问题</router-link>

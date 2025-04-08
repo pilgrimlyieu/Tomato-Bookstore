@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 py-3">
       <div class="flex justify-between items-center">
         <!-- Logo -->
-        <router-link to="/" class="flex items-center">
+        <router-link :to="Routes.HOME" class="flex items-center">
           <img src="@/assets/images/logo.svg" alt="番茄商城" class="h-10 mr-3" />
           <span class="text-xl font-bold text-tomato-600">番茄商城</span>
         </router-link>
@@ -12,7 +12,7 @@
         <nav class="flex items-center gap-2 md:gap-3 lg:gap-5">
           <!-- 主导航链接 -->
           <div class="hidden md:flex items-center space-x-6 mr-4">
-            <router-link to="/" class="nav-link">首页</router-link>
+            <router-link :to="Routes.HOME" class="nav-link">首页</router-link>
             <router-link :to="Routes.PRODUCT_LIST" class="nav-link">商品浏览</router-link>
             <router-link v-if="userStore.isLoggedIn" :to="Routes.ORDER_LIST" class="nav-link">我的订单</router-link>
             <router-link v-if="userStore.isAdmin" :to="Routes.ADMIN" class="nav-link">管理后台</router-link>
@@ -29,7 +29,7 @@
           />
 
           <!-- 购物车 -->
-          <router-link to="/cart" class="relative">
+          <router-link :to="Routes.CART" class="relative">
             <el-button type="primary" size="large" :icon="ShoppingCart" text />
             <span
               v-if="userStore.isLoggedIn && cartItemCount > 0"
@@ -55,7 +55,7 @@
                     </div>
                   </el-dropdown-item>
                   <el-dropdown-item divided>
-                    <router-link to="/user/profile" class="flex w-full">
+                    <router-link :to="Routes.USER_PROFILE" class="flex w-full">
                       <el-icon class="mr-1"><Setting /></el-icon>
                       个人中心
                     </router-link>
@@ -75,12 +75,12 @@
                 </div>
                 <div v-else>
                   <el-dropdown-item>
-                    <router-link to="/user/login" class="flex w-full">
+                    <router-link :to="Routes.USER_LOGIN" class="flex w-full">
                       登录
                     </router-link>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <router-link to="/user/register" class="flex w-full">
+                    <router-link :to="Routes.USER_REGISTER" class="flex w-full">
                       注册
                     </router-link>
                   </el-dropdown-item>

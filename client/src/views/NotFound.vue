@@ -6,9 +6,13 @@
       <p class="text-gray-600 mb-8">
         抱歉，您访问的页面不存在或已被移除。
       </p>
-      <router-link to="/">
+      <router-link :to="Routes.HOME">
         <el-button type="primary" size="large">返回首页</el-button>
       </router-link>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { Routes } from "@/constants/routes";
+</script>
