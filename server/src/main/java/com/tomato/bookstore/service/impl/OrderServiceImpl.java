@@ -26,6 +26,7 @@ import com.tomato.bookstore.repository.CartsOrdersRelationRepository;
 import com.tomato.bookstore.repository.OrderRepository;
 import com.tomato.bookstore.repository.StockpileRepository;
 import com.tomato.bookstore.repository.UserRepository;
+import com.tomato.bookstore.service.CartService;
 import com.tomato.bookstore.service.OrderService;
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -53,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
   private final StockpileRepository stockpileRepository;
   private final AlipayClient alipayClient;
   private final AlipayConfig alipayConfig;
+  private final CartService cartService;
 
   // 订单过期时间：30 分钟
   private static int ORDER_EXPIRATION_MINUTES = 30;
@@ -247,6 +249,10 @@ public class OrderServiceImpl implements OrderService {
 
     // 减少商品库存
     reduceStock(order);
+
+    // 清空用户购物车
+    cartService.clearCart(order.getUser().getId());
+    log.info("已清空用户购物车：userId={}", order.getUser().getId());
 
     log.info("订单支付成功：orderId={}, tradeNo={}", order.getId(), notifyDTO.getTradeNo());
     return notifyDTO;
