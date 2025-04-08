@@ -192,7 +192,6 @@ const handleClearCart = async () => {
 
 // 去结算
 const handleCheckout = () => {
-
   if (cartStore.items.length > 0) {
     router.push(Routes.CART_CHECKOUT);
   }
