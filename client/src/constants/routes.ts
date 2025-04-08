@@ -11,6 +11,18 @@ export const Routes = {
   PRODUCT_DETAIL: "/products/:id",
   PRODUCT_STOCKPILE: "/products/stockpile/:productId",
 
+  // 购物车
+  CART: "/cart",
+  CART_ITEM: "/cart/:cartItemId",
+  CART_CHECKOUT: "/cart/checkout",
+
+  // 订单
+  ORDER_LIST: "/orders",
+  ORDER_DETAIL: "/orders/:orderId",
+  ORDER_PAY: "/orders/:orderId/pay",
+  ORDER_SUCCESS: "/orders/success",
+  ORDER_FAIL: "/orders/fail",
+
   // 管理员
   ADMIN: "/admin",
   ADMIN_PRODUCTS: "/admin/products",
