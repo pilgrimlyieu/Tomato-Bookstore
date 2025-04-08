@@ -67,10 +67,10 @@
                     </router-link>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <button class="flex w-full" @click="logout">
+                    <el-button class="flex w-full" @click="logout">
                       <el-icon class="mr-1"><SwitchButton /></el-icon>
                       退出登录
-                    </button>
+                    </el-button>
                   </el-dropdown-item>
                 </div>
                 <div v-else>
