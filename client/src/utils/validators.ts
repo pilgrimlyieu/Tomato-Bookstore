@@ -283,3 +283,20 @@ export const getProductRules = (): FormRules => {
     ],
   };
 };
+
+/**
+ * 收货地址验证规则
+ */
+export const shippingAddressRules: FormItemRule[] = [
+  { required: true, message: "请输入收货地址", trigger: "blur" },
+  { max: 200, message: "地址长度不能超过 200 个字符", trigger: "blur" },
+];
+
+/**
+ * 获取结账表单验证规则
+ */
+export const getCheckoutRules = (): FormRules => {
+  return {
+    shippingAddress: shippingAddressRules,
+  };
+};
