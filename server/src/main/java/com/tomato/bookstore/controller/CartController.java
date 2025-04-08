@@ -130,8 +130,7 @@ public class CartController {
    */
   @DeleteMapping
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
-  public ApiResponse<String> clearCart(
-      @AuthenticationPrincipal UserPrincipal userPrincipal) {
+  public ApiResponse<String> clearCart(@AuthenticationPrincipal UserPrincipal userPrincipal) {
     log.info("用户「{}」清空购物车", userPrincipal.getUsername());
     cartService.clearCart(userPrincipal.getUserId());
     return ApiResponse.success("清空购物车成功");
