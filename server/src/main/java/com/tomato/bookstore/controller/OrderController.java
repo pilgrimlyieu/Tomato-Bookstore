@@ -11,6 +11,7 @@ import com.tomato.bookstore.service.OrderService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -42,6 +43,21 @@ public class OrderController {
     log.info("用户「{}」查看订单：orderId={}", userPrincipal.getUsername(), orderId);
     OrderDTO order = orderService.getOrder(userPrincipal.getUserId(), orderId);
     return ApiResponse.success(order);
+  }
+
+  /**
+   * 获取用户的订单列表
+   *
+   * @param userPrincipal 当前用户
+   * @return 订单列表
+   */
+  @GetMapping
+  @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
+  public ApiResponse<List<OrderDTO>> getUserOrderList(
+      @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    log.info("用户「{}」获取订单列表", userPrincipal.getUsername());
+    List<OrderDTO> orders = orderService.getUserOrderList(userPrincipal.getUserId());
+    return ApiResponse.success(orders);
   }
 
   /**

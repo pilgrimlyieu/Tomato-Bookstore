@@ -159,6 +159,16 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public List<OrderDTO> getUserOrderList(Long userId) {
+    log.info("获取用户订单列表：userId={}", userId);
+    User user = findUser(userId);
+    List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user);
+
+    return orders.stream().map(this::convertToOrderDTO).collect(Collectors.toList());
+  }
+
+  @Override
   @Transactional
   public PaymentDTO payOrder(Long userId, Long orderId) {
     log.info("支付订单：userId={}, orderId={}", userId, orderId);

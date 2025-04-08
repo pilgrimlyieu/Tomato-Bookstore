@@ -3,6 +3,7 @@ package com.tomato.bookstore.repository;
 import com.tomato.bookstore.constant.OrderStatus;
 import com.tomato.bookstore.model.Order;
 import com.tomato.bookstore.model.User;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,6 +45,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
    * @param expiredTime 过期时间
    * @return 过期订单列表
    */
-  List<Order> findByStatusAndCreatedAtBefore(
-      OrderStatus status, java.time.LocalDateTime expiredTime);
+  List<Order> findByStatusAndCreatedAtBefore(OrderStatus status, LocalDateTime expiredTime);
+
+  /**
+   * 根据用户查询所有订单并按创建时间降序排序
+   *
+   * @param user 用户
+   * @return 该用户的所有订单
+   */
+  List<Order> findByUserOrderByCreatedAtDesc(User user);
 }
