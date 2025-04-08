@@ -41,7 +41,6 @@ import org.springframework.test.web.servlet.MvcResult;
  */
 @Component
 public class TestDataFactory {
-
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;

@@ -35,6 +35,7 @@ import com.tomato.bookstore.repository.CartsOrdersRelationRepository;
 import com.tomato.bookstore.repository.OrderRepository;
 import com.tomato.bookstore.repository.StockpileRepository;
 import com.tomato.bookstore.repository.UserRepository;
+import com.tomato.bookstore.service.impl.CartServiceImpl;
 import com.tomato.bookstore.service.impl.OrderServiceImpl;
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -64,6 +65,7 @@ public class OrderServiceImplTest {
   @Mock private AlipayClient alipayClient;
   @Mock private AlipayConfig alipayConfig;
   @Mock private AlipayTradePagePayResponse alipayResponse;
+  @Mock private CartServiceImpl cartService;
 
   @InjectMocks private OrderServiceImpl orderService;
 
