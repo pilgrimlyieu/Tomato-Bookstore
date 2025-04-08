@@ -8,12 +8,15 @@ import com.tomato.bookstore.dto.PaymentDTO;
 import com.tomato.bookstore.dto.PaymentNotifyDTO;
 import com.tomato.bookstore.security.UserPrincipal;
 import com.tomato.bookstore.service.OrderService;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +31,9 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class OrderController {
   private final OrderService orderService;
+
+  @Value("${app.frontend.base-url}")
+  private String frontendBaseUrl;
 
   /**
    * 获取订单详情
@@ -145,14 +151,23 @@ public class OrderController {
    * <p>支付宝支付成功后，用户会被重定向到该接口。
    */
   @GetMapping(value = ApiConstants.ORDER_RETURN)
-  public ApiResponse<String> handlePaymentReturn(
+  public String handlePaymentReturn(
       @RequestParam("out_trade_no") String outTradeNo,
       @RequestParam("trade_no") String tradeNo,
-      @RequestParam(value = "total_amount", required = false) String totalAmount) {
+      @RequestParam(value = "total_amount", required = false) String totalAmount,
+      HttpServletResponse response) {
 
     log.info("收到支付同步返回：outTradeNo={}, tradeNo={}, amount={}", outTradeNo, tradeNo, totalAmount);
 
-    // 仅作为前端跳转使用，实际支付结果以异步通知为准
-    return ApiResponse.success("支付处理中，请等待系统确认", "订单号：" + outTradeNo);
+    try {
+      // 重定向到前端订单成功页面
+      String redirectUrl = frontendBaseUrl + "/orders/success?orderId=" + outTradeNo;
+      log.info("重定向到前端订单成功页面：{}", redirectUrl);
+      response.sendRedirect(redirectUrl);
+      return null;
+    } catch (IOException e) {
+      log.error("重定向失败：", e);
+      return "支付处理中，请等待系统确认";
+    }
   }
 }
