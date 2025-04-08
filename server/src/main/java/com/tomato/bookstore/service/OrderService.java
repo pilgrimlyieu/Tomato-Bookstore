@@ -4,6 +4,7 @@ import com.tomato.bookstore.dto.CheckoutDTO;
 import com.tomato.bookstore.dto.OrderDTO;
 import com.tomato.bookstore.dto.PaymentDTO;
 import com.tomato.bookstore.dto.PaymentNotifyDTO;
+import java.util.List;
 
 /** 订单服务接口 */
 public interface OrderService {
@@ -51,4 +52,12 @@ public interface OrderService {
 
   /** 处理过期订单 */
   void handleExpiredOrders();
+
+  /**
+   * 获取用户订单列表
+   *
+   * @param userId 用户 ID
+   * @return 用户订单列表
+   */
+  List<OrderDTO> getUserOrderList(Long userId);
 }

@@ -80,7 +80,7 @@
                   </div>
                   <div class="mt-auto flex justify-between items-center">
                     <span class="text-tomato-600 font-bold">¥{{ book.price.toFixed(2) }}</span>
-                    <el-button size="small" type="primary" plain>
+                    <el-button size="small" type="primary" plain @click="handleAddToCart(book)">
                       <el-icon>
                         <Plus />
                       </el-icon>
@@ -138,7 +138,7 @@
             </div>
 
             <!-- 加入购物车按钮 -->
-            <el-button class="w-full mt-4" type="primary">立即抢购</el-button>
+            <el-button class="w-full mt-4" type="primary" @click="handleBuyNow(promo)">立即抢购</el-button>
           </div>
         </div>
       </div>
@@ -257,7 +257,7 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
+import { useCart } from "@/composables/useCart";
 import {
   ArrowRight,
   Collection,
@@ -268,7 +268,7 @@ import {
 import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
 
-const userStore = useUserStore();
+const { addToCart, buyNow } = useCart();
 
 // 轮播数据
 const carouselSlides = [
@@ -466,6 +466,20 @@ const handleNewsletter = () => {
     newsletterEmail.value = "";
     subscribingNewsletter.value = false;
   }, 1000);
+};
+
+// 添加商品到购物车
+const handleAddToCart = async (book: any) => {
+  // TODO: 这里仅为演示，实际项目中应该有书籍的真实 ID
+  const mockBookId = Math.floor(Math.random() * 1000) + 1;
+  await addToCart(mockBookId, 1, book.title);
+};
+
+// 立即抢购
+const handleBuyNow = async (promo: any) => {
+  // 这里仅为演示，实际项目中应该有特惠商品的真实 ID
+  const mockPromoId = Math.floor(Math.random() * 1000) + 1;
+  await buyNow(mockPromoId, 1, promo.title);
 };
 </script>
 

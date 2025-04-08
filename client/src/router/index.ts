@@ -69,6 +69,50 @@ const router = createRouter({
         },
       ],
     },
+    // 购物车路由
+    {
+      path: Routes.CART,
+      name: "cart",
+      component: () => import("@/views/Cart/Cart.vue"),
+      meta: { title: "购物车", requiresAuth: true },
+    },
+    {
+      path: Routes.CART_CHECKOUT,
+      name: "checkout",
+      component: () => import("@/views/Cart/Checkout.vue"),
+      meta: { title: "结算", requiresAuth: true },
+    },
+    // 订单路由
+    {
+      path: Routes.ORDER_LIST,
+      name: "orderList",
+      component: () => import("@/views/Order/List.vue"),
+      meta: { title: "我的订单", requiresAuth: true },
+    },
+    {
+      path: Routes.ORDER_DETAIL,
+      name: "orderDetail",
+      component: () => import("@/views/Order/Detail.vue"),
+      meta: { title: "订单详情", requiresAuth: true },
+    },
+    {
+      path: Routes.ORDER_PAY,
+      name: "orderPay",
+      component: () => import("@/views/Order/Pay.vue"),
+      meta: { title: "订单支付", requiresAuth: true },
+    },
+    {
+      path: Routes.ORDER_SUCCESS,
+      name: "orderSuccess",
+      component: () => import("@/views/Order/Success.vue"),
+      meta: { title: "支付成功", requiresAuth: true },
+    },
+    {
+      path: Routes.ORDER_FAIL,
+      name: "orderFail",
+      component: () => import("@/views/Order/Fail.vue"),
+      meta: { title: "支付失败", requiresAuth: true },
+    },
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",

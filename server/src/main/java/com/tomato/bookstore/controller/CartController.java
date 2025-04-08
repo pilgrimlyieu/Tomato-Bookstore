@@ -121,4 +121,18 @@ public class CartController {
     OrderDTO order = orderService.createOrder(checkoutDTO);
     return ApiResponse.success(order);
   }
+
+  /**
+   * 清空购物车
+   *
+   * @param userPrincipal 当前用户
+   * @return 清空结果
+   */
+  @DeleteMapping
+  @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
+  public ApiResponse<String> clearCart(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    log.info("用户「{}」清空购物车", userPrincipal.getUsername());
+    cartService.clearCart(userPrincipal.getUserId());
+    return ApiResponse.success("清空购物车成功");
+  }
 }

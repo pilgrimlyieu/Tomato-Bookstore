@@ -33,7 +33,7 @@
           <div class="md:w-2/5">
             <div class="bg-gray-100 rounded-xl aspect-w-3 aspect-h-4 overflow-hidden shadow-md">
               <img
-                :src="product.cover || '/images/book-placeholder.jpg'"
+                :src="product.cover || '@/assets/images/placeholder.svg'"
                 :alt="product.title"
                 class="w-full h-full object-cover object-center"
               />
@@ -67,7 +67,10 @@
             <!-- 库存信息 -->
             <div v-if="stockpile" class="mb-6">
               <p class="text-gray-700 mb-1">
-                <span class="font-medium">库存：</span> {{ stockpile.amount }}
+                <span class="font-medium">库存：</span>
+                <span :class="{'text-green-600': stockpile.amount > 10, 'text-tomato-600': stockpile.amount <= 10}">
+                  {{ stockpile.amount }}
+                </span>
               </p>
             </div>
 
@@ -88,9 +91,36 @@
               <p class="text-gray-600">{{ product.description }}</p>
             </div>
 
+            <!-- 购买数量 -->
+            <div class="mb-6">
+              <h3 class="text-lg font-medium text-gray-800 mb-2">数量</h3>
+              <el-input-number
+                v-model="quantity"
+                :min="1"
+                :max="stockpile?.amount || 1"
+                size="large"
+                :disabled="!stockpile || stockpile.amount <= 0"
+                class="w-32"
+              />
+              <span v-if="stockpile && stockpile.amount <= 0" class="ml-3 text-red-600 text-sm">
+                该商品暂无库存
+              </span>
+              <span v-else-if="stockpile && stockpile.amount <= 10" class="ml-3 text-tomato-600 text-sm">
+                库存紧张
+              </span>
+            </div>
+
             <!-- 操作按钮 -->
             <div class="mt-6 flex gap-4">
-              <el-button type="primary" size="large" class="rounded-lg" :icon="ShoppingCart">
+              <el-button
+                type="primary"
+                size="large"
+                class="rounded-lg"
+                :icon="ShoppingCart"
+                @click="handleAddToCart"
+                :disabled="!stockpile || stockpile.amount <= 0 || adding"
+                :loading="adding"
+              >
                 加入购物车
               </el-button>
               <el-button size="large" class="rounded-lg" :icon="Star">
@@ -113,20 +143,24 @@
 </template>
 
 <script setup lang="ts">
+import { useCart } from "@/composables/useCart";
 import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import { ShoppingCart, Star } from "@element-plus/icons-vue";
-import { computed, onMounted, watch } from "vue";
+import { ElMessage } from "element-plus";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const productStore = useProductStore();
 const route = useRoute();
 const router = useRouter();
+const { addToCart } = useCart();
 
 const productId = computed(() => Number(route.params.id));
-
 const product = computed(() => productStore.currentProduct);
 const stockpile = computed(() => productStore.currentStockpile);
+const quantity = ref(1);
+const adding = ref(false);
 
 // 加载商品数据
 const loadProductData = async () => {
@@ -145,9 +179,26 @@ watch(
   () => route.params.id,
   () => {
     productStore.clearCurrentProduct();
+    quantity.value = 1;
     loadProductData();
   },
 );
+
+// 添加商品到购物车
+const handleAddToCart = async () => {
+  // 检查库存
+  if (!stockpile.value || stockpile.value.amount < quantity.value) {
+    ElMessage.error("商品库存不足");
+    return;
+  }
+
+  try {
+    adding.value = true;
+    await addToCart(productId.value, quantity.value, product.value?.title);
+  } finally {
+    adding.value = false;
+  }
+};
 </script>
 
 <style scoped>

@@ -38,8 +38,6 @@ logging:
     "[com.tomato.bookstore]": debug
     "[org.hibernate]": warn
     "[org.springframework]": warn
-    "[org.hibernate.SQL]": debug
-    "[org.hibernate.type.descriptor.sql.BasicBinder]": trace
 
 app:
   jwt:
@@ -47,6 +45,8 @@ app:
     expiration: 86400000 # 24 小时
   security:
     public-paths: /,/api,/api/user/login,/api/user/register,/api/orders/notify
+  frontend:
+    base-url: ${FRONTEND_BASE_URL:http://localhost:5173}
 
 alipay:
   appId: ${ALIPAY_APP_ID}

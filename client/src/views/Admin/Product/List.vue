@@ -33,8 +33,8 @@
       <el-table-column label="封面" width="120" align="center">
         <template #default="scope">
           <el-image
-            :src="scope.row.cover || '/images/book-placeholder.jpg'"
-            :preview-src-list="[scope.row.cover || '/images/book-placeholder.jpg']"
+            :src="scope.row.cover || '@/assets/images/placeholder.svg'"
+            :preview-src-list="[scope.row.cover || '@/assets/images/placeholder.svg']"
             fit="cover"
             class="h-16 w-12 object-cover rounded"
           />
