@@ -1,4 +1,12 @@
-# Project
+# Private files
 *private*
-.vscode
+
+# Binary files
 .bin
+
+# VS Code settings
+.vscode
+
+# GitHub Copilot prompts
+.github/copilot-instructions.md
+.github/prompts
