@@ -28,10 +28,10 @@ public class Order {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @Column(name = "total_amount", nullable = false)
+  @Column(nullable = false)
   private BigDecimal totalAmount;
 
-  @Column(name = "payment_method", nullable = false)
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private PaymentMethod paymentMethod;
 
@@ -39,15 +39,14 @@ public class Order {
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
-  @Column(name = "shipping_address", nullable = false)
+  @Column(nullable = false)
   private String shippingAddress;
 
-  @Column(name = "trade_no")
   private String tradeNo;
 
   private LocalDateTime paymentTime;
 
-  @Column(name = "created_at", nullable = false)
+  @Column(nullable = false)
   private LocalDateTime createdAt;
 
   private LocalDateTime updatedAt;
