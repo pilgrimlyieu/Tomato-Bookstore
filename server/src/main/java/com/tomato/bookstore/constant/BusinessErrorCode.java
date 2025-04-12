@@ -52,14 +52,19 @@ public enum BusinessErrorCode {
   ORDER_NOTIFY_VERIFY_FAILED(40013, "支付通知验证失败"),
   ORDER_PAYMENT_AMOUNT_ERROR(40014, "支付金额错误"),
 
-  // 书评模块（50xxx）
-  REVIEW_NOT_FOUND(50001, "书评不存在"),
-  REVIEW_ALREADY_EXISTS(50002, "已发表过书评"),
-  REVIEW_CONTENT_INVALID(50003, "书评内容不符合规范"),
+  // 广告模块（50xxx）
+  ADVERTISEMENT_NOT_FOUND(50001, "广告不存在"),
+  ADVERTISEMENT_TITLE_DUPLICATE(50002, "广告标题已存在"),
+  ADVERTISEMENT_INVALID_PARAMETER(50003, "广告参数无效"),
 
-  // 笔记模块（60xxx）
-  NOTE_NOT_FOUND(60001, "笔记不存在"),
-  NOTE_CONTENT_INVALID(60002, "笔记内容不符合规范"),
+  // 书评模块（60xxx）
+  REVIEW_NOT_FOUND(60001, "书评不存在"),
+  REVIEW_ALREADY_EXISTS(60002, "已发表过书评"),
+  REVIEW_CONTENT_INVALID(60003, "书评内容不符合规范"),
+
+  // 笔记模块（70xxx）
+  NOTE_NOT_FOUND(70001, "笔记不存在"),
+  NOTE_CONTENT_INVALID(70002, "笔记内容不符合规范"),
 
   // 系统通用（90xxx）
   SYSTEM_ERROR(90001, "系统错误"),
