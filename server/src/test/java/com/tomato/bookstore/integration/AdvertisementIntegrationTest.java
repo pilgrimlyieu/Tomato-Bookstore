@@ -133,7 +133,7 @@ public class AdvertisementIntegrationTest {
             get(ApiConstants.ADVERTISEMENT_DETAIL_PATH.replace("{id}", nonExistingId.toString()))
                 .header("Authorization", "Bearer " + customerToken))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
+        .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
         .andExpect(jsonPath("$.msg").value(String.format("广告不存在，ID：%s", nonExistingId)));
   }
 

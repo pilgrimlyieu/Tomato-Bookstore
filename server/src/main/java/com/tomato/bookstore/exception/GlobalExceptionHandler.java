@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ApiResponse<Void> handleResourceNotFoundException(ResourceNotFoundException e) {
     log.warn("资源不存在：{}", e.getMessage());
-    return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    return ApiResponse.error(HttpStatus.NOT_FOUND.value(), e.getMessage());
   }
 
   /**
