@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
    * @return ApiResponse 统一格式的响应
    */
   @ExceptionHandler(ResourceNotFoundException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   public ApiResponse<Void> handleResourceNotFoundException(ResourceNotFoundException e) {
     log.warn("资源不存在：{}", e.getMessage());
     return ApiResponse.error(HttpStatus.NOT_FOUND.value(), e.getMessage());
