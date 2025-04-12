@@ -1,9 +1,7 @@
-import { Routes } from "@/constants/routes";
 import type { ApiResponse } from "@/types/api";
 import type { Cart, CartList, Checkout, QuantityUpdate } from "@/types/cart";
 import type { Order } from "@/types/order";
 import apiClient from "@/utils/apiClient";
-import { buildRoute } from "@/utils/routeHelper";
 
 /**
  * 购物车服务
@@ -15,7 +13,7 @@ export default {
    * @returns {Promise<ApiResponse<CartList>>} 购物车信息
    */
   getUserCart(): Promise<ApiResponse<CartList>> {
-    return apiClient.get(Routes.CART);
+    return apiClient.get("/cart");
   },
 
   /**
@@ -25,7 +23,7 @@ export default {
    * @returns {Promise<ApiResponse<Cart>>} 添加的商品信息
    */
   addToCart(cart: Cart): Promise<ApiResponse<Cart>> {
-    return apiClient.post(Routes.CART, cart);
+    return apiClient.post("/cart", cart);
   },
 
   /**
@@ -35,7 +33,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 操作结果
    */
   removeFromCart(cartItemId: number): Promise<ApiResponse<string>> {
-    return apiClient.delete(buildRoute(Routes.CART_ITEM, { cartItemId }));
+    return apiClient.delete(`/cart/${cartItemId}`);
   },
 
   /**
@@ -49,10 +47,7 @@ export default {
     cartItemId: number,
     update: QuantityUpdate,
   ): Promise<ApiResponse<string>> {
-    return apiClient.patch(
-      buildRoute(Routes.CART_ITEM, { cartItemId }),
-      update,
-    );
+    return apiClient.patch(`/cart/${cartItemId}`, update);
   },
 
   /**
@@ -62,7 +57,7 @@ export default {
    * @returns {Promise<ApiResponse<Order>>} 创建的订单信息
    */
   checkout(checkout: Checkout): Promise<ApiResponse<Order>> {
-    return apiClient.post(Routes.CART_CHECKOUT, checkout);
+    return apiClient.post("/cart/checkout", checkout);
   },
 
   /**
@@ -71,6 +66,6 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 操作结果
    */
   clearCart(): Promise<ApiResponse<string>> {
-    return apiClient.delete(Routes.CART);
+    return apiClient.delete("/cart");
   },
 };

@@ -1,4 +1,3 @@
-import { Routes } from "@/constants/routes";
 import type { ApiResponse } from "@/types/api";
 import type {
   Product,
@@ -7,7 +6,6 @@ import type {
   StockpileParams,
 } from "@/types/product";
 import apiClient from "@/utils/apiClient";
-import { buildRoute } from "@/utils/routeHelper";
 
 /**
  * 商品服务
@@ -19,7 +17,7 @@ export default {
    * @returns {Promise<ApiResponse<Product[]>>} 所有商品列表
    */
   getAllProducts(): Promise<ApiResponse<Product[]>> {
-    return apiClient.get(Routes.PRODUCT_LIST);
+    return apiClient.get("/products");
   },
 
   /**
@@ -29,7 +27,7 @@ export default {
    * @returns {Promise<ApiResponse<Product>>} 商品详细信息
    */
   getProductById(id: number): Promise<ApiResponse<Product>> {
-    return apiClient.get(buildRoute(Routes.PRODUCT_DETAIL, { id }));
+    return apiClient.get(`/products/${id}`);
   },
 
   /**
@@ -39,7 +37,7 @@ export default {
    * @returns {Promise<ApiResponse<Product>>} 创建的商品
    */
   createProduct(params: ProductParams): Promise<ApiResponse<Product>> {
-    return apiClient.post(Routes.PRODUCT_LIST, params);
+    return apiClient.post("/products", params);
   },
 
   /**
@@ -49,7 +47,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 更新结果
    */
   updateProduct(params: ProductParams): Promise<ApiResponse<string>> {
-    return apiClient.put(Routes.PRODUCT_LIST, params);
+    return apiClient.put("/products", params);
   },
 
   /**
@@ -59,7 +57,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 删除结果
    */
   deleteProduct(id: number): Promise<ApiResponse<string>> {
-    return apiClient.delete(buildRoute(Routes.PRODUCT_DETAIL, { id }));
+    return apiClient.delete(`/products/${id}`);
   },
 
   /**
@@ -69,7 +67,7 @@ export default {
    * @returns {Promise<ApiResponse<Stockpile>>} 商品库存信息
    */
   getStockpile(productId: number): Promise<ApiResponse<Stockpile>> {
-    return apiClient.get(buildRoute(Routes.PRODUCT_STOCKPILE, { productId }));
+    return apiClient.get(`/products/stockpile/${productId}`);
   },
 
   /**
@@ -83,9 +81,6 @@ export default {
     productId: number,
     params: StockpileParams,
   ): Promise<ApiResponse<string>> {
-    return apiClient.patch(
-      buildRoute(Routes.PRODUCT_STOCKPILE, { productId }),
-      params,
-    );
+    return apiClient.patch(`/products/stockpile/${productId}`, params);
   },
 };
