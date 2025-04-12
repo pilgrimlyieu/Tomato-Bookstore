@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS products;
 
 DROP TABLE IF EXISTS users;
 
+DROP TABLE IF EXISTS advertisements;
+
 -- 创建用户表
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -59,9 +61,9 @@ CREATE TABLE specifications (
 
 -- 创建购物车表
 CREATE TABLE carts (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '购物车商品 id',
-    user_id BIGINT NOT NULL COMMENT '用户 id，关联用户表',
-    product_id BIGINT NOT NULL COMMENT '商品 id，关联商品表',
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '购物车商品 ID',
+    user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
+    product_id BIGINT NOT NULL COMMENT '商品 ID，关联商品表',
     quantity INT NOT NULL DEFAULT 1 COMMENT '商品数量，默认为 1',
     created_at TIMESTAMP NOT NULL COMMENT '创建时间',
     updated_at TIMESTAMP COMMENT '更新时间',
@@ -94,6 +96,16 @@ CREATE TABLE carts_orders_relation (
     FOREIGN KEY (order_id) REFERENCES orders (id)
 ) COMMENT='购物车商品与订单关联表';
 
+-- 创建广告表
+CREATE TABLE advertisements (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '广告 ID',
+    title VARCHAR(50) NOT NULL COMMENT '广告标题，不允许为空',
+    content VARCHAR(500) NOT NULL COMMENT '广告内容',
+    image_url VARCHAR(500) NOT NULL COMMENT '广告图片 URL',
+    product_id BIGINT NOT NULL COMMENT '所属商品 ID，不允许为空',
+    FOREIGN KEY (product_id) REFERENCES products(id)
+) COMMENT='广告表';
+
 -- 为外键创建索引以提高查询性能
 CREATE INDEX idx_stockpile_product ON stockpiles (product_id);
 CREATE INDEX idx_specification_product ON specifications (product_id);
@@ -103,3 +115,4 @@ CREATE INDEX idx_cart_product ON carts (product_id);
 CREATE INDEX idx_order_user ON orders (user_id);
 CREATE INDEX idx_relation_cart ON carts_orders_relation (cart_id);
 CREATE INDEX idx_relation_order ON carts_orders_relation (order_id);
+CREATE INDEX idx_advertisement_product ON advertisements (product_id);
