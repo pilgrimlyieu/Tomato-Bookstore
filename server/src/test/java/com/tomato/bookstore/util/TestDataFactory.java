@@ -10,6 +10,7 @@ import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.constant.OrderStatus;
 import com.tomato.bookstore.constant.PaymentMethod;
 import com.tomato.bookstore.dto.LoginDTO;
+import com.tomato.bookstore.model.Advertisement;
 import com.tomato.bookstore.model.Cart;
 import com.tomato.bookstore.model.CartsOrdersRelation;
 import com.tomato.bookstore.model.Order;
@@ -17,6 +18,7 @@ import com.tomato.bookstore.model.Product;
 import com.tomato.bookstore.model.Stockpile;
 import com.tomato.bookstore.model.User;
 import com.tomato.bookstore.model.User.UserRole;
+import com.tomato.bookstore.repository.AdvertisementRepository;
 import com.tomato.bookstore.repository.CartRepository;
 import com.tomato.bookstore.repository.CartsOrdersRelationRepository;
 import com.tomato.bookstore.repository.OrderRepository;
@@ -56,6 +58,8 @@ public class TestDataFactory {
   @Autowired private OrderRepository orderRepository;
 
   @Autowired private CartsOrdersRelationRepository relationRepository;
+
+  @Autowired private AdvertisementRepository advertisementRepository;
 
   @Autowired private Clock clock;
 
@@ -185,6 +189,24 @@ public class TestDataFactory {
     stockpileRepository.save(stockpile);
 
     return order;
+  }
+
+  /**
+   * 创建测试广告
+   *
+   * @param title 广告标题
+   * @param content 广告内容
+   * @param product 关联商品
+   * @return 创建的广告
+   */
+  public Advertisement createTestAdvertisement(String title, String content, Product product) {
+    Advertisement advertisement = new Advertisement();
+    advertisement.setTitle(title);
+    advertisement.setContent(content);
+    advertisement.setImageUrl("https://example.com/test-ad-image.jpg");
+    advertisement.setProduct(product);
+
+    return advertisementRepository.save(advertisement);
   }
 
   /**
