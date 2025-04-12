@@ -36,14 +36,19 @@ export const BusinessErrorCode = {
   ORDER_CANNOT_CANCEL: 40004,
   ORDER_STATUS_ERROR: 40005,
 
-  // 书评模块（50xxx）
-  REVIEW_NOT_FOUND: 50001,
-  REVIEW_ALREADY_EXISTS: 50002,
-  REVIEW_CONTENT_INVALID: 50003,
+  // 广告模块（50xxx）
+  ADVERTISEMENT_NOT_FOUND: 50001,
+  ADVERTISEMENT_TITLE_DUPLICATE: 50002,
+  ADVERTISEMENT_INVALID_PARAMETER: 50003,
 
-  // 笔记模块（60xxx）
-  NOTE_NOT_FOUND: 60001,
-  NOTE_CONTENT_INVALID: 60002,
+  // 书评模块（60xxx）
+  REVIEW_NOT_FOUND: 60001,
+  REVIEW_ALREADY_EXISTS: 60002,
+  REVIEW_CONTENT_INVALID: 60003,
+
+  // 笔记模块（70xxx）
+  NOTE_NOT_FOUND: 70001,
+  NOTE_CONTENT_INVALID: 70002,
 
   // 系统通用（90xxx）
   SYSTEM_ERROR: 90001,
@@ -98,12 +103,17 @@ export const BusinessErrorMessages: Record<number, string> = {
   [BusinessErrorCode.ORDER_CANNOT_CANCEL]: "订单无法取消",
   [BusinessErrorCode.ORDER_STATUS_ERROR]: "订单状态错误",
 
-  // 书评模块（50xxx）
+  // 广告模块（50xxx）
+  [BusinessErrorCode.ADVERTISEMENT_NOT_FOUND]: "广告不存在",
+  [BusinessErrorCode.ADVERTISEMENT_TITLE_DUPLICATE]: "广告标题已存在",
+  [BusinessErrorCode.ADVERTISEMENT_INVALID_PARAMETER]: "广告参数无效",
+
+  // 书评模块（60xxx）
   [BusinessErrorCode.REVIEW_NOT_FOUND]: "书评不存在",
   [BusinessErrorCode.REVIEW_ALREADY_EXISTS]: "已发表过书评",
   [BusinessErrorCode.REVIEW_CONTENT_INVALID]: "书评内容不符合规范",
 
-  // 笔记模块（60xxx）
+  // 笔记模块（70xxx）
   [BusinessErrorCode.NOTE_NOT_FOUND]: "笔记不存在",
   [BusinessErrorCode.NOTE_CONTENT_INVALID]: "笔记内容不符合规范",
 

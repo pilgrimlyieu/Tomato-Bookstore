@@ -1,8 +1,6 @@
-import { Routes } from "@/constants/routes";
 import type { ApiResponse } from "@/types/api";
 import type { Order, Payment } from "@/types/order";
 import apiClient from "@/utils/apiClient";
-import { buildRoute } from "@/utils/routeHelper";
 
 /**
  * 订单服务
@@ -14,7 +12,7 @@ export default {
    * @returns {Promise<ApiResponse<Order[]>>} 订单列表
    */
   getOrderList(): Promise<ApiResponse<Order[]>> {
-    return apiClient.get(Routes.ORDER_LIST);
+    return apiClient.get("/orders");
   },
 
   /**
@@ -24,7 +22,7 @@ export default {
    * @returns {Promise<ApiResponse<Order>>} 订单详情
    */
   getOrder(orderId: number): Promise<ApiResponse<Order>> {
-    return apiClient.get(buildRoute(Routes.ORDER_DETAIL, { orderId }));
+    return apiClient.get(`/orders/${orderId}`);
   },
 
   /**
@@ -34,7 +32,7 @@ export default {
    * @returns {Promise<ApiResponse<Payment>>} 支付信息
    */
   payOrder(orderId: number): Promise<ApiResponse<Payment>> {
-    return apiClient.post(buildRoute(Routes.ORDER_PAY, { orderId }));
+    return apiClient.post(`/orders/${orderId}/pay`);
   },
 
   /**
@@ -44,6 +42,6 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 操作结果
    */
   cancelOrder(orderId: number): Promise<ApiResponse<string>> {
-    return apiClient.delete(buildRoute(Routes.ORDER_DETAIL, { orderId }));
+    return apiClient.delete(`/orders/${orderId}`);
   },
 };

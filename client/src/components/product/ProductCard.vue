@@ -5,6 +5,7 @@
         <img
           :src="product.cover || '/images/placeholder.svg'"
           :alt="product.title"
+          referrerPolicy="no-referrer"
           class="w-full h-full object-cover transform transition duration-300 hover:scale-110"
         />
       </div>

@@ -1,4 +1,3 @@
-import { Routes } from "@/constants/routes";
 import type { ApiResponse } from "@/types/api";
 import type {
   LoginParams,
@@ -19,7 +18,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 登录结果
    */
   login(params: LoginParams): Promise<ApiResponse<string>> {
-    return apiClient.post(Routes.USER_LOGIN, params);
+    return apiClient.post("/user/login", params);
   },
 
   /**
@@ -29,7 +28,7 @@ export default {
    * @returns {Promise<ApiResponse<void>>} 注册结果
    */
   register(params: RegisterParams): Promise<ApiResponse<void>> {
-    return apiClient.post(Routes.USER_REGISTER, params);
+    return apiClient.post("/user/register", params);
   },
 
   /**
@@ -38,7 +37,7 @@ export default {
    * @returns {Promise<ApiResponse<User>>} 当前用户信息
    */
   getCurrentUser(): Promise<ApiResponse<User>> {
-    return apiClient.get(Routes.USER_PROFILE);
+    return apiClient.get("/user/profile");
   },
 
   /**
@@ -48,6 +47,6 @@ export default {
    * @returns {Promise<ApiResponse<User>>} 更新结果
    */
   updateUserProfile(params: UpdateUserParams): Promise<ApiResponse<User>> {
-    return apiClient.put(Routes.USER_PROFILE, params);
+    return apiClient.put("/user/profile", params);
   },
 };
