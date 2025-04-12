@@ -35,6 +35,7 @@
               <img
                 :src="product.cover || '@/assets/images/placeholder.svg'"
                 :alt="product.title"
+                referrerPolicy="no-referrer"
                 class="w-full h-full object-cover object-center"
               />
             </div>

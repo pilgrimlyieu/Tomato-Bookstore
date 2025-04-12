@@ -8,6 +8,7 @@
       <img
         :src="advertisement.imageUrl"
         :alt="advertisement.title"
+        referrerPolicy="no-referrer"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <!-- 广告标题横幅 -->
