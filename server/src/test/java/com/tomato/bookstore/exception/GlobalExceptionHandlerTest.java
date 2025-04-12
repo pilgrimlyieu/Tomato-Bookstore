@@ -45,7 +45,7 @@ public class GlobalExceptionHandlerTest {
 
     // 验证
     assertNotNull(response);
-    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getCode());
+    assertEquals(HttpStatus.NOT_FOUND.value(), response.getCode());
     assertEquals("用户不存在", response.getMsg());
   }
 
