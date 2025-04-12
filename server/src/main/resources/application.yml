@@ -41,7 +41,7 @@ logging:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:tomatobookstoresecretkeyiswhatyouguess}
+    secret: ${JWT_SECRET:tomatobookstoresecretkeyiswhatyouguesstomatobookstoresecretkeyiswhatyouguess}
     expiration: 86400000 # 24 小时
   security:
     public-paths: /,/api,/api/user/login,/api/user/register,/api/orders/notify
