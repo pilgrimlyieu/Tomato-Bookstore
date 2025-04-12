@@ -32,4 +32,8 @@ public class ExceptionMessages {
   // 系统通用异常
   public static final String UNAUTHORIZED = "未授权访问";
   public static final String ACCESS_DENIED = "无权限执行此操作";
+
+  // 广告模块异常
+  public static final String ADVERTISEMENT_NOT_FOUND = "广告不存在，ID：%s";
+  public static final String ADVERTISEMENT_TITLE_DUPLICATE = "广告标题已存在：%s";
 }

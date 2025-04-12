@@ -51,4 +51,12 @@ public class ApiConstants {
   public static final String ORDER_PAY_PATH = ORDERS + ORDER_PAY;
   public static final String ORDER_NOTIFY_PATH = ORDERS + ORDER_NOTIFY;
   public static final String ORDER_RETURN_PATH = ORDERS + ORDER_RETURN;
+
+  // 广告相关路径
+  public static final String ADVERTISEMENTS = "/advertisements";
+  public static final String ADVERTISEMENT_DETAIL = "/{id}";
+
+  // 完整广告路径
+  public static final String ADVERTISEMENT_BASE_PATH = ADVERTISEMENTS;
+  public static final String ADVERTISEMENT_DETAIL_PATH = ADVERTISEMENTS + ADVERTISEMENT_DETAIL;
 }
