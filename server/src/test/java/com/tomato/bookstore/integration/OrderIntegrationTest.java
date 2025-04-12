@@ -149,7 +149,7 @@ public class OrderIntegrationTest {
         .perform(
             get(ApiConstants.ORDER_DETAIL_PATH.replace("{orderId}", nonExistingId.toString()))
                 .header("Authorization", "Bearer " + userToken))
-        .andExpect(status().isBadRequest())
+        .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
         .andExpect(jsonPath("$.msg").value("订单不存在，ID：" + nonExistingId));
   }

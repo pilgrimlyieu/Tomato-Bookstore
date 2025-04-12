@@ -213,7 +213,7 @@ public class ProductIntegrationTest {
         .perform(
             get(ApiConstants.PRODUCT_DETAIL_PATH.replace("{id}", nonExistingId.toString()))
                 .header("Authorization", "Bearer " + adminToken))
-        .andExpect(status().isBadRequest())
+        .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
         .andExpect(jsonPath("$.msg").value(String.format("商品不存在，ID：%s", nonExistingId)));
   }
