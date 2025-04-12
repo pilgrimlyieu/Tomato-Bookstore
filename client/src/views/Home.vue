@@ -29,118 +29,14 @@
       </el-carousel>
     </div>
 
-    <!-- 类别快速导航 -->
-    <div class="bg-gray-50 py-10 animate-fade-in">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <router-link v-for="(category, index) in categories" :key="index" :to="category.link"
-            class="bg-white p-4 rounded-xl shadow-sm text-center hover-lift group">
-            <div
-              class="bg-gray-100 p-3 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center group-hover:bg-tomato-50 transition-colors">
-              <img :src="category.icon" :alt="category.name" class="w-8 h-8">
-            </div>
-            <h3 class="text-gray-700 font-medium group-hover:text-tomato-600 transition-colors">{{ category.name }}</h3>
-          </router-link>
-        </div>
-      </div>
-    </div>
-
-    <!-- 新书上架 -->
+    <!-- 广告推荐 -->
     <section class="py-16 px-4">
       <div class="container mx-auto">
         <div class="flex justify-between items-center mb-8">
-          <h2 class="section-title">新书上架</h2>
-          <router-link to="/new-releases" class="text-tomato-600 hover:text-tomato-700 flex items-center group">
-            <span>查看全部</span>
-            <el-icon class="ml-1 group-hover:translate-x-1 transition-transform">
-              <ArrowRight />
-            </el-icon>
-          </router-link>
+          <h2 class="section-title">精选图书推荐</h2>
         </div>
 
-        <el-carousel :interval="4000" type="card" height="320px">
-          <el-carousel-item v-for="(book, index) in newBooks" :key="index">
-            <div class="h-full rounded-lg overflow-hidden group">
-              <div
-                class="h-full flex flex-col bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                <div class="relative h-48 overflow-hidden">
-                  <img :src="book.cover" :alt="book.title"
-                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                  <div class="absolute top-2 right-2 bg-tomato-500 text-white text-xs px-2 py-1 rounded-full">
-                    新书
-                  </div>
-                </div>
-                <div class="p-4 flex flex-col flex-grow">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-1 group-hover:text-tomato-600 transition-colors">{{
-                    book.title }}</h3>
-                  <p class="text-gray-600 text-sm mb-2">{{ book.author }}</p>
-                  <div class="flex items-center mb-3">
-                    <el-rate v-model="book.rating" disabled text-color="#ff9900" />
-                    <span class="text-gray-500 text-xs ml-1">({{ book.reviewCount }})</span>
-                  </div>
-                  <div class="mt-auto flex justify-between items-center">
-                    <span class="text-tomato-600 font-bold">¥{{ book.price.toFixed(2) }}</span>
-                    <el-button size="small" type="primary" plain @click="handleAddToCart(book)">
-                      <el-icon>
-                        <Plus />
-                      </el-icon>
-                      加入购物车
-                    </el-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-    </section>
-
-    <!-- 特惠商品 -->
-    <section class="py-16 px-4 bg-gray-50">
-      <div class="container mx-auto">
-        <div class="flex justify-between items-center mb-8">
-          <h2 class="section-title">特惠活动</h2>
-          <router-link to="/promotions" class="text-tomato-600 hover:text-tomato-700 flex items-center group">
-            <span>查看全部</span>
-            <el-icon class="ml-1 group-hover:translate-x-1 transition-transform">
-              <ArrowRight />
-            </el-icon>
-          </router-link>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div v-for="(promo, index) in promotions" :key="index" class="card-gradient group relative overflow-hidden">
-            <!-- 打折标签 -->
-            <div class="absolute top-0 right-0 bg-tomato-600 text-white z-10 px-3 py-1 font-medium shadow-md">
-              {{ promo.discount }}折
-            </div>
-
-            <!-- 商品图片 -->
-            <div class="relative w-3/5 mx-auto mb-4">
-              <img :src="promo.image" :alt="promo.title"
-                class="w-full h-48 object-contain transition-transform duration-500 group-hover:scale-105">
-            </div>
-
-            <!-- 商品信息 -->
-            <h3 class="text-lg font-semibold text-gray-800 mb-1 group-hover:text-tomato-600 transition-colors">{{
-              promo.title }}</h3>
-            <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ promo.description }}</p>
-
-            <!-- 价格与计时器 -->
-            <div class="mt-2 flex justify-between items-center">
-              <div>
-                <div class="text-tomato-600 font-bold text-lg">¥{{ promo.price.toFixed(2) }}</div>
-                <div class="text-gray-500 line-through text-xs">¥{{ promo.originalPrice.toFixed(2) }}</div>
-              </div>
-              <div class="text-xs text-gray-600">
-                剩余 {{ promo.timeLeft }}
-              </div>
-            </div>
-
-            <!-- 加入购物车按钮 -->
-            <el-button class="w-full mt-4" type="primary" @click="handleBuyNow(promo)">立即抢购</el-button>
-          </div>
-        </div>
+        <advertisement-list />
       </div>
     </section>
 
@@ -148,7 +44,6 @@
     <section class="py-16 px-4 bg-gradient-to-br from-white to-tomato-50">
       <div class="container mx-auto">
         <h2 class="text-3xl font-bold text-center mb-12">为什么选择番茄书城？</h2>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- 特色 1 -->
           <div class="bg-white p-6 rounded-xl shadow-md text-center hover-lift transition-all relative">
@@ -165,7 +60,6 @@
               </p>
             </div>
           </div>
-
           <!-- 特色 2 -->
           <div class="bg-white p-6 rounded-xl shadow-md text-center hover-lift transition-all relative">
             <div
@@ -181,7 +75,6 @@
               </p>
             </div>
           </div>
-
           <!-- 特色 3 -->
           <div class="bg-white p-6 rounded-xl shadow-md text-center hover-lift transition-all relative">
             <div
@@ -206,7 +99,6 @@
       <div class="container mx-auto">
         <h2 class="text-3xl font-bold text-center mb-2">读者心声</h2>
         <p class="text-gray-600 text-center mb-10">来自我们真实客户的评价</p>
-
         <el-carousel :interval="5000" indicator-position="none" height="250px" arrow="always"
           class="testimonial-carousel">
           <el-carousel-item v-for="(testimonial, index) in testimonials" :key="index">
@@ -235,7 +127,6 @@
           <h2 class="text-3xl font-bold mb-2">订阅我们的通讯</h2>
           <p class="text-tomato-100">获取最新图书推荐、特别优惠和阅读灵感</p>
         </div>
-
         <div class="max-w-lg mx-auto">
           <el-form @submit.prevent="handleNewsletter">
             <div class="flex">
@@ -257,18 +148,10 @@
 </template>
 
 <script setup lang="ts">
-import { useCart } from "@/composables/useCart";
-import {
-  ArrowRight,
-  Collection,
-  Discount,
-  Plus,
-  Van,
-} from "@element-plus/icons-vue";
+import AdvertisementList from "@/components/advertisement/AdvertisementList.vue";
+import { Collection, Discount, Van } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { reactive, ref } from "vue";
-
-const { addToCart, buyNow } = useCart();
+import { ref } from "vue";
 
 // 轮播数据
 const carouselSlides = [
@@ -295,124 +178,6 @@ const carouselSlides = [
     link: "/recommendations",
     image:
       "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-  },
-];
-
-// 分类数据
-const categories = [
-  {
-    name: "文学小说",
-    icon: "https://img.icons8.com/color/96/000000/literature.png",
-    link: "/categories/fiction",
-  },
-  {
-    name: "科学技术",
-    icon: "https://img.icons8.com/color/96/000000/microscope.png",
-    link: "/categories/science",
-  },
-  {
-    name: "艺术设计",
-    icon: "https://img.icons8.com/color/96/000000/paint-palette.png",
-    link: "/categories/art",
-  },
-  {
-    name: "历史传记",
-    icon: "https://img.icons8.com/color/96/000000/historical.png",
-    link: "/categories/history",
-  },
-  {
-    name: "教育考试",
-    icon: "https://img.icons8.com/color/96/000000/graduation-cap.png",
-    link: "/categories/education",
-  },
-  {
-    name: "少儿读物",
-    icon: "https://img.icons8.com/color/96/000000/babys-room.png",
-    link: "/categories/children",
-  },
-];
-
-// 新书数据
-const newBooks = reactive([
-  {
-    title: "云边有个小卖部",
-    author: "张嘉佳",
-    price: 38.6,
-    rating: 4.5,
-    reviewCount: 2467,
-    cover: "https://picsum.photos/seed/book1/300/400",
-  },
-  {
-    title: "深度学习",
-    author: "Ian Goodfellow / 等",
-    price: 168.0,
-    rating: 5,
-    reviewCount: 845,
-    cover: "https://picsum.photos/seed/book2/300/400",
-  },
-  {
-    title: "天才在左，疯子在右",
-    author: "高铭",
-    price: 29.8,
-    rating: 4,
-    reviewCount: 5412,
-    cover: "https://picsum.photos/seed/book3/300/400",
-  },
-  {
-    title: "活着",
-    author: "余华",
-    price: 20.0,
-    rating: 4.5,
-    reviewCount: 8954,
-    cover: "https://picsum.photos/seed/book4/300/400",
-  },
-  {
-    title: "人类简史",
-    author: "尤瓦尔·赫拉利",
-    price: 68.0,
-    rating: 4.5,
-    reviewCount: 3268,
-    cover: "https://picsum.photos/seed/book5/300/400",
-  },
-]);
-
-// 特惠商品数据
-const promotions = [
-  {
-    title: "自控力",
-    description: "斯坦福大学最受欢迎心理学课程",
-    price: 39.8,
-    originalPrice: 59.8,
-    discount: 6.7,
-    timeLeft: "2 天 23 小时",
-    image: "https://picsum.photos/seed/promo1/300/400",
-  },
-  {
-    title: "百年孤独",
-    description: "魔幻现实主义文学代表作",
-    price: 29.9,
-    originalPrice: 39.9,
-    discount: 7.5,
-    timeLeft: "3 天 12 小时",
-    image: "https://picsum.photos/seed/promo2/300/400",
-  },
-  {
-    title: "JavaScript 高级程序设计",
-    description: "JS 红宝书最新版",
-    price: 99.0,
-    originalPrice: 129.0,
-    discount: 7.7,
-    timeLeft: "1 天 8 小时",
-    image: "https://picsum.photos/seed/promo3/300/400",
-  },
-  {
-    title: "时间简史",
-    description: "史蒂芬·霍金的宇宙学著作",
-    price: 35.0,
-    originalPrice: 45.0,
-    discount: 7.8,
-    timeLeft: "4 天 5 小时",
-    image: "https://picsum.photos/seed/promo4/300/400",
   },
 ];
 
@@ -466,20 +231,6 @@ const handleNewsletter = () => {
     newsletterEmail.value = "";
     subscribingNewsletter.value = false;
   }, 1000);
-};
-
-// 添加商品到购物车
-const handleAddToCart = async (book: any) => {
-  // TODO: 这里仅为演示，实际项目中应该有书籍的真实 ID
-  const mockBookId = Math.floor(Math.random() * 1000) + 1;
-  await addToCart(mockBookId, 1, book.title);
-};
-
-// 立即抢购
-const handleBuyNow = async (promo: any) => {
-  // 这里仅为演示，实际项目中应该有特惠商品的真实 ID
-  const mockPromoId = Math.floor(Math.random() * 1000) + 1;
-  await buyNow(mockPromoId, 1, promo.title);
 };
 </script>
 
