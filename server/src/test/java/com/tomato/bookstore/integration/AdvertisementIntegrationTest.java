@@ -193,12 +193,12 @@ public class AdvertisementIntegrationTest {
   @Test
   @DisplayName("创建广告失败 - 商品不存在")
   void createAdvertisementProductNotFoundTest() throws Exception {
-    // 创建广告 DTO 用不存在的商品ID
+    // 创建广告 DTO 用不存在的商品 ID
     AdvertisementDTO advertisementDTO = new AdvertisementDTO();
     advertisementDTO.setTitle("新测试广告");
     advertisementDTO.setContent("这是新广告内容");
     advertisementDTO.setImageUrl("https://example.com/new-image.jpg");
-    advertisementDTO.setProductId(9999L); // 不存在的商品ID
+    advertisementDTO.setProductId(9999L); // 不存在的商品 ID
 
     mockMvc
         .perform(
@@ -279,7 +279,7 @@ public class AdvertisementIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    // 获取新创建的广告ID
+    // 获取新创建的广告 ID
     String createJson = createResult.getResponse().getContentAsString();
     Long newAdId = objectMapper.readTree(createJson).path("data").path("id").asLong();
 
