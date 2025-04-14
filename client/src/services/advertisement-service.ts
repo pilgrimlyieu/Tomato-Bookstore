@@ -1,3 +1,4 @@
+import { ADVERTISEMENT_MODULE } from "@/constants/apiPrefix";
 import type { Advertisement } from "@/types/advertisement";
 import type { ApiResponse } from "@/types/api";
 import apiClient from "@/utils/apiClient";
@@ -12,7 +13,7 @@ export default {
    * @returns {Promise<ApiResponse<Advertisement[]>>} 广告列表
    */
   getAllAdvertisements(): Promise<ApiResponse<Advertisement[]>> {
-    return apiClient.get("/advertisements");
+    return apiClient.get(`${ADVERTISEMENT_MODULE}`);
   },
 
   /**
@@ -22,6 +23,6 @@ export default {
    * @returns {Promise<ApiResponse<Advertisement>>} 广告详情
    */
   getAdvertisementById(id: number): Promise<ApiResponse<Advertisement>> {
-    return apiClient.get(`/advertisements/${id}`);
+    return apiClient.get(`${ADVERTISEMENT_MODULE}/${id}`);
   },
 };

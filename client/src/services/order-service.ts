@@ -1,3 +1,4 @@
+import { ORDER_MODULE } from "@/constants/apiPrefix";
 import type { ApiResponse } from "@/types/api";
 import type { Order, Payment } from "@/types/order";
 import apiClient from "@/utils/apiClient";
@@ -12,7 +13,7 @@ export default {
    * @returns {Promise<ApiResponse<Order[]>>} 订单列表
    */
   getOrderList(): Promise<ApiResponse<Order[]>> {
-    return apiClient.get("/orders");
+    return apiClient.get(`${ORDER_MODULE}`);
   },
 
   /**
@@ -22,7 +23,7 @@ export default {
    * @returns {Promise<ApiResponse<Order>>} 订单详情
    */
   getOrder(orderId: number): Promise<ApiResponse<Order>> {
-    return apiClient.get(`/orders/${orderId}`);
+    return apiClient.get(`${ORDER_MODULE}/${orderId}`);
   },
 
   /**
@@ -32,7 +33,7 @@ export default {
    * @returns {Promise<ApiResponse<Payment>>} 支付信息
    */
   payOrder(orderId: number): Promise<ApiResponse<Payment>> {
-    return apiClient.post(`/orders/${orderId}/pay`);
+    return apiClient.post(`${ORDER_MODULE}/${orderId}/pay`);
   },
 
   /**
@@ -42,6 +43,6 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 操作结果
    */
   cancelOrder(orderId: number): Promise<ApiResponse<string>> {
-    return apiClient.delete(`/orders/${orderId}`);
+    return apiClient.delete(`${ORDER_MODULE}/${orderId}`);
   },
 };
