@@ -43,7 +43,7 @@
       <el-table-column prop="title" label="商品名称" min-width="200" show-overflow-tooltip />
       <el-table-column prop="price" label="价格" width="130">
         <template #default="scope">
-          <span class="text-tomato-600 font-medium">¥{{ scope.row.price }}</span>
+          <span class="text-tomato-600 font-medium">{{ formatPrice(scope.row.price) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="评分" width="120" align="center">
@@ -165,6 +165,7 @@
 import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import type { Product } from "@/types/product";
+import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { Plus, Search } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";

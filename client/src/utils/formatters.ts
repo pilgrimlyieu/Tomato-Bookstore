@@ -1,6 +1,7 @@
 /**
  * 格式化日期
- * @param {string | any[]} dateValue 日期值，可以是字符串或数组 [年,月,日,时,分,秒]
+ *
+ * @param {string | any[]} dateValue 日期值，可以是字符串或数组 [年, 月, 日, 时, 分, 秒]
  * @param {Intl.DateTimeFormatOptions} options 格式化选项，默认为中文格式
  * @returns {string} 格式化后的日期字符串，无效日期返回 "-"
  */
@@ -58,7 +59,8 @@ export const formatPrice = (
 ): string => {
   const numPrice = typeof price === "string" ? parseFloat(price) : price;
 
-  if (isNaN(numPrice)) return `${currency}0.00`;
-
+  if (isNaN(numPrice)) {
+    return `${currency}0.00`;
+  }
   return `${currency}${numPrice.toFixed(2)}`;
 };

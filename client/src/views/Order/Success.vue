@@ -26,7 +26,7 @@
 
             <div class="flex justify-between">
               <span class="text-gray-600">支付金额：</span>
-              <span class="font-medium text-tomato-600">¥{{ order.totalAmount.toFixed(2) }}</span>
+              <span class="font-medium text-tomato-600">{{ formatPrice(order.totalAmount) }}</span>
             </div>
 
             <div class="flex justify-between">
@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { Routes } from "@/constants/routes";
 import { useOrderStore } from "@/stores/order";
-import { formatDate } from "@/utils/formatters";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 

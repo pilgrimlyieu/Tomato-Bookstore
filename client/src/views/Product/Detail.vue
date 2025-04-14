@@ -62,7 +62,7 @@
 
             <!-- 价格 -->
             <div class="mb-6">
-              <p class="text-3xl font-bold text-tomato-600">¥{{ product.price }}</p>
+              <p class="text-3xl font-bold text-tomato-600">{{ formatPrice(product.price) }}</p>
             </div>
 
             <!-- 库存信息 -->
@@ -147,6 +147,7 @@
 import { useCart } from "@/composables/useCart";
 import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
+import { formatPrice } from "@/utils/formatters";
 import { ShoppingCart, Star } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { computed, onMounted, ref, watch } from "vue";

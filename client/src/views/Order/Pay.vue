@@ -49,7 +49,7 @@
               <div class="text-sm text-gray-500">请在 30 分钟内完成支付，超时订单将自动取消</div>
             </div>
             <div class="text-xl font-bold text-tomato-600">
-              ¥{{ order.totalAmount.toFixed(2) }}
+              {{ formatPrice(order.totalAmount) }}
             </div>
           </div>
 
@@ -97,6 +97,7 @@ import { Routes } from "@/constants/routes";
 import { useCartStore } from "@/stores/cart";
 import { useOrderStore } from "@/stores/order";
 import { OrderStatus } from "@/types/order";
+import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { getOrderStatusText } from "@/utils/statusHelpers";
 import { ElMessage } from "element-plus";

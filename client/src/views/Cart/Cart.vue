@@ -68,7 +68,7 @@
 
               <!-- 单价 -->
               <div class="col-span-2 text-center">
-                <span class="text-tomato-600 font-medium">¥{{ item.price?.toFixed(2) }}</span>
+                <span class="text-tomato-600 font-medium">{{ formatPrice(item.price) }}</span>
               </div>
 
               <!-- 数量 -->
@@ -85,7 +85,7 @@
               <!-- 小计 -->
               <div class="col-span-2 text-right">
                 <span class="text-tomato-600 font-medium">
-                  ¥{{ (item.price! * item.quantity).toFixed(2) }}
+                  {{ formatPrice(item.price! * item.quantity) }}
                 </span>
               </div>
             </div>
@@ -113,7 +113,7 @@
                   共 <span class="font-medium">{{ cartStore.totalItems }}</span> 件商品，总计：
                 </div>
                 <div class="text-2xl font-bold text-tomato-600">
-                  ¥{{ cartStore.totalAmount.toFixed(2) }}
+                  {{ formatPrice(cartStore.totalAmount) }}
                 </div>
               </div>
               <el-button
@@ -136,6 +136,7 @@
 <script setup lang="ts">
 import { Routes } from "@/constants/routes";
 import { useCartStore } from "@/stores/cart";
+import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessageBox } from "element-plus";
 import { computed, onMounted, ref } from "vue";

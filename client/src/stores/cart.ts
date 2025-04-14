@@ -36,7 +36,7 @@ export const useCartStore = defineStore("cart", {
         const response = await cartService.getUserCart();
 
         if (response.code === HttpStatusCode.Ok) {
-          const cartList = response.data as CartList;
+          const cartList = response.data;
           this.items = cartList.items;
           this.totalAmount = cartList.totalAmount;
           this.totalItems = cartList.total;
