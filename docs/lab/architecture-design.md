@@ -10,29 +10,29 @@
 
 ### 词汇表
 
-| 词汇名称        | 词汇含义                                                       | 备注                  |
+| 词汇名称        | 词汇含义                                                       | 备注                |
 | :-------------- | :------------------------------------------------------------- | :------------------ |
-| Spring Boot     | 用于创建独立、生产级的基于 Spring 的应用程序的框架。           | 后端核心框架                                            |
-| Spring Data JPA | Spring Data 项目的一部分，简化了基于 JPA 的数据访问层的实现。  | ORM 框架                                                       |
-| MySQL           | 流行的开源关系型数据库管理系统。                               | 数据库                |
-| Spring Security | 提供身份验证、授权和其他安全功能的框架。                       | 后端安全框架          |
-| JWT             | JSON Web Token，一种用于安全传输信息的开放标准（RFC 7519）。   | 身份认证方案                                                              |
-| Maven           | Java 项目管理和构建自动化工具。                                | 后端构建工具               |
-| Lombok          | 通过注解减少 Java 样板代码的库。                               | 后端辅助工具                            |
-| Vue 3           | 用于构建用户界面的渐进式 JavaScript 框架。                     | 前端核心框架                                              |
-| TypeScript      | JavaScript 的超集，添加了静态类型。                            | 前端开发语言                     |
-| Vite            | 新一代前端构建工具，提供极速的冷启动和热模块替换。             | 前端构建工具          |
-| Element Plus    | 基于 Vue 3 的桌面端 UI 组件库。                                | UI 组件库                                    |
-| Tailwind CSS    | 一个实用工具优先的 CSS 框架。                                  | CSS 框架                                     |
-| Pinia           | Vue 的官方状态管理库。                                         | 前端状态管理              |
-| Vue Router      | Vue.js 的官方路由管理器。                                      | 前端路由管理                 |
-| Axios           | 基于 Promise 的 HTTP 客户端，用于浏览器和 Node.js。            | HTTP 请求库                                                          |
-| RESTful API     | 一种基于 REST 架构风格设计的 Web API。                         | 前后端交互接口风格                                     |
-| DTO             | Data Transfer Object，数据传输对象，用于在不同层之间传输数据。 | 如 `ProductDTO`                     |
-| PO              | Persistent Object，持久化对象，与数据库表映射的 Java 对象。    | 如 `Product` 实体类                                                        |
-| SPA             | Single Page Application，单页面应用。                          | 前端应用模式                      |
-| ORM             | Object-Relational Mapping，对象关系映射。                      | 如 JPA                                  |
-| RBAC            | Role-Based Access Control，基于角色的访问控制。                | 权限管理模型                            |
+| Spring Boot     | 用于创建独立、生产级的基于 Spring 的应用程序的框架。           | 后端核心框架        |
+| Spring Data JPA | Spring Data 项目的一部分，简化了基于 JPA 的数据访问层的实现。  | ORM 框架            |
+| MySQL           | 流行的开源关系型数据库管理系统。                               | 数据库              |
+| Spring Security | 提供身份验证、授权和其他安全功能的框架。                       | 后端安全框架        |
+| JWT             | JSON Web Token，一种用于安全传输信息的开放标准（RFC 7519）。   | 身份认证方案        |
+| Maven           | Java 项目管理和构建自动化工具。                                | 后端构建工具        |
+| Lombok          | 通过注解减少 Java 样板代码的库。                               | 后端辅助工具        |
+| Vue 3           | 用于构建用户界面的渐进式 JavaScript 框架。                     | 前端核心框架        |
+| TypeScript      | JavaScript 的超集，添加了静态类型。                            | 前端开发语言        |
+| Vite            | 新一代前端构建工具，提供极速的冷启动和热模块替换。             | 前端构建工具        |
+| Element Plus    | 基于 Vue 3 的桌面端 UI 组件库。                                | UI 组件库           |
+| Tailwind CSS    | 一个实用工具优先的 CSS 框架。                                  | CSS 框架            |
+| Pinia           | Vue 的官方状态管理库。                                         | 前端状态管理        |
+| Vue Router      | Vue.js 的官方路由管理器。                                      | 前端路由管理        |
+| Axios           | 基于 Promise 的 HTTP 客户端，用于浏览器和 Node.js。            | HTTP 请求库         |
+| RESTful API     | 一种基于 REST 架构风格设计的 Web API。                         | 前后端交互接口风格  |
+| DTO             | Data Transfer Object，数据传输对象，用于在不同层之间传输数据。 | 如 `ProductDTO`     |
+| PO              | Persistent Object，持久化对象，与数据库表映射的 Java 对象。    | 如 `Product` 实体类 |
+| SPA             | Single Page Application，单页面应用。                          | 前端应用模式        |
+| ORM             | Object-Relational Mapping，对象关系映射。                      | 如 JPA              |
+| RBAC            | Role-Based Access Control，基于角色的访问控制。                | 权限管理模型        |
 
 ### 参考资料
 
@@ -261,11 +261,11 @@ flowchart TB
 
 表 1 开发包设计：
 
-| 开发（物理）包 | 依赖的其他开发包                                                                      |
-| :------------- | :--------------------------------------------------------------------------------     |
-| `client`       | `server`（通过 API）                                                                  |
+| 开发（物理）包 | 依赖的其他开发包                                                                    |
+| :------------- | :--------------------------------------------------------------------------------   |
+| `client`       | `server`（通过 API）                                                                |
 | `server`       | `MySQL`（数据库驱动）, `Maven 依赖库`（Spring Boot, JPA, Security, Lombok, JWT 等） |
-| `recommend`    | `server`, `Maven 依赖库`（算法库、数据处理库）                                        |
+| `recommend`    | `server`, `Maven 依赖库`（算法库、数据处理库）                                      |
 
 开发包图：
 
