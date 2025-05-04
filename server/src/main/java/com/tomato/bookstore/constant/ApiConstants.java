@@ -59,4 +59,20 @@ public class ApiConstants {
   // 完整广告路径
   public static final String ADVERTISEMENT_BASE_PATH = ADVERTISEMENTS;
   public static final String ADVERTISEMENT_DETAIL_PATH = ADVERTISEMENTS + ADVERTISEMENT_DETAIL;
+
+  // 书评相关路径
+  public static final String REVIEWS = "/reviews";
+  public static final String REVIEW_DETAIL = "/{reviewId}";
+  public static final String REVIEW_PRODUCT = "/product/{productId}";
+  public static final String REVIEW_USER = "/user";
+  public static final String REVIEW_USER_DETAIL = "/user/{userId}";
+  public static final String REVIEW_ADMIN = "/admin/{reviewId}";
+
+  // 完整书评路径
+  public static final String REVIEW_BASE_PATH = REVIEWS;
+  public static final String REVIEW_DETAIL_PATH = REVIEWS + REVIEW_DETAIL;
+  public static final String REVIEW_PRODUCT_PATH = REVIEWS + REVIEW_PRODUCT;
+  public static final String REVIEW_USER_PATH = REVIEWS + REVIEW_USER;
+  public static final String REVIEW_USER_DETAIL_PATH = REVIEWS + REVIEW_USER_DETAIL;
+  public static final String REVIEW_ADMIN_PATH = REVIEWS + REVIEW_ADMIN;
 }
