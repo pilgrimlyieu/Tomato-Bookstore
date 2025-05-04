@@ -9,7 +9,9 @@ export const formatDate = (
   dateValue?: string | any[],
   options?: Intl.DateTimeFormatOptions,
 ): string => {
-  if (!dateValue) return "-";
+  if (!dateValue) {
+    return "-";
+  }
 
   // 默认格式化选项
   const defaultOptions: Intl.DateTimeFormatOptions = {
@@ -49,18 +51,16 @@ export const formatDate = (
 /**
  * 格式化价格
  *
- * @param {number | string} price 价格数值
- * @param {string} currency 货币符号，默认为 "¥"
+ * @param {number | undefined} price 价格数值
  * @returns {string} 格式化后的价格字符串
  */
-export const formatPrice = (
-  price: number | string,
-  currency: string = "¥",
-): string => {
-  const numPrice = typeof price === "string" ? parseFloat(price) : price;
-
-  if (isNaN(numPrice)) {
-    return `${currency}0.00`;
+export const formatPrice = (price?: number): string => {
+  if (price === undefined || price === null) {
+    return "¥0.00";
   }
-  return `${currency}${numPrice.toFixed(2)}`;
+  return new Intl.NumberFormat("zh-CN", {
+    style: "currency",
+    currency: "CNY",
+    minimumFractionDigits: price % 1 === 0 ? 0 : 2,
+  }).format(price);
 };
