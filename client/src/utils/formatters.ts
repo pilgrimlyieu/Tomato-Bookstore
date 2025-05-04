@@ -51,8 +51,8 @@ export const formatDate = (
 /**
  * 格式化价格
  *
- * @param {number | undefined} price 价格数值
- * @returns {string} 格式化后的价格字符串
+ * @param {number | null | undefined} price 价格数值。如果为 null 或 undefined，则返回默认值 "¥0.00"。
+ * @returns {string} 格式化后的价格字符串，使用人民币 (CNY) 货币格式。
  */
 export const formatPrice = (price?: number): string => {
   if (price === undefined || price === null) {
