@@ -58,9 +58,21 @@ export const formatPrice = (price?: number): string => {
   if (price === undefined || price === null) {
     return "¥0.00";
   }
+export const formatPrice = (
+  price?: number,
+  currency: string = 'CNY',
+  locale: string = 'zh-CN'
+): string => {
+  if (price === undefined || price === null) {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: 2,
+    }).format(0);
+  }
   return new Intl.NumberFormat("zh-CN", {
     style: "currency",
-    currency: "CNY",
+    currency: currency,
     minimumFractionDigits: price % 1 === 0 ? 0 : 2,
   }).format(price);
 };
