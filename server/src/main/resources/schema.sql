@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS specifications;
 
 DROP TABLE IF EXISTS stockpiles;
 
+DROP TABLE IF EXISTS reviews;
+
 DROP TABLE IF EXISTS products;
 
 DROP TABLE IF EXISTS users;
@@ -106,6 +108,20 @@ CREATE TABLE advertisements (
     FOREIGN KEY (product_id) REFERENCES products(id)
 ) COMMENT='广告表';
 
+-- 创建书评表
+CREATE TABLE reviews (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '书评 ID',
+    product_id BIGINT NOT NULL COMMENT '商品 ID，关联商品表',
+    user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
+    rating INT NOT NULL COMMENT '评分（0-10）',
+    content TEXT COMMENT '评论内容',
+    created_at TIMESTAMP NOT NULL COMMENT '创建时间',
+    updated_at TIMESTAMP COMMENT '更新时间',
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE KEY uk_product_user (product_id, user_id) COMMENT '一个用户对一本书只能有一个评价'
+) COMMENT='书评表';
+
 -- 为外键创建索引以提高查询性能
 CREATE INDEX idx_stockpile_product ON stockpiles (product_id);
 CREATE INDEX idx_specification_product ON specifications (product_id);
@@ -116,3 +132,5 @@ CREATE INDEX idx_order_user ON orders (user_id);
 CREATE INDEX idx_relation_cart ON carts_orders_relation (cart_id);
 CREATE INDEX idx_relation_order ON carts_orders_relation (order_id);
 CREATE INDEX idx_advertisement_product ON advertisements (product_id);
+CREATE INDEX idx_review_product ON reviews (product_id);
+CREATE INDEX idx_review_user ON reviews (user_id);
