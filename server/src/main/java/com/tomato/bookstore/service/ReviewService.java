@@ -25,8 +25,8 @@ public interface ReviewService {
   /**
    * 创建书评
    *
-   * @param productId       商品 ID
-   * @param userId          用户 ID
+   * @param productId 商品 ID
+   * @param userId 用户 ID
    * @param reviewCreateDTO 书评创建 DTO
    * @return 创建的书评
    */
@@ -35,8 +35,8 @@ public interface ReviewService {
   /**
    * 更新书评
    *
-   * @param reviewId        书评 ID
-   * @param userId          用户 ID
+   * @param reviewId 书评 ID
+   * @param userId 用户 ID
    * @param reviewCreateDTO 书评创建 DTO
    * @return 更新后的书评
    */
@@ -45,7 +45,7 @@ public interface ReviewService {
   /**
    * 管理员更新书评
    *
-   * @param reviewId        书评 ID
+   * @param reviewId 书评 ID
    * @param reviewCreateDTO 书评创建 DTO
    * @return 更新后的书评
    */
@@ -55,7 +55,7 @@ public interface ReviewService {
    * 删除书评
    *
    * @param reviewId 书评 ID
-   * @param userId   用户 ID
+   * @param userId 用户 ID
    */
   void deleteReview(Long reviewId, Long userId);
 

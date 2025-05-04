@@ -20,23 +20,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "reviews")
 public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private Long productId;
+  @Column(nullable = false)
+  private Long productId;
 
-    @Column(nullable = false)
-    private Long userId;
+  @Column(nullable = false)
+  private Long userId;
 
-    @Column(nullable = false)
-    private Integer rating;
+  @Column(nullable = false)
+  private Integer rating;
 
-    private String content;
+  private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+  @Column(nullable = false)
+  private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
+  private LocalDateTime updatedAt;
 }
