@@ -1,3 +1,4 @@
+import { USER_MODULE } from "@/constants/apiPrefix";
 import type { ApiResponse } from "@/types/api";
 import type {
   LoginParams,
@@ -18,7 +19,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 登录结果
    */
   login(params: LoginParams): Promise<ApiResponse<string>> {
-    return apiClient.post("/user/login", params);
+    return apiClient.post(`${USER_MODULE}/login`, params);
   },
 
   /**
@@ -28,7 +29,7 @@ export default {
    * @returns {Promise<ApiResponse<void>>} 注册结果
    */
   register(params: RegisterParams): Promise<ApiResponse<void>> {
-    return apiClient.post("/user/register", params);
+    return apiClient.post(`${USER_MODULE}/register`, params);
   },
 
   /**
@@ -37,7 +38,7 @@ export default {
    * @returns {Promise<ApiResponse<User>>} 当前用户信息
    */
   getCurrentUser(): Promise<ApiResponse<User>> {
-    return apiClient.get("/user/profile");
+    return apiClient.get(`${USER_MODULE}/profile`);
   },
 
   /**
@@ -47,6 +48,6 @@ export default {
    * @returns {Promise<ApiResponse<User>>} 更新结果
    */
   updateUserProfile(params: UpdateUserParams): Promise<ApiResponse<User>> {
-    return apiClient.put("/user/profile", params);
+    return apiClient.put(`${USER_MODULE}/profile`, params);
   },
 };

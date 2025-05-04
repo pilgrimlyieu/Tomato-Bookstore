@@ -21,13 +21,6 @@ export const useProductStore = defineStore("product", {
     adminLoading: false, // 管理员操作加载状态
   }),
 
-  getters: {
-    // 获取特色商品（评分最高的前 4 个）
-    featuredProducts: (state) => {
-      return [...state.products].sort((a, b) => b.rate - a.rate).slice(0, 4);
-    },
-  },
-
   actions: {
     /**
      * 获取所有商品

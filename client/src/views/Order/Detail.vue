@@ -64,7 +64,7 @@
         <div class="bg-white/90 backdrop-blur-md rounded-xl shadow-md p-6">
           <div class="flex justify-between mb-2">
             <span>商品总金额：</span>
-            <span>¥{{ order.totalAmount.toFixed(2) }}</span>
+            <span>{{ formatPrice(order.totalAmount) }}</span>
           </div>
 
           <div class="flex justify-between mb-2">
@@ -74,7 +74,7 @@
 
           <div class="border-t border-dashed mt-4 pt-4 flex justify-between">
             <span class="text-lg">实付金额：</span>
-            <span class="text-xl font-bold text-tomato-600">¥{{ order.totalAmount.toFixed(2) }}</span>
+            <span class="text-xl font-bold text-tomato-600">{{ formatPrice(order.totalAmount) }}</span>
           </div>
         </div>
       </template>
@@ -86,7 +86,7 @@
 import { Routes } from "@/constants/routes";
 import { useOrderStore } from "@/stores/order";
 import { OrderStatus } from "@/types/order";
-import { formatDate } from "@/utils/formatters";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { getPaymentMethodText } from "@/utils/statusHelpers";
 import { getOrderStatusText, getOrderStatusType } from "@/utils/statusHelpers";

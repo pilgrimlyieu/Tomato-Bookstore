@@ -70,7 +70,7 @@
               <div class="text-sm text-gray-500">{{ item.quantity }}件</div>
             </div>
             <div class="text-tomato-600 font-medium">
-              ¥{{ (item.price! * item.quantity).toFixed(2) }}
+              {{ formatPrice(item.price! * item.quantity) }}
             </div>
           </div>
         </div>
@@ -79,12 +79,12 @@
         <div class="bg-white/90 backdrop-blur-md rounded-xl shadow-md p-6">
           <div class="flex justify-between mb-2">
             <span>商品总金额：</span>
-            <span>¥{{ cartStore.totalAmount.toFixed(2) }}</span>
+            <span>{{ formatPrice(cartStore.totalAmount) }}</span>
           </div>
 
           <div class="border-t border-dashed mt-4 pt-4 flex justify-between">
             <span class="text-lg">应付总额：</span>
-            <span class="text-xl font-bold text-tomato-600">¥{{ cartStore.totalAmount.toFixed(2) }}</span>
+            <span class="text-xl font-bold text-tomato-600">{{ formatPrice(cartStore.totalAmount) }}</span>
           </div>
 
           <!-- 结算按钮 -->
@@ -112,6 +112,7 @@ import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/user";
 import type { Checkout } from "@/types/cart";
 import { PaymentMethod } from "@/types/order";
+import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { getCheckoutRules } from "@/utils/validators";
 import type { FormInstance } from "element-plus";

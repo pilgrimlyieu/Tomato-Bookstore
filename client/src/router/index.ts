@@ -29,7 +29,6 @@ const router = createRouter({
       component: () => import("@/views/User/Profile.vue"),
       meta: { title: "个人信息", requiresAuth: true },
     },
-    // 新增商品相关路由
     {
       path: Routes.PRODUCT_LIST,
       name: "products",
@@ -42,7 +41,6 @@ const router = createRouter({
       component: () => import("@/views/Product/Detail.vue"),
       meta: { title: "商品详情" },
     },
-    // 管理员路由
     {
       path: Routes.ADMIN,
       name: "admin",

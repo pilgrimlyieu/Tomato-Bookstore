@@ -1,3 +1,4 @@
+import { PRODUCT_MODULE } from "@/constants/apiPrefix";
 import type { ApiResponse } from "@/types/api";
 import type {
   Product,
@@ -17,7 +18,7 @@ export default {
    * @returns {Promise<ApiResponse<Product[]>>} 所有商品列表
    */
   getAllProducts(): Promise<ApiResponse<Product[]>> {
-    return apiClient.get("/products");
+    return apiClient.get(`${PRODUCT_MODULE}`);
   },
 
   /**
@@ -27,7 +28,7 @@ export default {
    * @returns {Promise<ApiResponse<Product>>} 商品详细信息
    */
   getProductById(id: number): Promise<ApiResponse<Product>> {
-    return apiClient.get(`/products/${id}`);
+    return apiClient.get(`${PRODUCT_MODULE}/${id}`);
   },
 
   /**
@@ -37,7 +38,7 @@ export default {
    * @returns {Promise<ApiResponse<Product>>} 创建的商品
    */
   createProduct(params: ProductParams): Promise<ApiResponse<Product>> {
-    return apiClient.post("/products", params);
+    return apiClient.post(`${PRODUCT_MODULE}`, params);
   },
 
   /**
@@ -47,7 +48,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 更新结果
    */
   updateProduct(params: ProductParams): Promise<ApiResponse<string>> {
-    return apiClient.put("/products", params);
+    return apiClient.put(`${PRODUCT_MODULE}`, params);
   },
 
   /**
@@ -57,7 +58,7 @@ export default {
    * @returns {Promise<ApiResponse<string>>} 删除结果
    */
   deleteProduct(id: number): Promise<ApiResponse<string>> {
-    return apiClient.delete(`/products/${id}`);
+    return apiClient.delete(`${PRODUCT_MODULE}/${id}`);
   },
 
   /**
@@ -67,7 +68,7 @@ export default {
    * @returns {Promise<ApiResponse<Stockpile>>} 商品库存信息
    */
   getStockpile(productId: number): Promise<ApiResponse<Stockpile>> {
-    return apiClient.get(`/products/stockpile/${productId}`);
+    return apiClient.get(`${PRODUCT_MODULE}/stockpile/${productId}`);
   },
 
   /**
@@ -81,6 +82,6 @@ export default {
     productId: number,
     params: StockpileParams,
   ): Promise<ApiResponse<string>> {
-    return apiClient.patch(`/products/stockpile/${productId}`, params);
+    return apiClient.patch(`${PRODUCT_MODULE}/stockpile/${productId}`, params);
   },
 };

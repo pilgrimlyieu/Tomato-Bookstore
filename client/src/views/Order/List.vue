@@ -73,7 +73,7 @@
                 <div class="text-right">
                   <div class="text-gray-500">总计：</div>
                   <div class="text-xl font-bold text-tomato-600">
-                    ¥{{ order.totalAmount.toFixed(2) }}
+                    {{ formatPrice(order.totalAmount) }}
                   </div>
                 </div>
                 <div class="space-x-2">
@@ -131,7 +131,7 @@
 import { Routes } from "@/constants/routes";
 import { useOrderStore } from "@/stores/order";
 import { type Order, OrderStatus } from "@/types/order";
-import { formatDate } from "@/utils/formatters";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { getOrderStatusText, getOrderStatusType } from "@/utils/statusHelpers";
 import { Search } from "@element-plus/icons-vue";

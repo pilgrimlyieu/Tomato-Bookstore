@@ -10,7 +10,4 @@ export const AppConfig = {
   CONTACT_PHONE: "123-456-7890",
   CONTACT_ADDRESS: "中国江苏省苏州市虎丘区太湖大道南京大学苏州校区东校区",
   COPYRIGHT_YEAR: new Date().getFullYear(),
-  DEFAULT_LOCALE: "zh-CN",
-  DEFAULT_PAGE_SIZE: 10,
-  DEFAULT_CURRENCY: "¥",
 };

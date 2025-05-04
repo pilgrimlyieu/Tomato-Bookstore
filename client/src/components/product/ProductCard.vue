@@ -34,7 +34,7 @@
 
       <!-- 价格和操作 -->
       <div class="flex justify-between items-center mt-4">
-        <span class="text-tomato-600 font-medium text-lg">¥{{ product.price }}</span>
+        <span class="text-tomato-600 font-medium text-lg">{{ formatPrice(product.price) }}</span>
         <el-button size="small" type="primary" plain class="rounded-lg" @click.stop="handleAddToCart">
           <el-icon><Plus /></el-icon>
           加入购物车
@@ -48,6 +48,7 @@
 import { useCart } from "@/composables/useCart";
 import { Routes } from "@/constants/routes";
 import type { Product } from "@/types/product";
+import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { Plus } from "@element-plus/icons-vue";
 

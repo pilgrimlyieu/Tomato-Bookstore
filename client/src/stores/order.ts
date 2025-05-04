@@ -28,7 +28,7 @@ export const useOrderStore = defineStore("order", {
         const response = await orderService.getOrder(orderId);
 
         if (response.code === HttpStatusCode.Ok) {
-          this.currentOrder = response.data as Order;
+          this.currentOrder = response.data;
           return true;
         }
         return false;
@@ -53,7 +53,7 @@ export const useOrderStore = defineStore("order", {
         const response = await orderService.payOrder(orderId);
 
         if (response.code === HttpStatusCode.Ok) {
-          this.payment = response.data as Payment;
+          this.payment = response.data;
           return this.payment;
         }
         return null;
@@ -107,7 +107,7 @@ export const useOrderStore = defineStore("order", {
         const response = await orderService.getOrderList();
 
         if (response.code === HttpStatusCode.Ok) {
-          this.orderList = response.data as Order[];
+          this.orderList = response.data;
           return true;
         }
         return false;
