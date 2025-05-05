@@ -29,12 +29,12 @@ public class ReviewServiceImpl implements ReviewService {
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
 
+  private static final int BASE_RATING = 8; // 基准评分
+
   @Override
   public List<ReviewDTO> getReviewsByProductId(Long productId) {
     // 确认商品存在
-    productRepository
-        .findById(productId)
-        .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", productId));
+    getProductById(productId);
 
     List<Review> reviews = reviewRepository.findByProductIdOrderByCreatedAtDesc(productId);
 
@@ -45,9 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
   @Override
   public List<ReviewDTO> getReviewsByUserId(Long userId) {
     // 确认用户存在
-    userRepository
-        .findById(userId)
-        .orElseThrow(() -> ResourceNotFoundException.create("用户", "id", userId));
+    getUserById(userId);
 
     List<Review> reviews = reviewRepository.findByUserId(userId);
 
@@ -59,16 +57,10 @@ public class ReviewServiceImpl implements ReviewService {
   @Transactional
   public ReviewDTO createReview(Long productId, Long userId, ReviewCreateDTO reviewCreateDTO) {
     // 检查商品是否存在
-    Product product =
-        productRepository
-            .findById(productId)
-            .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", productId));
+    Product product = getProductById(productId);
 
     // 检查用户是否存在
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(() -> ResourceNotFoundException.create("用户", "id", userId));
+    getUserById(userId);
 
     // 检查用户是否已经评论过该商品
     if (reviewRepository.existsByProductIdAndUserId(productId, userId)) {
@@ -99,10 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
   @Transactional
   public ReviewDTO updateReview(Long reviewId, Long userId, ReviewCreateDTO reviewCreateDTO) {
     // 检查书评是否存在且属于该用户
-    Review review =
-        reviewRepository
-            .findById(reviewId)
-            .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
+    Review review = getReviewById(reviewId);
 
     if (!review.getUserId().equals(userId)) {
       throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
@@ -117,10 +106,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("用户 {} 更新了书评 {}", userId, reviewId);
 
     // 更新商品评分
-    Product product =
-        productRepository
-            .findById(review.getProductId())
-            .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", review.getProductId()));
+    Product product = getProductById(userId);
     updateProductRating(product);
 
     return convertToDTO(updatedReview);
@@ -130,10 +116,7 @@ public class ReviewServiceImpl implements ReviewService {
   @Transactional
   public ReviewDTO updateReviewByAdmin(Long reviewId, ReviewCreateDTO reviewCreateDTO) {
     // 检查书评是否存在
-    Review review =
-        reviewRepository
-            .findById(reviewId)
-            .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
+    Review review = getReviewById(reviewId);
 
     // 更新书评
     review.setRating(reviewCreateDTO.getRating());
@@ -144,10 +127,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("管理员更新了书评 {}", reviewId);
 
     // 更新商品评分
-    Product product =
-        productRepository
-            .findById(review.getProductId())
-            .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", review.getProductId()));
+    Product product = getProductById(reviewId);
     updateProductRating(product);
 
     return convertToDTO(updatedReview);
@@ -157,10 +137,7 @@ public class ReviewServiceImpl implements ReviewService {
   @Transactional
   public void deleteReview(Long reviewId, Long userId) {
     // 检查书评是否存在且属于该用户
-    Review review =
-        reviewRepository
-            .findById(reviewId)
-            .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
+    Review review = getReviewById(reviewId);
 
     if (!review.getUserId().equals(userId)) {
       throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
@@ -171,10 +148,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("用户 {} 删除了书评 {}", userId, reviewId);
 
     // 更新商品评分
-    Product product =
-        productRepository
-            .findById(review.getProductId())
-            .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", review.getProductId()));
+    Product product = getProductById(review.getProductId());
     updateProductRating(product);
   }
 
@@ -182,20 +156,14 @@ public class ReviewServiceImpl implements ReviewService {
   @Transactional
   public void deleteReviewByAdmin(Long reviewId) {
     // 检查书评是否存在
-    Review review =
-        reviewRepository
-            .findById(reviewId)
-            .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
+    Review review = getReviewById(reviewId);
 
     // 删除书评
     reviewRepository.delete(review);
     log.info("管理员删除了书评 {}", reviewId);
 
     // 更新商品评分
-    Product product =
-        productRepository
-            .findById(review.getProductId())
-            .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", review.getProductId()));
+    Product product = getProductById(review.getProductId());
     updateProductRating(product);
   }
 
@@ -229,6 +197,39 @@ public class ReviewServiceImpl implements ReviewService {
   }
 
   /**
+   * 获取商品信息
+   *
+   * @param productId 商品 ID
+   * @return 商品信息
+   */
+  private Product getProductById(Long productId) {
+    return productRepository.findById(productId)
+        .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", productId));
+  }
+
+  /**
+   * 获取用户信息
+   *
+   * @param userId 用户 ID
+   * @return 用户信息
+   */
+  private User getUserById(Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> ResourceNotFoundException.create("用户", "id", userId));
+  }
+
+  /**
+   * 获取书评信息
+   *
+   * @param reviewId 书评 ID
+   * @return 书评信息
+   */
+  private Review getReviewById(Long reviewId) {
+    return reviewRepository.findById(reviewId)
+        .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
+  }
+
+  /**
    * 更新商品评分
    *
    * <p>使用简单的加权平均算法，基准评分权重为 1，用户评分权重为 2
@@ -241,8 +242,7 @@ public class ReviewServiceImpl implements ReviewService {
     if (averageRating != null) {
       // 加权平均：基准评分权重为 1，用户评分平均值权重为 2
       // 最终评分 = (基准评分 + 用户评分平均值 * 2) / 3
-      int baseRating = 8; // 基准评分
-      int finalRating = (int) Math.round((baseRating + averageRating * 2) / 3);
+      int finalRating = (int) Math.round((BASE_RATING + averageRating * 2) / 3);
       product.setRate(finalRating);
       productRepository.save(product);
       log.info("更新商品 {} 评分为 {}", product.getId(), finalRating);
