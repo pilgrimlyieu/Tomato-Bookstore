@@ -58,9 +58,14 @@
                 />
               </div>
               <span class="text-gray-600">{{ product.rate }}/10</span>
-              <span class="text-blue-500 ml-2 cursor-pointer" @click="scrollToReviews">
+                <span
+                v-if="totalReviews > 0"
+                class="text-blue-500 ml-2 cursor-pointer"
+                @click="scrollToReviews"
+                >
                 （{{ totalReviews }} 条评价）
-              </span>
+                </span>
+                <span v-else class="text-gray-400 ml-2">（暂无评价）</span>
             </div>
 
             <!-- 价格 -->
@@ -183,6 +188,7 @@ const reviewSection = ref<HTMLElement | null>(null);
 
 // 书评总数
 const totalReviews = computed(() => {
+  if (reviewStore.loading) return 0;
   return reviewStore.productReviews.length;
 });
 
