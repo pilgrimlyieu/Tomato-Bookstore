@@ -34,13 +34,13 @@
         </el-form>
       </div>
 
-      <div class="reviews-table">
+      <div class="reviews-table overflow-x-auto">
         <el-table :data="paginatedReviews" style="width: 100%" v-loading="loading" border>
           <el-table-column prop="id" label="ID" width="80" />
 
           <el-table-column label="用户" width="180">
             <template #default="{ row }">
-              <div class="user-info flex items-center gap-2">
+              <div class="user-info items-center gap-2">
                 <el-avatar :size="32" :src="row.userAvatar">
                   {{ row.username?.substring(0, 1).toUpperCase() }}
                 </el-avatar>
@@ -60,7 +60,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="评分" width="180">
+          <el-table-column label="评分" width="150">
             <template #default="{ row }">
               <el-rate
                 v-model="row.rating"
@@ -72,7 +72,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="content" label="评论内容" min-width="300">
+          <el-table-column prop="content" label="评论内容" min-width="250">
             <template #default="{ row }">
               <div v-if="row.content" class="content-preview">
                 {{ row.content }}
@@ -81,13 +81,13 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="发表时间" width="180">
+          <el-table-column label="发表时间" width="160" show-overflow-tooltip>
             <template #default="{ row }">
               {{ formatDate(row.createdAt) }}
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column label="操作" width="120">
             <template #default="{ row }">
               <el-button-group>
                 <el-button
@@ -155,68 +155,70 @@
           <h3 class="text-lg font-medium">用户 ID: {{ selectedUserId }}</h3>
         </div>
 
-        <el-table :data="managedUserReviews" style="width: 100%" border>
-          <el-table-column prop="id" label="ID" width="80" />
+        <div class="overflow-x-auto">
+          <el-table :data="managedUserReviews" style="width: 100%" border>
+            <el-table-column prop="id" label="ID" width="80" />
 
-          <el-table-column label="商品" width="100">
-            <template #default="{ row }">
-              <router-link
-                :to="buildRoute(Routes.PRODUCT_DETAIL, { id: row.productId })"
-                class="text-primary hover:underline"
-              >
-                ID: {{ row.productId }}
-              </router-link>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="评分" width="180">
-            <template #default="{ row }">
-              <el-rate
-                v-model="row.rating"
-                :max="10"
-                disabled
-                show-score
-                score-template="{value}"
-              />
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="content" label="评论内容" min-width="300">
-            <template #default="{ row }">
-              <div v-if="row.content" class="content-preview">
-                {{ row.content }}
-              </div>
-              <div v-else class="text-gray-400 italic">无评论内容</div>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="发表时间" width="180">
-            <template #default="{ row }">
-              {{ formatDate(row.createdAt) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="操作" width="150">
-            <template #default="{ row }">
-              <el-button-group>
-                <el-button
-                  type="primary"
-                  link
-                  @click="handleEdit(row)"
+            <el-table-column label="商品" width="100">
+              <template #default="{ row }">
+                <router-link
+                  :to="buildRoute(Routes.PRODUCT_DETAIL, { id: row.productId })"
+                  class="text-primary hover:underline"
                 >
-                  编辑
-                </el-button>
-                <el-button
-                  type="danger"
-                  link
-                  @click="handleDelete(row)"
-                >
-                  删除
-                </el-button>
-              </el-button-group>
-            </template>
-          </el-table-column>
-        </el-table>
+                  ID: {{ row.productId }}
+                </router-link>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="评分" width="150">
+              <template #default="{ row }">
+                <el-rate
+                  v-model="row.rating"
+                  :max="10"
+                  disabled
+                  show-score
+                  score-template="{value}"
+                />
+              </template>
+            </el-table-column>
+
+            <el-table-column prop="content" label="评论内容" min-width="250">
+              <template #default="{ row }">
+                <div v-if="row.content" class="content-preview">
+                  {{ row.content }}
+                </div>
+                <div v-else class="text-gray-400 italic">无评论内容</div>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="发表时间" width="160" show-overflow-tooltip>
+              <template #default="{ row }">
+                {{ formatDate(row.createdAt) }}
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作" width="120">
+              <template #default="{ row }">
+                <el-button-group>
+                  <el-button
+                    type="primary"
+                    link
+                    @click="handleEdit(row)"
+                  >
+                    编辑
+                  </el-button>
+                  <el-button
+                    type="danger"
+                    link
+                    @click="handleDelete(row)"
+                  >
+                    删除
+                  </el-button>
+                </el-button-group>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
 
         <el-empty
           v-if="managedUserReviews.length === 0 && !userReviewsLoading"
@@ -401,6 +403,7 @@ const handleCurrentChange = (val: number) => {
 <style scoped>
 .admin-reviews-container {
   padding: 1.5rem;
+  max-width: 100%;
 }
 
 .content-preview {
