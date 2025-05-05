@@ -241,7 +241,6 @@ import { computed, onMounted, reactive, ref, watch } from "vue";
 const reviewStore = useReviewStore();
 
 // 状态
-const allReviews = ref<Review[]>([]);
 const filters = reactive({
   userId: null as number | null,
   productId: null as number | null,
@@ -260,6 +259,7 @@ const userReviewsLoading = ref(false);
 // 计算属性
 const loading = computed(() => reviewStore.loading);
 const managedUserReviews = computed(() => reviewStore.managedUserReviews);
+const allReviews = computed(() => reviewStore.allReviews);
 
 // 根据过滤条件筛选书评
 const filteredReviews = computed(() => {
@@ -286,45 +286,9 @@ const paginatedReviews = computed(() => {
 });
 
 // 初始化：获取所有书评
-const fetchAllReviews = async () => {
-  try {
-    // 这里模拟获取所有书评，实际项目中可能需要分页加载
-    // 由于没有专门的管理员获取所有书评的 API，这里我们先获取前 100 个商品的书评
-    const productIds = Array.from({ length: 100 }, (_, i) => i + 1);
-    const reviewPromises = [];
-
-    for (const productId of productIds) {
-      reviewPromises.push(reviewStore.fetchProductReviews(productId));
-    }
-
-    await Promise.all(reviewPromises);
-
-    // 合并所有书评并去重
-    const reviewMap = new Map();
-    reviewStore.productReviews.forEach((review) => {
-      reviewMap.set(review.id, review);
-    });
-
-    allReviews.value = Array.from(reviewMap.values());
-  } catch (error) {
-    console.error("获取所有书评失败：", error);
-  }
-};
-
-// 首次加载
 onMounted(async () => {
-  await fetchAllReviews();
+  await reviewStore.fetchAllReviews();
 });
-
-// 处理用户筛选
-watch(
-  () => filters.userId,
-  async (newUserId) => {
-    if (newUserId !== null) {
-      showUserDetail(newUserId);
-    }
-  },
-);
 
 // 搜索
 const handleSearch = async () => {
@@ -415,8 +379,8 @@ const handleDelete = async (review: Review) => {
     const success = await reviewStore.deleteReviewByAdmin(review.id);
 
     if (success) {
-      // 从本地列表中移除
-      allReviews.value = allReviews.value.filter((r) => r.id !== review.id);
+      // 从所有书评列表中移除
+      reviewStore.removeReviewFromAllReviews(review.id);
     }
   } catch {
     // 用户取消删除

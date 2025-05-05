@@ -71,6 +71,19 @@ public class ReviewController {
   }
 
   /**
+   * 获取所有书评（仅管理员）
+   *
+   * @return 书评列表
+   */
+  @GetMapping("/all")
+  @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
+  public ApiResponse<List<ReviewDTO>> getAllReviews() {
+      log.info("管理员查看所有书评");
+      List<ReviewDTO> reviews = reviewService.getAllReviews();
+      return ApiResponse.success(reviews);
+  }
+
+  /**
    * 创建书评
    *
    * @param productId 商品 ID

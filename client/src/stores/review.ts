@@ -16,6 +16,7 @@ export const useReviewStore = defineStore("review", {
     productReviews: [] as Review[], // 当前查看的商品书评列表
     userReviews: [] as Review[], // 当前用户的书评列表
     managedUserReviews: [] as Review[], // 管理员查看的用户书评列表（仅管理员）
+    allReviews: [] as Review[], // 所有书评列表（仅管理员）
     currentReview: null as Review | null, // 当前操作的书评
     loading: false, // 加载状态
   }),
@@ -106,6 +107,24 @@ export const useReviewStore = defineStore("review", {
           this.managedUserReviews = data;
         },
         `获取用户书评列表失败（用户ID: ${userId}）：`,
+        true,
+      );
+    },
+
+    /**
+     * 获取所有书评（仅管理员）
+     *
+     * @returns {Promise<void>}
+     */
+    async fetchAllReviews(): Promise<void> {
+      await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.getAllReviews(),
+        (data) => {
+          this.allReviews = data;
+        },
+        "获取所有书评失败：",
         true,
       );
     },
@@ -244,6 +263,17 @@ export const useReviewStore = defineStore("review", {
         true,
         [HttpStatusCode.Ok],
         "书评已删除",
+      );
+    },
+
+    /**
+     * 从所有书评列表中移除书评
+     *
+     * @param {number} reviewId 书评 ID
+     */
+    removeReviewFromAllReviews(reviewId: number): void {
+      this.allReviews = this.allReviews.filter(
+        (review) => review.id !== reviewId,
       );
     },
 

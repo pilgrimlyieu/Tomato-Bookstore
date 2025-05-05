@@ -41,6 +41,15 @@ export default {
   },
 
   /**
+   * 获取所有书评（仅管理员）
+   *
+   * @returns {Promise<ApiResponse<Review[]>>} 书评列表
+   */
+  getAllReviews(): Promise<ApiResponse<Review[]>> {
+    return apiClient.get(`${REVIEW_MODULE}/all`);
+  },
+
+  /**
    * 创建书评
    *
    * @param {number} productId 商品 ID
