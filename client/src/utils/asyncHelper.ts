@@ -67,9 +67,9 @@ export async function performAsync<T, R = boolean>(
  * @param {string} [successMessage] 成功提示消息
  * @returns {Promise<boolean>} 是否成功
  */
-export async function performAsyncAction<T>(
-  state: any,
-  loadingKey: string,
+export async function performAsyncAction<T, S>(
+  state: S,
+  loadingKey: keyof S,
   apiCall: () => Promise<ApiResponse<T>>,
   onSuccess: (data: T) => void,
   errorMessage: string,

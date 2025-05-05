@@ -90,7 +90,9 @@ export const useProductStore = defineStore("product", {
         this,
         "adminLoading",
         () => productService.createProduct(product),
-        () => {},
+        (created: Product) => {
+          this.products.unshift(created);
+        },
         "创建商品失败：",
         true,
         [HttpStatusCode.Ok],

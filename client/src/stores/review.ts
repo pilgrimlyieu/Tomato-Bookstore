@@ -201,14 +201,6 @@ export const useReviewStore = defineStore("review", {
         (data) => {
           // 更新本地数据
           this.updateLocalReviewData(data);
-
-          // 更新管理员查看的用户书评列表
-          const index = this.managedUserReviews.findIndex(
-            (review) => review.id === reviewId,
-          );
-          if (index !== -1) {
-            this.managedUserReviews[index] = data;
-          }
         },
         `管理员更新书评失败（ID: ${reviewId}）：`,
         true,
@@ -253,11 +245,6 @@ export const useReviewStore = defineStore("review", {
         () => {
           // 从本地列表中移除
           this.removeLocalReview(reviewId);
-
-          // 从管理员查看的用户书评列表中移除
-          this.managedUserReviews = this.managedUserReviews.filter(
-            (review) => review.id !== reviewId,
-          );
         },
         `管理员删除书评失败（ID: ${reviewId}）：`,
         true,
@@ -267,37 +254,26 @@ export const useReviewStore = defineStore("review", {
     },
 
     /**
-     * 从所有书评列表中移除书评
-     *
-     * @param {number} reviewId 书评 ID
-     */
-    removeReviewFromAllReviews(reviewId: number): void {
-      this.allReviews = this.allReviews.filter(
-        (review) => review.id !== reviewId,
-      );
-    },
-
-    /**
      * 更新本地书评数据
      *
      * @param {Review} updatedReview 更新后的书评
      */
     updateLocalReviewData(updatedReview: Review): void {
-      // 更新商品书评列表
-      const productIndex = this.productReviews.findIndex(
-        (review) => review.id === updatedReview.id,
-      );
-      if (productIndex !== -1) {
-        this.productReviews[productIndex] = updatedReview;
-      }
+      // 定义一个辅助函数来更新列表中的评论
+      const updateInList = (list: Review[]) => {
+        const index = list.findIndex(
+          (review) => review.id === updatedReview.id,
+        );
+        if (index !== -1) {
+          list[index] = updatedReview;
+        }
+      };
 
-      // 更新用户书评列表
-      const userIndex = this.userReviews.findIndex(
-        (review) => review.id === updatedReview.id,
-      );
-      if (userIndex !== -1) {
-        this.userReviews[userIndex] = updatedReview;
-      }
+      // 更新所有列表
+      updateInList(this.productReviews);
+      updateInList(this.userReviews);
+      updateInList(this.managedUserReviews);
+      updateInList(this.allReviews);
 
       // 更新当前书评
       if (this.currentReview && this.currentReview.id === updatedReview.id) {
@@ -311,10 +287,17 @@ export const useReviewStore = defineStore("review", {
      * @param {number} reviewId 书评 ID
      */
     removeLocalReview(reviewId: number): void {
+      // 从所有列表中移除指定 ID 的评论
       this.productReviews = this.productReviews.filter(
         (review) => review.id !== reviewId,
       );
       this.userReviews = this.userReviews.filter(
+        (review) => review.id !== reviewId,
+      );
+      this.managedUserReviews = this.managedUserReviews.filter(
+        (review) => review.id !== reviewId,
+      );
+      this.allReviews = this.allReviews.filter(
         (review) => review.id !== reviewId,
       );
 

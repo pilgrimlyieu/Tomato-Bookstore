@@ -42,9 +42,12 @@
                       我的书评
                       <el-badge :value="userReviews.length" type="primary" class="ml-2" v-if="userReviews.length > 0" />
                     </h3>
-                    <el-button type="primary" size="small" class="rounded-lg" :disabled="userReviews.length === 0">
-                      查看全部 <el-icon class="ml-1"><arrow-right /></el-icon>
-                    </el-button>
+                    <router-link :to="{ path: Routes.USER_REVIEWS }">
+                      <el-button type="primary" size="small" class="rounded-lg" :disabled="userReviews.length === 0">
+                        查看全部 <el-icon class="ml-1"><arrow-right /></el-icon>
+                      </el-button>
+                    </router-link>
+
                   </div>
 
                     <div v-if="userReviews.length > 0">

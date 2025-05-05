@@ -175,6 +175,8 @@ const handleUpdateReview = async (formData: ReviewUpdateParams) => {
     if (success) {
       showEditDialog.value = false;
       currentEditReview.value = null;
+    } else {
+      ElMessage.error("更新评论失败，请重试");
     }
   } finally {
     formLoading.value = false;

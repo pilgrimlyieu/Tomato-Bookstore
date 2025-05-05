@@ -378,12 +378,7 @@ const handleDelete = async (review: Review) => {
       },
     );
 
-    const success = await reviewStore.deleteReviewByAdmin(review.id);
-
-    if (success) {
-      // 从所有书评列表中移除
-      reviewStore.removeReviewFromAllReviews(review.id);
-    }
+    await reviewStore.deleteReviewByAdmin(review.id);
   } catch {
     // 用户取消删除
   }
