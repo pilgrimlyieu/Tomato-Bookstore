@@ -14,8 +14,8 @@ CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    phone VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(255) NOT NULL UNIQUE,
     avatar VARCHAR(255),
     address VARCHAR(255),
     role VARCHAR(20) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE stockpiles (
     product_id BIGINT NOT NULL,
     amount INT NOT NULL,
     frozen INT NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 );
 
 -- 创建商品规格表
@@ -51,7 +51,7 @@ CREATE TABLE specifications (
     product_id BIGINT NOT NULL,
     item VARCHAR(255) NOT NULL,
     value VARCHAR(255) NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 );
 
 -- 创建购物车表
@@ -78,7 +78,7 @@ CREATE TABLE orders (
     payment_time TIMESTAMP COMMENT '支付时间',
     created_at TIMESTAMP NOT NULL COMMENT '订单创建时间',
     updated_at TIMESTAMP COMMENT '订单更新时间',
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) COMMENT='订单表';
 
 -- 创建购物车商品与订单关联表
@@ -126,8 +126,6 @@ CREATE INDEX idx_order_user ON orders (user_id);
 CREATE INDEX idx_relation_cart ON carts_orders_relation (cart_id);
 CREATE INDEX idx_relation_order ON carts_orders_relation (order_id);
 CREATE INDEX idx_advertisement_product ON advertisements (product_id);
-CREATE INDEX idx_review_product ON reviews (product_id);
 CREATE INDEX idx_review_user ON reviews (user_id);
 CREATE INDEX idx_product_rate ON products (rate);
-CREATE INDEX idx_order_status ON orders (status);
 CREATE INDEX idx_review_product_created ON reviews (product_id, created_at DESC);
