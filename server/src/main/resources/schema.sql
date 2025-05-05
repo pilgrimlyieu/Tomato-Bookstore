@@ -1,20 +1,13 @@
 DROP TABLE IF EXISTS carts_orders_relation;
-
 DROP TABLE IF EXISTS orders;
-
 DROP TABLE IF EXISTS carts;
-
 DROP TABLE IF EXISTS specifications;
-
 DROP TABLE IF EXISTS stockpiles;
-
 DROP TABLE IF EXISTS reviews;
-
+DROP TABLE IF EXISTS advertisements;
 DROP TABLE IF EXISTS products;
-
 DROP TABLE IF EXISTS users;
 
-DROP TABLE IF EXISTS advertisements;
 
 -- 创建用户表
 CREATE TABLE users (
@@ -113,7 +106,7 @@ CREATE TABLE reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '书评 ID',
     product_id BIGINT NOT NULL COMMENT '商品 ID，关联商品表',
     user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
-    rating INT NOT NULL COMMENT '评分（0-10）',
+    rating INT NOT NULL COMMENT '评分（0-10）' CHECK (rating >= 0 AND rating <= 10),
     content TEXT COMMENT '评论内容',
     created_at TIMESTAMP NOT NULL COMMENT '创建时间',
     updated_at TIMESTAMP COMMENT '更新时间',
