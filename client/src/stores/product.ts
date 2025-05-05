@@ -1,5 +1,6 @@
 import productService from "@/services/product-service";
 import type { Product, ProductParams, StockpileParams } from "@/types/product";
+import { performAsync, performAsyncAction } from "@/utils/asyncHelper";
 import { HttpStatusCode } from "axios";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
@@ -28,19 +29,16 @@ export const useProductStore = defineStore("product", {
      * @returns {Promise<void>}
      */
     async fetchAllProducts(): Promise<void> {
-      try {
-        this.loading = true;
-        const response = await productService.getAllProducts();
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.products = response.data;
-        }
-      } catch (error) {
-        console.error("获取商品列表失败：", error);
-        ElMessage.error("获取商品列表失败");
-      } finally {
-        this.loading = false;
-      }
+      await performAsyncAction(
+        this,
+        "loading",
+        () => productService.getAllProducts(),
+        (data) => {
+          this.products = data;
+        },
+        "获取商品列表失败：",
+        true,
+      );
     },
 
     /**
@@ -50,19 +48,16 @@ export const useProductStore = defineStore("product", {
      * @returns {Promise<void>}
      */
     async fetchProductById(id: number): Promise<void> {
-      try {
-        this.loading = true;
-        const response = await productService.getProductById(id);
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.currentProduct = response.data;
-        }
-      } catch (error) {
-        console.error(`获取商品详情失败（ID: ${id}）：`, error);
-        ElMessage.error("获取商品详情失败");
-      } finally {
-        this.loading = false;
-      }
+      await performAsyncAction(
+        this,
+        "loading",
+        () => productService.getProductById(id),
+        (data) => {
+          this.currentProduct = data;
+        },
+        `获取商品详情失败（ID: ${id}）：`,
+        true,
+      );
     },
 
     /**
@@ -72,18 +67,16 @@ export const useProductStore = defineStore("product", {
      * @returns {Promise<void>}
      */
     async fetchStockpile(productId: number): Promise<void> {
-      try {
-        this.loading = true;
-        const response = await productService.getStockpile(productId);
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.currentStockpile = response.data;
-        }
-      } catch (error) {
-        console.error(`获取商品库存失败（ID: ${productId}）：`, error);
-      } finally {
-        this.loading = false;
-      }
+      await performAsyncAction(
+        this,
+        "loading",
+        () => productService.getStockpile(productId),
+        (data) => {
+          this.currentStockpile = data;
+        },
+        `获取商品库存失败（ID: ${productId}）：`,
+        false, // 不显示错误消息
+      );
     },
 
     /**
@@ -93,21 +86,16 @@ export const useProductStore = defineStore("product", {
      * @returns {Promise<boolean>} 是否创建成功
      */
     async createProduct(product: ProductParams): Promise<boolean> {
-      try {
-        this.adminLoading = true;
-        const response = await productService.createProduct(product);
-
-        if (response.code === HttpStatusCode.Ok) {
-          ElMessage.success("商品创建成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("创建商品失败：", error);
-        return false;
-      } finally {
-        this.adminLoading = false;
-      }
+      return await performAsyncAction(
+        this,
+        "adminLoading",
+        () => productService.createProduct(product),
+        () => {},
+        "创建商品失败：",
+        true,
+        [HttpStatusCode.Ok],
+        "商品创建成功",
+      );
     },
 
     /**
@@ -116,25 +104,20 @@ export const useProductStore = defineStore("product", {
      * @returns {Promise<boolean>} 是否更新成功
      */
     async updateProduct(product: ProductParams): Promise<boolean> {
-      try {
-        this.adminLoading = true;
-        const response = await productService.updateProduct(product);
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "adminLoading",
+        () => productService.updateProduct(product),
+        () => {
           // 更新本地商品列表
           const index = this.products.findIndex((p) => p.id === product.id);
           if (index !== -1) {
             this.products[index] = { ...this.products[index], ...product };
           }
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`更新商品失败（ID: ${product.id}）：`, error);
-        return false;
-      } finally {
-        this.adminLoading = false;
-      }
+        },
+        `更新商品失败（ID: ${product.id}）：`,
+        true,
+      );
     },
 
     /**
@@ -143,23 +126,19 @@ export const useProductStore = defineStore("product", {
      * @returns {Promise<boolean>} 是否删除成功
      */
     async deleteProduct(id: number): Promise<boolean> {
-      try {
-        this.adminLoading = true;
-        const response = await productService.deleteProduct(id);
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "adminLoading",
+        () => productService.deleteProduct(id),
+        () => {
           // 从本地列表移除
           this.products = this.products.filter((p) => p.id !== id);
-          ElMessage.success("商品删除成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`删除商品失败（ID: ${id}）：`, error);
-        return false;
-      } finally {
-        this.adminLoading = false;
-      }
+        },
+        `删除商品失败（ID: ${id}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        "商品删除成功",
+      );
     },
 
     /**
@@ -172,30 +151,23 @@ export const useProductStore = defineStore("product", {
       productId: number,
       params: StockpileParams,
     ): Promise<boolean> {
-      try {
-        this.adminLoading = true;
-        const response = await productService.updateStockpile(
-          productId,
-          params,
-        );
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "adminLoading",
+        () => productService.updateStockpile(productId, params),
+        () => {
           if (
             this.currentStockpile &&
             this.currentStockpile.productId === productId
           ) {
             this.currentStockpile = { ...this.currentStockpile, ...params };
           }
-          ElMessage.success("库存更新成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`更新商品库存失败（ID: ${productId}）：`, error);
-        return false;
-      } finally {
-        this.adminLoading = false;
-      }
+        },
+        `更新商品库存失败（ID: ${productId}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        "库存更新成功",
+      );
     },
 
     /**

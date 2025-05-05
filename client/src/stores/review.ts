@@ -4,8 +4,8 @@ import type {
   ReviewCreateParams,
   ReviewUpdateParams,
 } from "@/types/review";
+import { performAsyncAction } from "@/utils/asyncHelper";
 import { HttpStatusCode } from "axios";
-import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 
 /**
@@ -61,19 +61,16 @@ export const useReviewStore = defineStore("review", {
      * @returns {Promise<void>}
      */
     async fetchProductReviews(productId: number): Promise<void> {
-      try {
-        this.loading = true;
-        const response = await reviewService.getProductReviews(productId);
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.productReviews = response.data;
-        }
-      } catch (error) {
-        console.error(`获取商品书评失败（ID: ${productId}）：`, error);
-        ElMessage.error("获取书评列表失败");
-      } finally {
-        this.loading = false;
-      }
+      await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.getProductReviews(productId),
+        (data) => {
+          this.productReviews = data;
+        },
+        `获取商品书评失败（ID: ${productId}）：`,
+        true,
+      );
     },
 
     /**
@@ -82,19 +79,16 @@ export const useReviewStore = defineStore("review", {
      * @returns {Promise<void>}
      */
     async fetchUserReviews(): Promise<void> {
-      try {
-        this.loading = true;
-        const response = await reviewService.getUserReviews();
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.userReviews = response.data;
-        }
-      } catch (error) {
-        console.error("获取用户书评列表失败：", error);
-        ElMessage.error("获取书评列表失败");
-      } finally {
-        this.loading = false;
-      }
+      await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.getUserReviews(),
+        (data) => {
+          this.userReviews = data;
+        },
+        "获取用户书评列表失败：",
+        true,
+      );
     },
 
     /**
@@ -104,19 +98,16 @@ export const useReviewStore = defineStore("review", {
      * @returns {Promise<void>}
      */
     async fetchUserReviewsByAdmin(userId: number): Promise<void> {
-      try {
-        this.loading = true;
-        const response = await reviewService.getUserReviewsByAdmin(userId);
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.managedUserReviews = response.data;
-        }
-      } catch (error) {
-        console.error(`获取用户书评列表失败（用户ID: ${userId}）：`, error);
-        ElMessage.error("获取用户书评列表失败");
-      } finally {
-        this.loading = false;
-      }
+      await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.getUserReviewsByAdmin(userId),
+        (data) => {
+          this.managedUserReviews = data;
+        },
+        `获取用户书评列表失败（用户ID: ${userId}）：`,
+        true,
+      );
     },
 
     /**
@@ -130,26 +121,21 @@ export const useReviewStore = defineStore("review", {
       productId: number,
       params: ReviewCreateParams,
     ): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await reviewService.createReview(productId, params);
-
-        if (response.code === HttpStatusCode.Created) {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.createReview(productId, params),
+        (data) => {
           // 更新本地商品书评列表
-          this.productReviews.unshift(response.data);
+          this.productReviews.unshift(data);
           // 更新用户书评列表
-          this.userReviews.unshift(response.data);
-
-          ElMessage.success("书评发布成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`创建书评失败（商品ID: ${productId}）：`, error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+          this.userReviews.unshift(data);
+        },
+        `创建书评失败（商品ID: ${productId}）：`,
+        true,
+        [HttpStatusCode.Created],
+        "书评发布成功",
+      );
     },
 
     /**
@@ -163,24 +149,19 @@ export const useReviewStore = defineStore("review", {
       reviewId: number,
       params: ReviewUpdateParams,
     ): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await reviewService.updateReview(reviewId, params);
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.updateReview(reviewId, params),
+        (data) => {
           // 更新本地数据
-          this.updateLocalReviewData(response.data);
-
-          ElMessage.success("书评更新成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`更新书评失败（ID: ${reviewId}）：`, error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+          this.updateLocalReviewData(data);
+        },
+        `更新书评失败（ID: ${reviewId}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        "书评更新成功",
+      );
     },
 
     /**
@@ -194,35 +175,27 @@ export const useReviewStore = defineStore("review", {
       reviewId: number,
       params: ReviewUpdateParams,
     ): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await reviewService.updateReviewByAdmin(
-          reviewId,
-          params,
-        );
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.updateReviewByAdmin(reviewId, params),
+        (data) => {
           // 更新本地数据
-          this.updateLocalReviewData(response.data);
+          this.updateLocalReviewData(data);
 
           // 更新管理员查看的用户书评列表
           const index = this.managedUserReviews.findIndex(
             (review) => review.id === reviewId,
           );
           if (index !== -1) {
-            this.managedUserReviews[index] = response.data;
+            this.managedUserReviews[index] = data;
           }
-
-          ElMessage.success("书评已修改");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`管理员更新书评失败（ID: ${reviewId}）：`, error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+        },
+        `管理员更新书评失败（ID: ${reviewId}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        "书评已修改",
+      );
     },
 
     /**
@@ -232,24 +205,19 @@ export const useReviewStore = defineStore("review", {
      * @returns {Promise<boolean>} 是否删除成功
      */
     async deleteReview(reviewId: number): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await reviewService.deleteReview(reviewId);
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.deleteReview(reviewId),
+        () => {
           // 从本地列表中移除
           this.removeLocalReview(reviewId);
-
-          ElMessage.success("书评已删除");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`删除书评失败（ID: ${reviewId}）：`, error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+        },
+        `删除书评失败（ID: ${reviewId}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        "书评已删除",
+      );
     },
 
     /**
@@ -259,11 +227,11 @@ export const useReviewStore = defineStore("review", {
      * @returns {Promise<boolean>} 是否删除成功
      */
     async deleteReviewByAdmin(reviewId: number): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await reviewService.deleteReviewByAdmin(reviewId);
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => reviewService.deleteReviewByAdmin(reviewId),
+        () => {
           // 从本地列表中移除
           this.removeLocalReview(reviewId);
 
@@ -271,17 +239,12 @@ export const useReviewStore = defineStore("review", {
           this.managedUserReviews = this.managedUserReviews.filter(
             (review) => review.id !== reviewId,
           );
-
-          ElMessage.success("书评已删除");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error(`管理员删除书评失败（ID: ${reviewId}）：`, error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+        },
+        `管理员删除书评失败（ID: ${reviewId}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        "书评已删除",
+      );
     },
 
     /**
