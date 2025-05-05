@@ -23,6 +23,9 @@ export const Routes = {
   ORDER_SUCCESS: "/orders/success",
   ORDER_FAIL: "/orders/fail",
 
+  // 书评
+  USER_REVIEWS: "/user/reviews",
+
   // 管理员
   ADMIN: "/admin",
   ADMIN_PRODUCTS: "/admin/products",
