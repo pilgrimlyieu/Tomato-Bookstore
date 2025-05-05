@@ -155,7 +155,7 @@
     >
       <div v-if="showUserDetailDialog && selectedUserId" v-loading="userReviewsLoading">
         <div class="user-reviews-header mb-4">
-          <h3 class="text-lg font-medium">用户 ID: {{ selectedUserId }}</h3>
+          <h3 class="text-lg font-medium">用户 ID：{{ selectedUserId }}</h3>
         </div>
 
         <div class="overflow-x-auto">
@@ -262,7 +262,7 @@ const currentReview = ref<Review | null>(null);
 const formLoading = ref(false);
 const userReviewsLoading = ref(false);
 
- const tempUserId = ref<number | null>(null);
+const tempUserId = ref<number | null>(null);
 const tempProductId = ref<number | null>(null);
 
 // 创建真正的去抖动处理函数
@@ -278,11 +278,11 @@ const allReviews = computed(() => reviewStore.allReviews);
 
 // 根据过滤条件筛选书评
 const filteredReviews = computed(() => {
- return allReviews.value.filter(
-  (review) =>
-    (filters.userId === null || review.userId === filters.userId) &&
-    (filters.productId === null || review.productId === filters.productId),
-);
+  return allReviews.value.filter(
+    (review) =>
+      (filters.userId === null || review.userId === filters.userId) &&
+      (filters.productId === null || review.productId === filters.productId),
+  );
 });
 
 // 当前分页的书评列表

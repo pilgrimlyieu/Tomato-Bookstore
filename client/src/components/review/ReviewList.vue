@@ -215,7 +215,7 @@ const loginRoute = computed(() => {
   };
 });
 
-// 监听商品ID变化，重新加载书评
+// 监听商品 ID 变化，重新加载书评
 watch(
   () => props.productId,
   async (newId) => {

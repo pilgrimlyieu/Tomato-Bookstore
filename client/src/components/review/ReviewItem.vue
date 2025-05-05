@@ -10,7 +10,7 @@
           <div class="text-sm text-gray-500">
             {{ formatDate(review.createdAt) }}
             <span v-if="review.updatedAt && review.updatedAt !== review.createdAt">
-              (已编辑于 {{ formatDate(review.updatedAt) }})
+              （已编辑于 {{ formatDate(review.updatedAt) }}）
             </span>
           </div>
         </div>
