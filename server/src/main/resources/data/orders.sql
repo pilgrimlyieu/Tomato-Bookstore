@@ -1,8 +1,6 @@
 -- 检查表是否已有数据，避免重复插入
 SET @order_count = ( SELECT COUNT(*) FROM orders );
 
-RAND(123456789); -- 设置随机种子，确保每次生成的随机数相同
-
 -- 1. 首先创建未支付订单
 INSERT INTO
     orders (user_id, total_amount, payment_method, status, shipping_address, created_at, updated_at)
