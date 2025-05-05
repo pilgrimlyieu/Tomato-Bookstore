@@ -10,20 +10,21 @@
         <el-form :model="filters" label-position="top" inline>
           <el-form-item label="用户 ID">
             <el-input
-              v-model.number="filters.userId"
+              v-model.number="debouncedFilters.userId"
               type="number"
               placeholder="输入用户 ID"
               clearable
-              @clear="clearUserFilter"
+              @clear="filters.userId = null;"
             />
           </el-form-item>
 
           <el-form-item label="商品 ID">
             <el-input
-              v-model.number="filters.productId"
+              v-model.number="debouncedFilters.productId"
               type="number"
               placeholder="输入商品 ID"
               clearable
+              @clear="filters.productId = null"
             />
           </el-form-item>
 
@@ -41,10 +42,10 @@
           <el-table-column label="用户" width="180">
             <template #default="{ row }">
               <div class="user-info items-center gap-2">
-                <el-avatar :size="32" :src="row.userAvatar">
+                <el-avatar :size="32" :src="row.userAvatar" class="cursor-pointer" @click="showUserDetail(row.userId)">
                   {{ row.username?.substring(0, 1).toUpperCase() }}
                 </el-avatar>
-                <span>{{ row.username }}</span>
+                <span class="cursor-pointer hover:text-primary" @click="showUserDetail(row.userId)">{{ row.username }}</span>
               </div>
             </template>
           </el-table-column>
@@ -237,7 +238,8 @@ import type { Review, ReviewUpdateParams } from "@/types/review";
 import { formatDate } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessageBox } from "element-plus";
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { debounce } from "lodash-es";
+import { computed, onMounted, reactive, ref } from "vue";
 
 // store
 const reviewStore = useReviewStore();
@@ -258,6 +260,22 @@ const currentReview = ref<Review | null>(null);
 const formLoading = ref(false);
 const userReviewsLoading = ref(false);
 
+const debouncedFilters = computed(() => {
+  return {
+    userId: filters.userId,
+    productId: filters.productId,
+  };
+});
+
+watch(
+  () => ({ ...debouncedFilters }),
+  debounce((newVal) => {
+    filters.userId = newVal.userId;
+    filters.productId = newVal.productId;
+  }, 300),
+  { deep: true },
+);
+
 // 计算属性
 const loading = computed(() => reviewStore.loading);
 const managedUserReviews = computed(() => reviewStore.managedUserReviews);
@@ -265,19 +283,13 @@ const allReviews = computed(() => reviewStore.allReviews);
 
 // 根据过滤条件筛选书评
 const filteredReviews = computed(() => {
-  let result = [...allReviews.value];
-
-  // 按用户 ID 筛选
-  if (filters.userId !== null) {
-    result = result.filter((review) => review.userId === filters.userId);
-  }
-
-  // 按商品 ID 筛选
-  if (filters.productId !== null) {
-    result = result.filter((review) => review.productId === filters.productId);
-  }
-
-  return result;
+ return allReviews.value.filter((review) => {
+  // 同时检查所有过滤条件
+  const userMatch = filters.userId === null || review.userId === filters.userId;
+  const productMatch =
+    filters.productId === null || review.productId === filters.productId;
+  return userMatch && productMatch;
+});
 });
 
 // 当前分页的书评列表
@@ -304,18 +316,10 @@ const handleReset = () => {
   pagination.currentPage = 1;
 };
 
-// 清除用户筛选
-const clearUserFilter = () => {
-  filters.userId = null;
-  showUserDetailDialog.value = false;
-};
-
-// 显示用户详情
 const showUserDetail = async (userId: number) => {
   selectedUserId.value = userId;
   showUserDetailDialog.value = true;
   userReviewsLoading.value = true;
-
   try {
     await reviewStore.fetchUserReviewsByAdmin(userId);
   } finally {
@@ -353,6 +357,23 @@ const handleUpdateReview = async (formData: ReviewUpdateParams) => {
           ...formData,
           updatedAt: new Date().toISOString(),
         };
+      }
+
+      if (
+        selectedUserId.value &&
+        selectedUserId.value === currentReview.value.userId
+      ) {
+        // 更新用户详情弹窗中的数据
+        const userReviewIndex = managedUserReviews.value.findIndex(
+          (r) => r.id === currentReview.value?.id,
+        );
+        if (userReviewIndex !== -1) {
+          reviewStore.managedUserReviews[userReviewIndex] = {
+            ...reviewStore.managedUserReviews[userReviewIndex],
+            ...formData,
+            updatedAt: new Date().toISOString(),
+          };
+        }
       }
 
       showEditDialog.value = false;
