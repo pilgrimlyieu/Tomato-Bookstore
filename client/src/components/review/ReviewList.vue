@@ -3,20 +3,10 @@
     <div class="review-stats mb-6" v-if="reviews.length > 0">
       <div class="flex items-center gap-4">
         <div class="stats-item">
-          <div class="text-lg font-medium">{{ averageRating.toFixed(1) }}</div>
-          <div class="text-sm text-gray-500">平均评分</div>
-        </div>
-        <div class="stats-item">
           <div class="text-lg font-medium">{{ reviews.length }}</div>
           <div class="text-sm text-gray-500">评价数量</div>
         </div>
       </div>
-      <el-progress
-        :percentage="averageRating * 10"
-        :status="getRatingStatus(averageRating)"
-        :stroke-width="8"
-        class="mt-2"
-      />
     </div>
 
     <div class="new-review mb-6">
@@ -140,7 +130,6 @@ import type {
   ReviewCreateParams,
   ReviewUpdateParams,
 } from "@/types/review";
-import { buildRoute } from "@/utils/routeHelper";
 import { ElMessage } from "element-plus";
 import { computed, onMounted, ref, watch } from "vue";
 import ReviewForm from "./ReviewForm.vue";
@@ -214,13 +203,6 @@ const paginatedReviews = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value;
   const end = start + pageSize.value;
   return sortedReviews.value.slice(start, end);
-});
-
-// 平均评分
-const averageRating = computed(() => {
-  if (reviews.value.length === 0) return 0;
-  const sum = reviews.value.reduce((acc, review) => acc + review.rating, 0);
-  return sum / reviews.value.length;
 });
 
 // 登录路由（附带当前页面作为重定向）
