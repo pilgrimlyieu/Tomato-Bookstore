@@ -35,7 +35,7 @@
       </div>
 
       <div class="reviews-table">
-        <el-table :data="filteredReviews" style="width: 100%" v-loading="loading" border>
+        <el-table :data="paginatedReviews" style="width: 100%" v-loading="loading" border>
           <el-table-column prop="id" label="ID" width="80" />
 
           <el-table-column label="用户" width="180">

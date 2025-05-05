@@ -72,7 +72,7 @@
     <div class="all-reviews" v-loading="loading">
       <template v-if="sortedReviews.length > 0">
         <ReviewItem
-          v-for="review in sortedReviews"
+          v-for="review in paginatedReviews"
           :key="review.id"
           :review="review"
           @edit="handleEditReview"
