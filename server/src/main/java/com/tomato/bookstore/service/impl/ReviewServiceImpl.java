@@ -180,8 +180,7 @@ public class ReviewServiceImpl implements ReviewService {
    */
   private ReviewDTO convertToDTO(Review review) {
     // 获取用户信息
-    User user =
-        userRepository.findById(review.getUserId()).orElse(new User()); // 如果用户不存在，使用空对象避免空指针
+    User user = getUserById(review.getUserId());
 
     return ReviewDTO.builder()
         .id(review.getId())
@@ -244,8 +243,10 @@ public class ReviewServiceImpl implements ReviewService {
       // 最终评分 = (基准评分 + 用户评分平均值 * 2) / 3
       int finalRating = (int) Math.round((BASE_RATING + averageRating * 2) / 3);
       product.setRate(finalRating);
-      productRepository.save(product);
-      log.info("更新商品 {} 评分为 {}", product.getId(), finalRating);
+    } else {
+      product.setRate(BASE_RATING);
     }
+    productRepository.save(product);
+    log.info("更新商品 {} 评分为 {}", product.getId(), product.getRate());
   }
 }
