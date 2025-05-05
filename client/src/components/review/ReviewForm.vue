@@ -5,7 +5,7 @@
       :model="form"
       :rules="rules"
       label-position="top"
-      v-loading="loading"
+      v-loading="!!loading"
     >
       <el-form-item label="评分" prop="rating">
         <el-rate
