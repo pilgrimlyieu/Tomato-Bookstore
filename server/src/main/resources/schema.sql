@@ -87,8 +87,9 @@ CREATE TABLE carts_orders_relation (
     cart_id BIGINT NOT NULL COMMENT '关联购物车商品 ID',
     order_id BIGINT NOT NULL COMMENT '关联订单 ID',
     quantity INT NOT NULL COMMENT '购买数量',
-    FOREIGN KEY (cart_id) REFERENCES carts (id),
-    FOREIGN KEY (order_id) REFERENCES orders (id)
+    FOREIGN KEY (cart_id) REFERENCES carts (id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
+    UNIQUE KEY uk_cart_order (cart_id, order_id) COMMENT '唯一索引，确保购物车商品与订单的唯一关联',
 ) COMMENT='购物车商品与订单关联表';
 
 -- 创建广告表
@@ -98,7 +99,7 @@ CREATE TABLE advertisements (
     content VARCHAR(500) NOT NULL COMMENT '广告内容',
     image_url VARCHAR(500) NOT NULL COMMENT '广告图片 URL',
     product_id BIGINT NOT NULL COMMENT '所属商品 ID，不允许为空',
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
 ) COMMENT='广告表';
 
 -- 创建书评表

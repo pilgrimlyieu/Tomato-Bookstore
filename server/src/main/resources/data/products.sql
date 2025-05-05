@@ -1,6 +1,8 @@
 -- 检查表是否已有数据，避免重复插入
 SET @product_count = ( SELECT COUNT(*) FROM products );
 
+RAND(123456789); -- 设置随机种子，确保每次生成的随机数相同
+
 -- 插入商品数据
 INSERT INTO
     products (
