@@ -116,25 +116,19 @@ gantt
 
 ## 资源概览和任务分配
 
-- **人员**：4 人小组
+- **人员**：单人小组
 - **技术栈**：Vue3 + Vite, SpringBoot + JPA, MySQL
 - **开发工具**：VS Code, IntelliJ IDEA, ApiFox
 - **版本控制**：GitHub
 
 **任务分配（初步）**：
-- **[PilgrimLyieu](https://github.com/pilgrimlyieu)（组长）**：统筹规划、前后端开发、文档编写
-- **[ahye285714](https://github.com/ahye285714)**：前端开发、UI 设计
-- **[HTDBJ](https://github.com/HTDBJ)**：后端开发、数据库设计
-- **[lxx-png](https://github.com/lxx-png)**：前端开发、测试
+- **[PilgrimLyieu](https://github.com/pilgrimlyieu)（组长）**：统筹规划、前后端开发、文档编写，负责项目的所有工作
 
 ## 人员配置表
 
 |                      姓名                       |   角色   |            主要职责            |
 |                       :-:                       |   :-:    |              :-:               |
 | [PilgrimLyieu](https://github.com/pilgrimlyieu) |   组长   | 项目管理、前后端开发、文档编写 |
-|   [ahye285714](https://github.com/ahye285714)   | 前端开发 |     前端页面开发、UI 设计      |
-|        [HTDBJ](https://github.com/HTDBJ)        | 后端开发 |    后端接口开发、数据库设计    |
-|      [lxx-png](https://github.com/lxx-png)      | 前端开发 |       前端页面开发、测试       |
 
 ## 沟通计划
 
