@@ -14,6 +14,7 @@ import com.tomato.bookstore.repository.UserRepository;
 import com.tomato.bookstore.service.ReviewService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +39,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     List<Review> reviews = reviewRepository.findByProductIdOrderByCreatedAtDesc(productId);
 
+    // 获取所有评论的 userId 列表
+    List<Long> userIds = reviews.stream().map(Review::getUserId).distinct().collect(Collectors.toList());
+
+    // 一次性获取所有用户信息
+    List<User> users = userRepository.findAllById(userIds);
+
+    // 构建 userId 到 User 的映射
+    Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
+
     // 转换为 DTO
-    return reviews.stream().map(this::convertToDTO).collect(Collectors.toList());
+    return reviews.stream().map(review -> convertToDTO(review, userMap)).collect(Collectors.toList());
   }
+
 
   @Override
   public List<ReviewDTO> getReviewsByUserId(Long userId) {
@@ -181,6 +192,45 @@ public class ReviewServiceImpl implements ReviewService {
   private ReviewDTO convertToDTO(Review review) {
     // 获取用户信息
     User user = getUserById(review.getUserId());
+
+    return ReviewDTO.builder()
+        .id(review.getId())
+        .productId(review.getProductId())
+        .userId(review.getUserId())
+        .username(user.getUsername())
+        .userAvatar(user.getAvatar())
+        .rating(review.getRating())
+        .content(review.getContent())
+        .createdAt(review.getCreatedAt())
+        .updatedAt(review.getUpdatedAt())
+        .build();
+  }
+
+  /**
+   * 将 Review 实体转换为 ReviewDTO
+   *
+   * @param review  书评实体
+   * @param userMap 用户信息 Map
+   * @return 书评 DTO
+   */
+  private ReviewDTO convertToDTO(Review review, Map<Long, User> userMap) {
+    // 从 map 中获取用户信息
+    User user = userMap.get(review.getUserId());
+
+    if (user == null) {
+      log.warn("用户 {} 不存在", review.getUserId());
+      return ReviewDTO.builder()
+          .id(review.getId())
+          .productId(review.getProductId())
+          .userId(review.getUserId())
+          .username("未知用户")
+          .userAvatar(null)
+          .rating(review.getRating())
+          .content(review.getContent())
+          .createdAt(review.getCreatedAt())
+          .updatedAt(review.getUpdatedAt())
+          .build();
+    }
 
     return ReviewDTO.builder()
         .id(review.getId())
