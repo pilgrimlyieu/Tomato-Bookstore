@@ -221,7 +221,7 @@ public class ReviewServiceImpl implements ReviewService {
     User user = userMap.get(review.getUserId());
 
     if (user == null) {
-      log.warn("用户 {} 不存在", review.getUserId());
+      log.error("严重的数据一致性问题：用户 {} 不存在但关联了书评 {}", review.getUserId(), review.getId());
       return ReviewDTO.builder()
           .id(review.getId())
           .productId(review.getProductId())
