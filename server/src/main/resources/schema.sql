@@ -106,7 +106,7 @@ CREATE TABLE reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '书评 ID',
     product_id BIGINT NOT NULL COMMENT '商品 ID，关联商品表',
     user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
-    rating INT NOT NULL COMMENT '评分（0-10）' CHECK (rating >= 0 AND rating <= 10),
+    rating INT NOT NULL COMMENT '评分（0-10）' CHECK (rating BETWEEN 0 AND 10),
     content TEXT COMMENT '评论内容',
     created_at TIMESTAMP NOT NULL COMMENT '创建时间',
     updated_at TIMESTAMP COMMENT '更新时间',
@@ -127,3 +127,6 @@ CREATE INDEX idx_relation_order ON carts_orders_relation (order_id);
 CREATE INDEX idx_advertisement_product ON advertisements (product_id);
 CREATE INDEX idx_review_product ON reviews (product_id);
 CREATE INDEX idx_review_user ON reviews (user_id);
+CREATE INDEX idx_product_rate ON products (rate);
+CREATE INDEX idx_order_status ON orders (status);
+CREATE INDEX idx_review_created_at ON reviews (created_at);
