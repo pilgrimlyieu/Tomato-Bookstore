@@ -10,21 +10,23 @@
         <el-form :model="filters" label-position="top" inline>
           <el-form-item label="用户 ID">
             <el-input
-              v-model.number="debouncedFilters.userId"
+              v-model.number="tempUserId"
               type="number"
               placeholder="输入用户 ID"
               clearable
-              @clear="filters.userId = null;"
+              @update:model-value="debouncedFilter"
+              @clear="filters.userId = null; debouncedFilter();"
             />
           </el-form-item>
 
           <el-form-item label="商品 ID">
             <el-input
-              v-model.number="debouncedFilters.productId"
+              v-model.number="tempProductId"
               type="number"
               placeholder="输入商品 ID"
               clearable
-              @clear="filters.productId = null"
+              @update:model-value="debouncedFilter"
+              @clear="filters.productId = null; debouncedFilter()"
             />
           </el-form-item>
 
@@ -260,21 +262,14 @@ const currentReview = ref<Review | null>(null);
 const formLoading = ref(false);
 const userReviewsLoading = ref(false);
 
-const debouncedFilters = computed(() => {
-  return {
-    userId: filters.userId,
-    productId: filters.productId,
-  };
-});
+ const tempUserId = ref<number | null>(null);
+const tempProductId = ref<number | null>(null);
 
-watch(
-  () => ({ ...debouncedFilters }),
-  debounce((newVal) => {
-    filters.userId = newVal.userId;
-    filters.productId = newVal.productId;
-  }, 300),
-  { deep: true },
-);
+// 创建真正的去抖动处理函数
+const debouncedFilter = debounce(() => {
+  filters.userId = tempUserId.value;
+  filters.productId = tempProductId.value;
+}, 300);
 
 // 计算属性
 const loading = computed(() => reviewStore.loading);
@@ -283,13 +278,11 @@ const allReviews = computed(() => reviewStore.allReviews);
 
 // 根据过滤条件筛选书评
 const filteredReviews = computed(() => {
- return allReviews.value.filter((review) => {
-  // 同时检查所有过滤条件
-  const userMatch = filters.userId === null || review.userId === filters.userId;
-  const productMatch =
-    filters.productId === null || review.productId === filters.productId;
-  return userMatch && productMatch;
-});
+ return allReviews.value.filter(
+  (review) =>
+    (filters.userId === null || review.userId === filters.userId) &&
+    (filters.productId === null || review.productId === filters.productId),
+);
 });
 
 // 当前分页的书评列表
@@ -306,6 +299,7 @@ onMounted(async () => {
 
 // 搜索
 const handleSearch = async () => {
+  // 由于使用了计算属性自动过滤，这里只需重置页码即可
   pagination.currentPage = 1;
 };
 
