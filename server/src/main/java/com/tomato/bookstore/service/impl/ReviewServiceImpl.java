@@ -18,8 +18,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewServiceImpl implements ReviewService {
-  private final ReviewRepository reviewRepository;
-  private final UserRepository userRepository;
-  private final ProductRepository productRepository;
-
   private static final int BASE_RATING = 8; // 基准评分
   private static final int BASE_RATING_WEIGHT = 1;
   private static final int USER_RATING_WEIGHT = 2;
   private static final int TOTAL_WEIGHT = BASE_RATING_WEIGHT + USER_RATING_WEIGHT;
+
+  private final ReviewRepository reviewRepository;
+  private final UserRepository userRepository;
+  private final ProductRepository productRepository;
 
   @Override
   public List<ReviewDTO> getReviewsByProductId(Long productId) {
@@ -45,7 +43,8 @@ public class ReviewServiceImpl implements ReviewService {
     List<Review> reviews = reviewRepository.findByProductIdOrderByCreatedAtDesc(productId);
 
     // 获取所有评论的 userId 列表
-    List<Long> userIds = reviews.stream().map(Review::getUserId).distinct().collect(Collectors.toList());
+    List<Long> userIds =
+        reviews.stream().map(Review::getUserId).distinct().collect(Collectors.toList());
 
     // 一次性获取所有用户信息
     List<User> users = userRepository.findAllById(userIds);
@@ -54,9 +53,10 @@ public class ReviewServiceImpl implements ReviewService {
     Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
 
     // 转换为 DTO
-    return reviews.stream().map(review -> convertToDTO(review, userMap)).collect(Collectors.toList());
+    return reviews.stream()
+        .map(review -> convertToDTO(review, userMap))
+        .collect(Collectors.toList());
   }
-
 
   @Override
   public List<ReviewDTO> getReviewsByUserId(Long userId) {
@@ -106,53 +106,29 @@ public class ReviewServiceImpl implements ReviewService {
   @Override
   @Transactional
   public ReviewDTO updateReview(Long reviewId, Long userId, ReviewCreateDTO reviewCreateDTO) {
-    // 检查书评是否存在且属于该用户
     Review review = getReviewById(reviewId);
-
-    if (!review.getUserId().equals(userId)) {
-      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
-    }
-
-    // 更新书评
-    log.info("用户 {} 更新了书评 {}", userId, reviewId);
-    return updateReviewCommon(review, reviewCreateDTO);
+    return updateReviewCommon(review, reviewCreateDTO, false, userId);
   }
 
   @Override
   @Transactional
   public ReviewDTO updateReviewByAdmin(Long reviewId, ReviewCreateDTO reviewCreateDTO) {
-    // 检查书评是否存在
     Review review = getReviewById(reviewId);
-
-    // 更新书评
-    log.info("管理员更新了书评 {}", reviewId);
-    return updateReviewCommon(review, reviewCreateDTO);
+    return updateReviewCommon(review, reviewCreateDTO, true, null);
   }
 
   @Override
   @Transactional
   public void deleteReview(Long reviewId, Long userId) {
-    // 检查书评是否存在且属于该用户
     Review review = getReviewById(reviewId);
-
-    if (!review.getUserId().equals(userId)) {
-      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
-    }
-
-    // 删除书评
-    deleteReviewCommon(review);
-    log.info("用户 {} 删除了书评 {}", userId, reviewId);
+    deleteReviewCommon(review, false, userId);
   }
 
   @Override
   @Transactional
   public void deleteReviewByAdmin(Long reviewId) {
-    // 检查书评是否存在
     Review review = getReviewById(reviewId);
-
-    // 删除书评
-    deleteReviewCommon(review);
-    log.info("管理员删除了书评 {}", reviewId);
+    deleteReviewCommon(review, true, null);
   }
 
   @Override
@@ -186,7 +162,7 @@ public class ReviewServiceImpl implements ReviewService {
   /**
    * 将 Review 实体转换为 ReviewDTO
    *
-   * @param review  书评实体
+   * @param review 书评实体
    * @param userMap 用户信息 Map
    * @return 书评 DTO
    */
@@ -229,7 +205,8 @@ public class ReviewServiceImpl implements ReviewService {
    * @return 商品信息
    */
   private Product getProductById(Long productId) {
-    return productRepository.findById(productId)
+    return productRepository
+        .findById(productId)
         .orElseThrow(() -> ResourceNotFoundException.create("商品", "id", productId));
   }
 
@@ -240,7 +217,8 @@ public class ReviewServiceImpl implements ReviewService {
    * @return 用户信息
    */
   private User getUserById(Long userId) {
-    return userRepository.findById(userId)
+    return userRepository
+        .findById(userId)
         .orElseThrow(() -> ResourceNotFoundException.create("用户", "id", userId));
   }
 
@@ -251,22 +229,35 @@ public class ReviewServiceImpl implements ReviewService {
    * @return 书评信息
    */
   private Review getReviewById(Long reviewId) {
-    return reviewRepository.findById(reviewId)
+    return reviewRepository
+        .findById(reviewId)
         .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
   }
 
   /**
    * 更新书评公共逻辑
    *
-   * @param review          书评
+   * @param review 书评
    * @param reviewCreateDTO 书评创建 DTO
+   * @param isAdmin 是否为管理员操作
+   * @param userId 用户 ID
    * @return 更新后的书评 DTO
    */
-  private ReviewDTO updateReviewCommon(Review review, ReviewCreateDTO reviewCreateDTO) {
+  private ReviewDTO updateReviewCommon(
+      Review review, ReviewCreateDTO reviewCreateDTO, boolean isAdmin, Long userId) {
+    if (!isAdmin && !review.getUserId().equals(userId)) {
+      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
+    }
     review.setRating(reviewCreateDTO.getRating());
     review.setContent(reviewCreateDTO.getContent());
     review.setUpdatedAt(LocalDateTime.now());
     Review updatedReview = reviewRepository.save(review);
+
+    if (isAdmin) {
+      log.info("管理员更新了书评 {}", review.getId());
+    } else {
+      log.info("用户 {} 更新了书评 {}", userId, review.getId());
+    }
 
     // 更新商品评分
     Product product = getProductById(review.getProductId());
@@ -279,9 +270,21 @@ public class ReviewServiceImpl implements ReviewService {
    * 删除书评公共逻辑
    *
    * @param review 书评
+   * @param isAdmin 是否为管理员操作
+   * @param userId 用户 ID
    */
-  private void deleteReviewCommon(Review review) {
+  private void deleteReviewCommon(Review review, boolean isAdmin, Long userId) {
+    if (!isAdmin && !review.getUserId().equals(userId)) {
+      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
+    }
+
     reviewRepository.delete(review);
+
+    if (isAdmin) {
+      log.info("管理员删除了书评 {}", review.getId());
+    } else {
+      log.info("用户 {} 删除了书评 {}", userId, review.getId());
+    }
 
     // 更新商品评分
     Product product = getProductById(review.getProductId());
@@ -299,8 +302,11 @@ public class ReviewServiceImpl implements ReviewService {
     Double averageRating = reviewRepository.calculateAverageRating(product.getId());
 
     if (averageRating != null) {
-      int finalRating = (int) Math
-          .round((BASE_RATING * BASE_RATING_WEIGHT + averageRating * USER_RATING_WEIGHT) / TOTAL_WEIGHT);
+      int finalRating =
+          (int)
+              Math.round(
+                  (BASE_RATING * BASE_RATING_WEIGHT + averageRating * USER_RATING_WEIGHT)
+                      / TOTAL_WEIGHT);
       product.setRate(finalRating);
     } else {
       product.setRate(BASE_RATING);
