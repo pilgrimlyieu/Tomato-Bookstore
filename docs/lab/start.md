@@ -122,7 +122,7 @@ gantt
 - **版本控制**：GitHub
 
 **任务分配（初步）**：
-- **[PilgrimLyieu](https://github.com/pilgrimlyieu)（组长）**：统筹规划、前后端开发、文档编写（即所有工作）
+- **[PilgrimLyieu](https://github.com/pilgrimlyieu)（组长）**：统筹规划、前后端开发、文档编写，负责项目的所有工作
 
 ## 人员配置表
 
