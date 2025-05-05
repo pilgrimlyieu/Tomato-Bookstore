@@ -31,6 +31,9 @@ public class ReviewServiceImpl implements ReviewService {
   private final ProductRepository productRepository;
 
   private static final int BASE_RATING = 8; // 基准评分
+  private static final int BASE_RATING_WEIGHT = 1;
+  private static final int USER_RATING_WEIGHT = 2;
+  private static final int TOTAL_WEIGHT = BASE_RATING_WEIGHT + USER_RATING_WEIGHT;
 
   @Override
   public List<ReviewDTO> getReviewsByProductId(Long productId) {
@@ -117,7 +120,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("用户 {} 更新了书评 {}", userId, reviewId);
 
     // 更新商品评分
-    Product product = getProductById(userId);
+    Product product = getProductById(review.getProductId());
     updateProductRating(product);
 
     return convertToDTO(updatedReview);
@@ -138,7 +141,7 @@ public class ReviewServiceImpl implements ReviewService {
     log.info("管理员更新了书评 {}", reviewId);
 
     // 更新商品评分
-    Product product = getProductById(reviewId);
+    Product product = getProductById(review.getProductId());
     updateProductRating(product);
 
     return convertToDTO(updatedReview);
@@ -289,9 +292,8 @@ public class ReviewServiceImpl implements ReviewService {
     Double averageRating = reviewRepository.calculateAverageRating(product.getId());
 
     if (averageRating != null) {
-      // 加权平均：基准评分权重为 1，用户评分平均值权重为 2
-      // 最终评分 = (基准评分 + 用户评分平均值 * 2) / 3
-      int finalRating = (int) Math.round((BASE_RATING + averageRating * 2) / 3);
+      int finalRating = (int) Math
+          .round((BASE_RATING * BASE_RATING_WEIGHT + averageRating * USER_RATING_WEIGHT) / TOTAL_WEIGHT);
       product.setRate(finalRating);
     } else {
       product.setRate(BASE_RATING);
