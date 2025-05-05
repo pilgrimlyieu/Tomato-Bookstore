@@ -42,7 +42,16 @@
 
             <el-table-column label="评论内容" min-width="250">
               <template #default="{ row }">
-                <div class="truncate max-w-md" v-if="row.content">
+                <el-tooltip
+                  v-if="row.content && row.content.length > 50"
+                  :content="row.content"
+                  placement="top"
+                  :show-after="500"
+                  max-width="300"
+                >
+                  <div class="truncate max-w-md">{{ row.content }}</div>
+                </el-tooltip>
+                <div class="truncate max-w-md" v-else-if="row.content">
                   {{ row.content }}
                 </div>
                 <div v-else class="text-gray-400 italic">无评论内容</div>
@@ -69,6 +78,7 @@
                     type="danger"
                     link
                     @click="handleDeleteReview(row)"
+                    :loading="deleting[row.id]"
                   >
                     删除
                   </el-button>
@@ -123,6 +133,7 @@ const productStore = useProductStore();
 const showEditDialog = ref(false);
 const currentEditReview = ref<Review | null>(null);
 const formLoading = ref(false);
+const deleting = ref<Record<number, boolean>>({});
 
 // 计算属性
 const reviews = computed(() => reviewStore.userReviews);
@@ -173,6 +184,7 @@ const handleUpdateReview = async (formData: ReviewUpdateParams) => {
 // 处理删除书评
 const handleDeleteReview = async (review: Review) => {
   if (!review.id) return;
+  if (deleting.value[review.id]) return;
 
   try {
     await ElMessageBox.confirm(
@@ -185,9 +197,14 @@ const handleDeleteReview = async (review: Review) => {
       },
     );
 
+    deleting.value[review.id] = true;
     await reviewStore.deleteReview(review.id);
   } catch {
     // 用户取消删除
+  } finally {
+    if (deleting.value[review.id]) {
+      deleting.value[review.id] = false;
+    }
   }
 };
 </script>
