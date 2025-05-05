@@ -8,3 +8,13 @@ spring:
   sql:
     init:
       mode: always
+      schema-locations:
+        - classpath:schema.sql
+      data-locations:
+        - classpath:data/users.sql
+        - classpath:data/products.sql
+        - classpath:data/specifications.sql
+        - classpath:data/advertisements.sql
+        - classpath:data/carts.sql
+        - classpath:data/orders.sql
+        - classpath:data/reviews.sql
