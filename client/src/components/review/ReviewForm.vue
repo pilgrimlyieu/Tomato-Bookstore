@@ -53,7 +53,7 @@ import type {
   ReviewUpdateParams,
 } from "@/types/review";
 import { type FormInstance, type FormRules } from "element-plus";
-import { onMounted, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 
 // 属性
 const props = defineProps<{
@@ -96,13 +96,16 @@ const rules = reactive<FormRules>({
 });
 
 // 初始化
-onMounted(() => {
-  // 如果是编辑模式，使用初始数据填充表单
-  if (props.isEdit && props.initialData) {
-    form.rating = props.initialData.rating;
-    form.content = props.initialData.content || "";
-  }
-});
+watch(
+  () => props.initialData,
+  (newVal) => {
+    if (props.isEdit && newVal) {
+      form.rating = newVal.rating;
+      form.content = newVal.content || "";
+    }
+  },
+  { immediate: true },
+);
 
 // 取消操作
 const handleCancel = () => {

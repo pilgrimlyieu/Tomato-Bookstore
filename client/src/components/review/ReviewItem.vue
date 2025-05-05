@@ -3,7 +3,7 @@
     <div class="review-header flex justify-between items-start mb-3">
       <div class="user-info flex items-center">
         <el-avatar :size="32" :src="review.userAvatar" class="mr-3">
-          {{ review.username ? review.username.substring(0, 1).toUpperCase() : '?' }}
+          {{ review.username ? (review.username.trim().charAt(0) || '?').toUpperCase() : '?' }}
         </el-avatar>
         <div>
           <div class="username font-medium">{{ review.username }}</div>

@@ -38,12 +38,13 @@
               <el-tab-pane label="我的书评">
                 <div class="py-4">
                   <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-medium text-gray-800">我的书评</h3>
-                    <router-link :to="{ path: Routes.USER_REVIEWS }">
-                      <el-button type="primary" size="small" class="rounded-lg">
-                        查看全部
-                      </el-button>
-                    </router-link>
+                    <h3 class="text-xl font-medium text-gray-800">
+                      我的书评
+                      <el-badge :value="userReviews.length" type="primary" class="ml-2" v-if="userReviews.length > 0" />
+                    </h3>
+                    <el-button type="primary" size="small" class="rounded-lg" :disabled="userReviews.length === 0">
+                      查看全部 <el-icon class="ml-1"><arrow-right /></el-icon>
+                    </el-button>
                   </div>
 
                     <div v-if="userReviews.length > 0">
@@ -80,8 +81,9 @@
                     </div>
 
                     <div v-if="userReviews.length > 3" class="text-center mt-4">
-                      <router-link :to="{ path: Routes.USER_REVIEWS }" class="text-primary hover:underline">
-                        查看更多书评（共 {{ userReviews.length }} 条）
+                      <router-link :to="{ path: Routes.USER_REVIEWS }" class="inline-flex items-center text-primary hover:underline hover:shadow-sm p-2 rounded-lg transition-all">
+                        <span>查看剩余 {{ userReviews.length - 3 }} 条书评</span>
+                        <el-icon class="ml-1"><arrow-right /></el-icon>
                       </router-link>
                     </div>
                   </div>
@@ -224,7 +226,7 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { getChangePasswordRules } from "@/utils/validators";
-import { Lock, Plus, Upload } from "@element-plus/icons-vue";
+import { ArrowRight, Lock, Plus, Upload } from "@element-plus/icons-vue";
 import type { FormInstance, UploadFile } from "element-plus";
 import { ElMessage } from "element-plus";
 import gsap from "gsap";
