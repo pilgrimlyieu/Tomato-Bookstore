@@ -6,6 +6,7 @@ import {
   type User,
   UserRole,
 } from "@/types/user";
+import { performAsyncAction } from "@/utils/asyncHelper";
 import { HttpStatusCode } from "axios";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
@@ -42,23 +43,20 @@ export const useUserStore = defineStore("user", {
      * @returns {Promise<boolean>} 是否登录成功
      */
     async login(params: LoginParams): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await userService.login(params);
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.setToken(response.data);
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => userService.login(params),
+        async (token) => {
+          this.setToken(token);
+          // 登录成功后获取用户信息
           await this.fetchUserInfo();
-          ElMessage.success("登录成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("登录失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+        },
+        "登录失败：",
+        true,
+        [HttpStatusCode.Ok],
+        "登录成功",
+      );
     },
 
     /**
@@ -68,20 +66,18 @@ export const useUserStore = defineStore("user", {
      * @returns {Promise<boolean>} 是否注册成功
      */
     async register(params: RegisterParams): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await userService.register(params);
-        if (response.code === HttpStatusCode.Created) {
-          ElMessage.success("注册成功，请登录");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("注册失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => userService.register(params),
+        () => {
+          // 注册成功不需要特别处理
+        },
+        "注册失败：",
+        true,
+        [HttpStatusCode.Created],
+        "注册成功，请登录",
+      );
     },
 
     /**
@@ -117,22 +113,18 @@ export const useUserStore = defineStore("user", {
      * @returns {Promise<boolean>} 是否更新成功
      */
     async updateUserProfile(params: UpdateUserParams): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await userService.updateUserProfile(params);
-
-        if (response.code === HttpStatusCode.Ok) {
-          this.user = response.data;
-          ElMessage.success("个人信息更新成功");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("更新用户信息失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => userService.updateUserProfile(params),
+        (data) => {
+          this.user = data;
+        },
+        "更新用户信息失败：",
+        true,
+        [HttpStatusCode.Ok],
+        "个人信息更新成功",
+      );
     },
 
     /**

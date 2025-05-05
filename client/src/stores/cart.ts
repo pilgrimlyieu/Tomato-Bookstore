@@ -1,6 +1,7 @@
 import cartService from "@/services/cart-service";
-import type { Cart, CartList, Checkout, QuantityUpdate } from "@/types/cart";
+import type { Cart, Checkout, QuantityUpdate } from "@/types/cart";
 import type { Order } from "@/types/order";
+import { performAsync, performAsyncAction } from "@/utils/asyncHelper";
 import { HttpStatusCode } from "axios";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
@@ -31,24 +32,18 @@ export const useCartStore = defineStore("cart", {
      * @returns {Promise<boolean>} 是否成功
      */
     async fetchUserCart(): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await cartService.getUserCart();
-
-        if (response.code === HttpStatusCode.Ok) {
-          const cartList = response.data;
-          this.items = cartList.items;
-          this.totalAmount = cartList.totalAmount;
-          this.totalItems = cartList.total;
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("获取购物车失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => cartService.getUserCart(),
+        (cart) => {
+          this.items = cart.items;
+          this.totalAmount = cart.totalAmount;
+          this.totalItems = cart.total;
+        },
+        "获取购物车失败：",
+        false,
+      );
     },
 
     /**
@@ -58,21 +53,20 @@ export const useCartStore = defineStore("cart", {
      * @returns {Promise<boolean>} 是否成功
      */
     async addToCart(cart: Cart): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await cartService.addToCart(cart);
+      const result = await performAsyncAction(
+        this,
+        "loading",
+        () => cartService.addToCart(cart),
+        () => {},
+        "添加商品到购物车失败：",
+        false,
+      );
 
-        if (response.code === HttpStatusCode.Ok) {
-          await this.fetchUserCart(); // 重新获取购物车，确保数据一致性
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("添加商品到购物车失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
+      if (result) {
+        await this.fetchUserCart(); // 重新获取购物车，确保数据一致性
+        return true;
       }
+      return false;
     },
 
     /**
@@ -82,26 +76,27 @@ export const useCartStore = defineStore("cart", {
      * @returns {Promise<boolean>} 是否成功
      */
     async removeFromCart(cartItemId: number): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await cartService.removeFromCart(cartItemId);
-
-        if (response.code === HttpStatusCode.Ok) {
+      const result = await performAsyncAction(
+        this,
+        "loading",
+        () => cartService.removeFromCart(cartItemId),
+        () => {
           // 从本地移除商品
           this.items = this.items.filter(
             (item) => item.cartItemId !== cartItemId,
           );
-          await this.fetchUserCart(); // 重新获取购物车，确保数据一致性
-          ElMessage.success("商品已从购物车移除");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("从购物车删除商品失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
+        },
+        "从购物车删除商品失败：",
+        false,
+        [HttpStatusCode.Ok],
+        "商品已从购物车移除",
+      );
+
+      if (result) {
+        await this.fetchUserCart(); // 重新获取购物车，确保数据一致性
+        return true;
       }
+      return false;
     },
 
     /**
@@ -115,22 +110,21 @@ export const useCartStore = defineStore("cart", {
       cartItemId: number,
       quantity: number,
     ): Promise<boolean> {
-      try {
-        this.loading = true;
-        const update: QuantityUpdate = { quantity };
-        const response = await cartService.updateQuantity(cartItemId, update);
+      const update: QuantityUpdate = { quantity };
+      const result = await performAsyncAction(
+        this,
+        "loading",
+        () => cartService.updateQuantity(cartItemId, update),
+        () => {},
+        "更新购物车商品数量失败：",
+        false,
+      );
 
-        if (response.code === HttpStatusCode.Ok) {
-          await this.fetchUserCart(); // 重新获取购物车，确保数据一致性
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("更新购物车商品数量失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
+      if (result) {
+        await this.fetchUserCart(); // 重新获取购物车，确保数据一致性
+        return true;
       }
+      return false;
     },
 
     /**
@@ -140,21 +134,17 @@ export const useCartStore = defineStore("cart", {
      * @returns {Promise<Order | null>} 创建的订单
      */
     async checkout(checkout: Checkout): Promise<Order | null> {
-      try {
-        this.loading = true;
-        const response = await cartService.checkout(checkout);
-
-        if (response.code === HttpStatusCode.Ok && response.data) {
+      return await performAsync<Order, Order | null>(
+        () => cartService.checkout(checkout),
+        (data) => {
           ElMessage.success("订单创建成功，即将跳转到支付页面");
-          return response.data as Order;
-        }
-        return null;
-      } catch (error) {
-        console.error("结算购物车失败：", error);
-        return null;
-      } finally {
-        this.loading = false;
-      }
+          return data;
+        },
+        "结算购物车失败：",
+        true,
+        (loading) => (this.loading = loading),
+        (loading) => (this.loading = loading),
+      );
     },
 
     /**
@@ -163,25 +153,21 @@ export const useCartStore = defineStore("cart", {
      * @returns {Promise<boolean>} 是否成功
      */
     async clearCart(): Promise<boolean> {
-      try {
-        this.loading = true;
-        const response = await cartService.clearCart();
-
-        if (response.code === HttpStatusCode.Ok) {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => cartService.clearCart(),
+        () => {
           // 清空本地购物车数据
           this.items = [];
           this.totalAmount = 0;
           this.totalItems = 0;
-          ElMessage.success("购物车已清空");
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("清空购物车失败：", error);
-        return false;
-      } finally {
-        this.loading = false;
-      }
+        },
+        "清空购物车失败：",
+        true,
+        [HttpStatusCode.Ok],
+        "购物车已清空",
+      );
     },
   },
 });

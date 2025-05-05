@@ -8,7 +8,9 @@ export interface ApiResponse<T = object | null> {
   /**
    * 响应码
    */
-  code: HttpStatusCode | typeof BusinessErrorCode;
+  code:
+    | HttpStatusCode
+    | (typeof BusinessErrorCode)[keyof typeof BusinessErrorCode];
 
   /**
    * 响应信息

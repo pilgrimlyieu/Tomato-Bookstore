@@ -73,4 +73,11 @@ public interface ReviewService {
    * @return 平均评分
    */
   Double calculateProductRating(Long productId);
+
+  /**
+   * 获取所有书评（仅管理员）
+   *
+   * @return 所有书评列表
+   */
+  List<ReviewDTO> getAllReviews();
 }

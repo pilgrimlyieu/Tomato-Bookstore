@@ -30,6 +30,12 @@ const router = createRouter({
       meta: { title: "个人信息", requiresAuth: true },
     },
     {
+      path: Routes.USER_REVIEWS,
+      name: "userReviews",
+      component: () => import("@/views/Review/UserReviews.vue"),
+      meta: { title: "我的书评", requiresAuth: true },
+    },
+    {
       path: Routes.PRODUCT_LIST,
       name: "products",
       component: () => import("@/views/Product/List.vue"),
@@ -64,6 +70,12 @@ const router = createRouter({
           name: "adminProductEdit",
           component: () => import("@/views/Admin/Product/Edit.vue"),
           meta: { title: "编辑商品", requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: Routes.ADMIN_REVIEWS,
+          name: "adminReviews",
+          component: () => import("@/views/Admin/Review/List.vue"),
+          meta: { title: "书评管理", requiresAuth: true, requiresAdmin: true },
         },
       ],
     },

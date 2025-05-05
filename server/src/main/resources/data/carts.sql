@@ -1,8 +1,6 @@
 -- 检查表是否已有数据，避免重复插入
 SET @cart_count = ( SELECT COUNT(*) FROM carts );
 
-RAND(123456789); -- 设置随机种子，确保每次生成的随机数相同
-
 -- 添加购物车测试数据
 INSERT INTO
     carts (

@@ -35,6 +35,69 @@
                   <ProfileForm />
                 </div>
               </el-tab-pane>
+              <el-tab-pane label="我的书评">
+                <div class="py-4">
+                  <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-medium text-gray-800">
+                      我的书评
+                      <el-badge :value="userReviews.length" type="primary" class="ml-2" v-if="userReviews.length > 0" />
+                    </h3>
+                    <router-link :to="{ path: Routes.USER_REVIEWS }">
+                      <el-button type="primary" size="small" class="rounded-lg" :disabled="userReviews.length === 0">
+                        查看全部 <el-icon class="ml-1"><arrow-right /></el-icon>
+                      </el-button>
+                    </router-link>
+
+                  </div>
+
+                    <div v-if="userReviews.length > 0">
+                    <div v-for="review in reviewsWithProductNames.slice(0, 3)" :key="review.id" class="mb-4 border-b pb-4">
+                      <div class="flex justify-between items-start">
+                      <div>
+                        <div class="font-medium text-gray-900 mb-1">
+                        《{{ review.productName }}》
+                        </div>
+                        <router-link
+                        :to="buildRoute(Routes.PRODUCT_DETAIL, { id: review.productId })"
+                        class="text-primary hover:underline mb-2 block text-sm"
+                        >
+                        查看商品详情
+                        </router-link>
+                        <el-rate
+                        v-model="review.rating"
+                        disabled
+                        :max="10"
+                        show-score
+                        score-template="{value}"
+                        />
+                      </div>
+                      <div class="text-gray-500 text-sm">
+                        {{ formatDate(review.createdAt) }}
+                      </div>
+                      </div>
+                      <div class="mt-2 text-gray-700" v-if="review.content">
+                      {{ review.content }}
+                      </div>
+                      <div class="mt-2 text-gray-400 italic" v-else>
+                      此评价没有评论内容
+                      </div>
+                    </div>
+
+                    <div v-if="userReviews.length > 3" class="text-center mt-4">
+                      <router-link :to="{ path: Routes.USER_REVIEWS }" class="inline-flex items-center text-primary hover:underline hover:shadow-sm p-2 rounded-lg transition-all">
+                        <span>查看剩余 {{ userReviews.length - 3 }} 条书评</span>
+                        <el-icon class="ml-1"><arrow-right /></el-icon>
+                      </router-link>
+                    </div>
+                  </div>
+
+                  <el-empty v-else description="您还没有发表过任何书评">
+                    <router-link :to="Routes.PRODUCT_LIST">
+                      <el-button type="primary" class="rounded-lg">浏览商品</el-button>
+                    </router-link>
+                  </el-empty>
+                </div>
+              </el-tab-pane>
               <el-tab-pane label="安全设置">
                 <div class="py-4">
                   <h3 class="text-xl font-medium text-gray-800 mb-6">修改密码</h3>
@@ -159,15 +222,53 @@
 
 <script setup lang="ts">
 import ProfileForm from "@/components/user/ProfileForm.vue";
+import { Routes } from "@/constants/routes";
+import { useProductStore } from "@/stores/product";
+import { useReviewStore } from "@/stores/review";
 import { useUserStore } from "@/stores/user";
+import { formatDate } from "@/utils/formatters";
+import { buildRoute } from "@/utils/routeHelper";
 import { getChangePasswordRules } from "@/utils/validators";
-import { Lock, Plus, Upload, User } from "@element-plus/icons-vue";
+import { ArrowRight, Lock, Plus, Upload } from "@element-plus/icons-vue";
 import type { FormInstance, UploadFile } from "element-plus";
 import { ElMessage } from "element-plus";
 import gsap from "gsap";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const userStore = useUserStore();
+const reviewStore = useReviewStore();
+const productStore = useProductStore();
+
+// 加载状态
+const loading = ref(false);
+
+// 获取用户书评
+onMounted(async () => {
+  loading.value = true;
+  try {
+    await reviewStore.fetchUserReviews();
+    await productStore.fetchAllProducts();
+  } catch (error) {
+    console.error("获取用户书评失败：", error);
+    ElMessage.error("获取书评数据失败，请刷新重试");
+  } finally {
+    loading.value = false;
+  }
+});
+
+// 用户书评列表
+const userReviews = computed(() => {
+  return reviewStore.userReviews;
+});
+
+const reviewsWithProductNames = computed(() => {
+  return reviewStore.userReviews.map((review) => ({
+    ...review,
+    productName:
+      productStore.products.find((p) => p.id === review.productId)?.title ||
+      "未知书名",
+  }));
+});
 
 // 修改密码相关
 const passwordFormRef = ref<FormInstance>();

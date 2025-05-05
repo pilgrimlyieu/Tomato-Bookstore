@@ -70,6 +70,25 @@ public class ReviewServiceImpl implements ReviewService {
   }
 
   @Override
+  public List<ReviewDTO> getAllReviews() {
+      List<Review> reviews = reviewRepository.findAll();
+
+      // 获取所有评论的 userId 列表
+      List<Long> userIds = reviews.stream().map(Review::getUserId).distinct().collect(Collectors.toList());
+
+      // 一次性获取所有用户信息
+      List<User> users = userRepository.findAllById(userIds);
+
+      // 构建 userId 到 User 的映射
+      Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
+
+      // 转换为 DTO
+      return reviews.stream()
+              .map(review -> convertToDTO(review, userMap))
+              .collect(Collectors.toList());
+  }
+
+  @Override
   @Transactional
   public ReviewDTO createReview(Long productId, Long userId, ReviewCreateDTO reviewCreateDTO) {
     // 检查商品是否存在
