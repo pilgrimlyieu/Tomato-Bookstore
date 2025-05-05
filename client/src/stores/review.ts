@@ -1,0 +1,349 @@
+import reviewService from "@/services/review-service";
+import type {
+  Review,
+  ReviewCreateParams,
+  ReviewUpdateParams,
+} from "@/types/review";
+import { HttpStatusCode } from "axios";
+import { ElMessage } from "element-plus";
+import { defineStore } from "pinia";
+
+/**
+ * 书评状态管理
+ */
+export const useReviewStore = defineStore("review", {
+  state: () => ({
+    productReviews: [] as Review[], // 当前查看的商品书评列表
+    userReviews: [] as Review[], // 当前用户的书评列表
+    managedUserReviews: [] as Review[], // 管理员查看的用户书评列表（仅管理员）
+    currentReview: null as Review | null, // 当前操作的书评
+    loading: false, // 加载状态
+  }),
+
+  getters: {
+    /**
+     * 当前用户是否已评价指定商品
+     *
+     * @param {number} productId 商品 ID
+     * @returns {boolean} 是否已评价
+     */
+    hasUserReviewed:
+      (state) =>
+      (productId: number, userId: number): boolean => {
+        return state.productReviews.some(
+          (review) =>
+            review.productId === productId && review.userId === userId,
+        );
+      },
+
+    /**
+     * 获取当前用户对指定商品的书评
+     *
+     * @param {number} productId 商品 ID
+     * @param {number} userId 用户 ID
+     * @returns {Review | undefined} 书评信息
+     */
+    getUserReviewForProduct:
+      (state) =>
+      (productId: number, userId: number): Review | undefined => {
+        return state.productReviews.find(
+          (review) =>
+            review.productId === productId && review.userId === userId,
+        );
+      },
+  },
+
+  actions: {
+    /**
+     * 获取指定商品的所有书评
+     *
+     * @param {number} productId 商品 ID
+     * @returns {Promise<void>}
+     */
+    async fetchProductReviews(productId: number): Promise<void> {
+      try {
+        this.loading = true;
+        const response = await reviewService.getProductReviews(productId);
+
+        if (response.code === HttpStatusCode.Ok) {
+          this.productReviews = response.data;
+        }
+      } catch (error) {
+        console.error(`获取商品书评失败（ID: ${productId}）：`, error);
+        ElMessage.error("获取书评列表失败");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 获取当前用户的所有书评
+     *
+     * @returns {Promise<void>}
+     */
+    async fetchUserReviews(): Promise<void> {
+      try {
+        this.loading = true;
+        const response = await reviewService.getUserReviews();
+
+        if (response.code === HttpStatusCode.Ok) {
+          this.userReviews = response.data;
+        }
+      } catch (error) {
+        console.error("获取用户书评列表失败：", error);
+        ElMessage.error("获取书评列表失败");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 获取指定用户的所有书评（管理员）
+     *
+     * @param {number} userId 用户 ID
+     * @returns {Promise<void>}
+     */
+    async fetchUserReviewsByAdmin(userId: number): Promise<void> {
+      try {
+        this.loading = true;
+        const response = await reviewService.getUserReviewsByAdmin(userId);
+
+        if (response.code === HttpStatusCode.Ok) {
+          this.managedUserReviews = response.data;
+        }
+      } catch (error) {
+        console.error(`获取用户书评列表失败（用户ID: ${userId}）：`, error);
+        ElMessage.error("获取用户书评列表失败");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 创建书评
+     *
+     * @param {number} productId 商品 ID
+     * @param {ReviewCreateParams} params 书评参数
+     * @returns {Promise<boolean>} 是否创建成功
+     */
+    async createReview(
+      productId: number,
+      params: ReviewCreateParams,
+    ): Promise<boolean> {
+      try {
+        this.loading = true;
+        const response = await reviewService.createReview(productId, params);
+
+        if (response.code === HttpStatusCode.Created) {
+          // 更新本地商品书评列表
+          this.productReviews.unshift(response.data);
+          // 更新用户书评列表
+          this.userReviews.unshift(response.data);
+
+          ElMessage.success("书评发布成功");
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error(`创建书评失败（商品ID: ${productId}）：`, error);
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 更新书评
+     *
+     * @param {number} reviewId 书评 ID
+     * @param {ReviewUpdateParams} params 更新参数
+     * @returns {Promise<boolean>} 是否更新成功
+     */
+    async updateReview(
+      reviewId: number,
+      params: ReviewUpdateParams,
+    ): Promise<boolean> {
+      try {
+        this.loading = true;
+        const response = await reviewService.updateReview(reviewId, params);
+
+        if (response.code === HttpStatusCode.Ok) {
+          // 更新本地数据
+          this.updateLocalReviewData(response.data);
+
+          ElMessage.success("书评更新成功");
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error(`更新书评失败（ID: ${reviewId}）：`, error);
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 管理员更新书评
+     *
+     * @param {number} reviewId 书评 ID
+     * @param {ReviewUpdateParams} params 更新参数
+     * @returns {Promise<boolean>} 是否更新成功
+     */
+    async updateReviewByAdmin(
+      reviewId: number,
+      params: ReviewUpdateParams,
+    ): Promise<boolean> {
+      try {
+        this.loading = true;
+        const response = await reviewService.updateReviewByAdmin(
+          reviewId,
+          params,
+        );
+
+        if (response.code === HttpStatusCode.Ok) {
+          // 更新本地数据
+          this.updateLocalReviewData(response.data);
+
+          // 更新管理员查看的用户书评列表
+          const index = this.managedUserReviews.findIndex(
+            (review) => review.id === reviewId,
+          );
+          if (index !== -1) {
+            this.managedUserReviews[index] = response.data;
+          }
+
+          ElMessage.success("书评已修改");
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error(`管理员更新书评失败（ID: ${reviewId}）：`, error);
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 删除书评
+     *
+     * @param {number} reviewId 书评 ID
+     * @returns {Promise<boolean>} 是否删除成功
+     */
+    async deleteReview(reviewId: number): Promise<boolean> {
+      try {
+        this.loading = true;
+        const response = await reviewService.deleteReview(reviewId);
+
+        if (response.code === HttpStatusCode.Ok) {
+          // 从本地列表中移除
+          this.removeLocalReview(reviewId);
+
+          ElMessage.success("书评已删除");
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error(`删除书评失败（ID: ${reviewId}）：`, error);
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 管理员删除书评
+     *
+     * @param {number} reviewId 书评 ID
+     * @returns {Promise<boolean>} 是否删除成功
+     */
+    async deleteReviewByAdmin(reviewId: number): Promise<boolean> {
+      try {
+        this.loading = true;
+        const response = await reviewService.deleteReviewByAdmin(reviewId);
+
+        if (response.code === HttpStatusCode.Ok) {
+          // 从本地列表中移除
+          this.removeLocalReview(reviewId);
+
+          // 从管理员查看的用户书评列表中移除
+          this.managedUserReviews = this.managedUserReviews.filter(
+            (review) => review.id !== reviewId,
+          );
+
+          ElMessage.success("书评已删除");
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error(`管理员删除书评失败（ID: ${reviewId}）：`, error);
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
+     * 更新本地书评数据
+     *
+     * @param {Review} updatedReview 更新后的书评
+     */
+    updateLocalReviewData(updatedReview: Review): void {
+      // 更新商品书评列表
+      const productIndex = this.productReviews.findIndex(
+        (review) => review.id === updatedReview.id,
+      );
+      if (productIndex !== -1) {
+        this.productReviews[productIndex] = updatedReview;
+      }
+
+      // 更新用户书评列表
+      const userIndex = this.userReviews.findIndex(
+        (review) => review.id === updatedReview.id,
+      );
+      if (userIndex !== -1) {
+        this.userReviews[userIndex] = updatedReview;
+      }
+
+      // 更新当前书评
+      if (this.currentReview && this.currentReview.id === updatedReview.id) {
+        this.currentReview = updatedReview;
+      }
+    },
+
+    /**
+     * 从本地移除书评
+     *
+     * @param {number} reviewId 书评 ID
+     */
+    removeLocalReview(reviewId: number): void {
+      this.productReviews = this.productReviews.filter(
+        (review) => review.id !== reviewId,
+      );
+      this.userReviews = this.userReviews.filter(
+        (review) => review.id !== reviewId,
+      );
+
+      if (this.currentReview && this.currentReview.id === reviewId) {
+        this.currentReview = null;
+      }
+    },
+
+    /**
+     * 设置当前操作的书评
+     *
+     * @param {Review | null} review 书评对象
+     */
+    setCurrentReview(review: Review | null): void {
+      this.currentReview = review;
+    },
+
+    /**
+     * 清除当前操作的书评
+     */
+    clearCurrentReview(): void {
+      this.currentReview = null;
+    },
+  },
+});
