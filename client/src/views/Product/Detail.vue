@@ -58,6 +58,9 @@
                 />
               </div>
               <span class="text-gray-600">{{ product.rate }}/10</span>
+              <span class="text-blue-500 ml-2 cursor-pointer" @click="scrollToReviews">
+                （{{ totalReviews }} 条评价）
+              </span>
             </div>
 
             <!-- 价格 -->
@@ -138,15 +141,27 @@
           </el-divider>
             <div class="product-detail mt-6 prose max-w-none text-left" v-html="product.detail"></div>
         </div>
+
+        <!-- 书评部分 -->
+        <div class="mt-10" ref="reviewSection">
+          <el-divider>
+            <span class="text-lg font-medium">用户评价</span>
+          </el-divider>
+          <div class="mt-6">
+            <ReviewList :product-id="productId" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import ReviewList from "@/components/review/ReviewList.vue";
 import { useCart } from "@/composables/useCart";
 import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
+import { useReviewStore } from "@/stores/review";
 import { formatPrice } from "@/utils/formatters";
 import { ShoppingCart, Star } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
@@ -154,6 +169,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const productStore = useProductStore();
+const reviewStore = useReviewStore();
 const route = useRoute();
 const router = useRouter();
 const { addToCart } = useCart();
@@ -163,6 +179,12 @@ const product = computed(() => productStore.currentProduct);
 const stockpile = computed(() => productStore.currentStockpile);
 const quantity = ref(1);
 const adding = ref(false);
+const reviewSection = ref<HTMLElement | null>(null);
+
+// 书评总数
+const totalReviews = computed(() => {
+  return reviewStore.productReviews.length;
+});
 
 // 加载商品数据
 const loadProductData = async () => {
@@ -199,6 +221,13 @@ const handleAddToCart = async () => {
     await addToCart(productId.value, quantity.value, product.value?.title);
   } finally {
     adding.value = false;
+  }
+};
+
+// 滚动到评论区域
+const scrollToReviews = () => {
+  if (reviewSection.value) {
+    reviewSection.value.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 };
 </script>

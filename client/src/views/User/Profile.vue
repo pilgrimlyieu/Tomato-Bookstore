@@ -35,6 +35,61 @@
                   <ProfileForm />
                 </div>
               </el-tab-pane>
+              <el-tab-pane label="我的书评">
+                <div class="py-4">
+                  <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-medium text-gray-800">我的书评</h3>
+                    <router-link :to="{ path: Routes.USER_REVIEWS }">
+                      <el-button type="primary" size="small" class="rounded-lg">
+                        查看全部
+                      </el-button>
+                    </router-link>
+                  </div>
+
+                  <div v-if="userReviews.length > 0">
+                    <div v-for="review in userReviews.slice(0, 3)" :key="review.id" class="mb-4 border-b pb-4">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <router-link
+                            :to="buildRoute(Routes.PRODUCT_DETAIL, { id: review.productId })"
+                            class="text-primary hover:underline mb-1 block font-medium"
+                          >
+                            查看商品详情
+                          </router-link>
+                          <el-rate
+                            v-model="review.rating"
+                            disabled
+                            :max="10"
+                            show-score
+                            score-template="{value}"
+                          />
+                        </div>
+                        <div class="text-gray-500 text-sm">
+                          {{ formatDate(review.createdAt) }}
+                        </div>
+                      </div>
+                      <div class="mt-2 text-gray-700" v-if="review.content">
+                        {{ review.content }}
+                      </div>
+                      <div class="mt-2 text-gray-400 italic" v-else>
+                        此评价没有评论内容
+                      </div>
+                    </div>
+
+                    <div v-if="userReviews.length > 3" class="text-center mt-4">
+                      <router-link :to="{ path: Routes.USER_REVIEWS }" class="text-primary hover:underline">
+                        查看更多书评 (共 {{ userReviews.length }} 条)
+                      </router-link>
+                    </div>
+                  </div>
+
+                  <el-empty v-else description="您还没有发表过任何书评">
+                    <router-link :to="Routes.PRODUCT_LIST">
+                      <el-button type="primary" class="rounded-lg">浏览商品</el-button>
+                    </router-link>
+                  </el-empty>
+                </div>
+              </el-tab-pane>
               <el-tab-pane label="安全设置">
                 <div class="py-4">
                   <h3 class="text-xl font-medium text-gray-800 mb-6">修改密码</h3>
@@ -159,15 +214,30 @@
 
 <script setup lang="ts">
 import ProfileForm from "@/components/user/ProfileForm.vue";
+import { Routes } from "@/constants/routes";
+import { useReviewStore } from "@/stores/review";
 import { useUserStore } from "@/stores/user";
+import { formatDate } from "@/utils/formatters";
+import { buildRoute } from "@/utils/routeHelper";
 import { getChangePasswordRules } from "@/utils/validators";
 import { Lock, Plus, Upload, User } from "@element-plus/icons-vue";
 import type { FormInstance, UploadFile } from "element-plus";
 import { ElMessage } from "element-plus";
 import gsap from "gsap";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const userStore = useUserStore();
+const reviewStore = useReviewStore();
+
+// 获取用户书评
+onMounted(async () => {
+  await reviewStore.fetchUserReviews();
+});
+
+// 用户书评列表
+const userReviews = computed(() => {
+  return reviewStore.userReviews;
+});
 
 // 修改密码相关
 const passwordFormRef = ref<FormInstance>();
