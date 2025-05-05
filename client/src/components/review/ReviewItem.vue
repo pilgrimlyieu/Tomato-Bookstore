@@ -89,7 +89,15 @@ const handleEdit = () => {
 const handleDelete = async () => {
   try {
     await ElMessageBox.confirm(
-      "确定要删除这条书评吗？此操作不可撤销。",
+      `确定要删除这条 ${props.review.rating} 分的评论吗？
+       "${
+         props.review.content
+           ? props.review.content.substring(0, 20) +
+             (props.review.content.length > 20 ? "..." : "")
+           : "无评论内容"
+       }"
+
+       此操作不可撤销。`,
       "删除确认",
       {
         confirmButtonText: "确定",

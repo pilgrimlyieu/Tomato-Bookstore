@@ -16,14 +16,14 @@
             </div>
           </div>
 
-          <el-table :data="reviews" style="width: 100%" v-loading="loading">
+          <el-table :data="reviewsWithProductNames" style="width: 100%" v-loading="loading">
             <el-table-column label="书名" min-width="150">
               <template #default="{ row }">
                 <router-link
                   :to="buildRoute(Routes.PRODUCT_DETAIL, { id: row.productId })"
                   class="text-primary hover:text-primary-dark hover:underline"
                 >
-                  查看商品
+                  《{{ row.productName }}》
                 </router-link>
               </template>
             </el-table-column>
@@ -107,6 +107,7 @@
 <script setup lang="ts">
 import ReviewForm from "@/components/review/ReviewForm.vue";
 import { Routes } from "@/constants/routes";
+import { useProductStore } from "@/stores/product";
 import { useReviewStore } from "@/stores/review";
 import type { Review, ReviewUpdateParams } from "@/types/review";
 import { formatDate } from "@/utils/formatters";
@@ -116,6 +117,7 @@ import { computed, onMounted, ref } from "vue";
 
 // store
 const reviewStore = useReviewStore();
+const productStore = useProductStore();
 
 // 状态变量
 const showEditDialog = ref(false);
@@ -129,6 +131,16 @@ const loading = computed(() => reviewStore.loading);
 // 加载用户的所有书评
 onMounted(async () => {
   await reviewStore.fetchUserReviews();
+  await productStore.fetchAllProducts();
+});
+
+const reviewsWithProductNames = computed(() => {
+  return reviewStore.userReviews.map((review) => ({
+    ...review,
+    productName:
+      productStore.products.find((p) => p.id === review.productId)?.title ||
+      "未知书名",
+  }));
 });
 
 // 处理编辑书评

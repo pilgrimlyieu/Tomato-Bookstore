@@ -52,7 +52,7 @@ import type {
   ReviewCreateParams,
   ReviewUpdateParams,
 } from "@/types/review";
-import type { FormInstance, FormRules } from "element-plus";
+import { type FormInstance, type FormRules } from "element-plus";
 import { onMounted, reactive, ref } from "vue";
 
 // 属性
@@ -125,6 +125,7 @@ const handleSubmit = async () => {
     emit("submit", submitData);
   } catch (error) {
     console.error("表单验证失败：", error);
+    ElMessage.error("表单验证失败，请检查输入是否正确");
   }
 };
 </script>
