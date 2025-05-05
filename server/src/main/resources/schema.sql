@@ -130,4 +130,4 @@ CREATE INDEX idx_review_product ON reviews (product_id);
 CREATE INDEX idx_review_user ON reviews (user_id);
 CREATE INDEX idx_product_rate ON products (rate);
 CREATE INDEX idx_order_status ON orders (status);
-CREATE INDEX idx_review_created_at ON reviews (created_at);
+CREATE INDEX idx_review_product_created ON reviews (product_id, created_at DESC);
