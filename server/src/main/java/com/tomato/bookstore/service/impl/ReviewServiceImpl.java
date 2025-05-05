@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,18 +114,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     // 更新书评
-    review.setRating(reviewCreateDTO.getRating());
-    review.setContent(reviewCreateDTO.getContent());
-    review.setUpdatedAt(LocalDateTime.now());
-
-    Review updatedReview = reviewRepository.save(review);
     log.info("用户 {} 更新了书评 {}", userId, reviewId);
-
-    // 更新商品评分
-    Product product = getProductById(review.getProductId());
-    updateProductRating(product);
-
-    return convertToDTO(updatedReview);
+    return updateReviewCommon(review, reviewCreateDTO);
   }
 
   @Override
@@ -133,18 +125,8 @@ public class ReviewServiceImpl implements ReviewService {
     Review review = getReviewById(reviewId);
 
     // 更新书评
-    review.setRating(reviewCreateDTO.getRating());
-    review.setContent(reviewCreateDTO.getContent());
-    review.setUpdatedAt(LocalDateTime.now());
-
-    Review updatedReview = reviewRepository.save(review);
     log.info("管理员更新了书评 {}", reviewId);
-
-    // 更新商品评分
-    Product product = getProductById(review.getProductId());
-    updateProductRating(product);
-
-    return convertToDTO(updatedReview);
+    return updateReviewCommon(review, reviewCreateDTO);
   }
 
   @Override
@@ -158,12 +140,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     // 删除书评
-    reviewRepository.delete(review);
+    deleteReviewCommon(review);
     log.info("用户 {} 删除了书评 {}", userId, reviewId);
-
-    // 更新商品评分
-    Product product = getProductById(review.getProductId());
-    updateProductRating(product);
   }
 
   @Override
@@ -173,12 +151,8 @@ public class ReviewServiceImpl implements ReviewService {
     Review review = getReviewById(reviewId);
 
     // 删除书评
-    reviewRepository.delete(review);
+    deleteReviewCommon(review);
     log.info("管理员删除了书评 {}", reviewId);
-
-    // 更新商品评分
-    Product product = getProductById(review.getProductId());
-    updateProductRating(product);
   }
 
   @Override
@@ -279,6 +253,39 @@ public class ReviewServiceImpl implements ReviewService {
   private Review getReviewById(Long reviewId) {
     return reviewRepository.findById(reviewId)
         .orElseThrow(() -> ResourceNotFoundException.create("书评", "id", reviewId));
+  }
+
+  /**
+   * 更新书评公共逻辑
+   *
+   * @param review          书评
+   * @param reviewCreateDTO 书评创建 DTO
+   * @return 更新后的书评 DTO
+   */
+  private ReviewDTO updateReviewCommon(Review review, ReviewCreateDTO reviewCreateDTO) {
+    review.setRating(reviewCreateDTO.getRating());
+    review.setContent(reviewCreateDTO.getContent());
+    review.setUpdatedAt(LocalDateTime.now());
+    Review updatedReview = reviewRepository.save(review);
+
+    // 更新商品评分
+    Product product = getProductById(review.getProductId());
+    updateProductRating(product);
+
+    return convertToDTO(updatedReview);
+  }
+
+  /**
+   * 删除书评公共逻辑
+   *
+   * @param review 书评
+   */
+  private void deleteReviewCommon(Review review) {
+    reviewRepository.delete(review);
+
+    // 更新商品评分
+    Product product = getProductById(review.getProductId());
+    updateProductRating(product);
   }
 
   /**
