@@ -78,9 +78,9 @@ public class ReviewController {
   @GetMapping("/all")
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<List<ReviewDTO>> getAllReviews() {
-      log.info("管理员查看所有书评");
-      List<ReviewDTO> reviews = reviewService.getAllReviews();
-      return ApiResponse.success(reviews);
+    log.info("管理员查看所有书评");
+    List<ReviewDTO> reviews = reviewService.getAllReviews();
+    return ApiResponse.success(reviews);
   }
 
   /**
