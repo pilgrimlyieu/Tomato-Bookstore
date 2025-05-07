@@ -17,14 +17,6 @@ public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> 
   List<NoteComment> findByNoteIdOrderByCreatedAtDesc(Long noteId);
 
   /**
-   * 根据用户 ID 查找所有评论
-   *
-   * @param userId 用户 ID
-   * @return 评论列表
-   */
-  List<NoteComment> findByUserId(Long userId);
-
-  /**
    * 删除指定笔记的所有评论
    *
    * @param noteId 笔记 ID
