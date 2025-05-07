@@ -2,6 +2,7 @@ package com.tomato.bookstore.repository;
 
 import com.tomato.bookstore.constant.FeedbackType;
 import com.tomato.bookstore.model.NoteFeedback;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,12 +39,14 @@ public interface NoteFeedbackRepository extends JpaRepository<NoteFeedback, Long
   long countByNoteIdAndFeedbackType(Long noteId, FeedbackType feedbackType);
 
   /**
-   * 获取笔记的点赞和点踩数
+   * 批量统计多个笔记的指定反馈类型数量
    *
-   * @param noteId 笔记 ID
-   * @return 包含点赞数和点踩数的对象数组
+   * @param noteIds 笔记 ID 列表
+   * @param feedbackType 反馈类型
+   * @return 笔记 ID 和对应的反馈数量数组 [noteId, count]
    */
   @Query(
-      "SELECT f.feedbackType, COUNT(f) FROM NoteFeedback f WHERE f.noteId = :noteId GROUP BY f.feedbackType")
-  Object[][] countFeedbacksByNoteId(@Param("noteId") Long noteId);
+      "SELECT f.noteId, COUNT(f) FROM NoteFeedback f WHERE f.noteId IN :noteIds AND f.feedbackType = :feedbackType GROUP BY f.noteId")
+  List<Object[]> countByNoteIdsAndFeedbackType(
+      @Param("noteIds") List<Long> noteIds, @Param("feedbackType") FeedbackType feedbackType);
 }
