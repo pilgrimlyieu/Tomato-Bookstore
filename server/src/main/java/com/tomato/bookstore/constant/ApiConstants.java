@@ -75,4 +75,26 @@ public class ApiConstants {
   public static final String REVIEW_USER_PATH = REVIEWS + REVIEW_USER;
   public static final String REVIEW_USER_DETAIL_PATH = REVIEWS + REVIEW_USER_DETAIL;
   public static final String REVIEW_ADMIN_PATH = REVIEWS + REVIEW_ADMIN;
+
+  // 读书笔记相关路径
+  public static final String NOTES = "/notes";
+  public static final String NOTE_DETAIL = "/{noteId}";
+  public static final String NOTE_PRODUCT = "/product/{productId}";
+  public static final String NOTE_USER = "/user";
+  public static final String NOTE_USER_DETAIL = "/user/{userId}";
+  public static final String NOTE_ADMIN = "/admin/{noteId}";
+  public static final String NOTE_COMMENT = "/{noteId}/comments";
+  public static final String NOTE_COMMENT_DETAIL = "/{noteId}/comments/{commentId}";
+  public static final String NOTE_FEEDBACK = "/{noteId}/feedback";
+
+  // 完整读书笔记路径
+  public static final String NOTE_BASE_PATH = NOTES;
+  public static final String NOTE_DETAIL_PATH = NOTES + NOTE_DETAIL;
+  public static final String NOTE_PRODUCT_PATH = NOTES + NOTE_PRODUCT;
+  public static final String NOTE_USER_PATH = NOTES + NOTE_USER;
+  public static final String NOTE_USER_DETAIL_PATH = NOTES + NOTE_USER_DETAIL;
+  public static final String NOTE_ADMIN_PATH = NOTES + NOTE_ADMIN;
+  public static final String NOTE_COMMENT_PATH = NOTES + NOTE_COMMENT;
+  public static final String NOTE_COMMENT_DETAIL_PATH = NOTES + NOTE_COMMENT_DETAIL;
+  public static final String NOTE_FEEDBACK_PATH = NOTES + NOTE_FEEDBACK;
 }
