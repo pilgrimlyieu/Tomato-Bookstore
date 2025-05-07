@@ -8,5 +8,4 @@ package com.tomato.bookstore.constant;
 public enum FeedbackType {
   LIKE, // 点赞
   DISLIKE, // 点踩
-  NONE, // 无反馈
 }

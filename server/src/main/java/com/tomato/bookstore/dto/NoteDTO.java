@@ -24,7 +24,7 @@ public class NoteDTO {
   private int likeCount;
   private int dislikeCount;
   private int commentCount;
-  private FeedbackType userFeedback;
+  private FeedbackType userFeedback; // null 表示用户没有反馈
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }
