@@ -21,7 +21,6 @@ import com.tomato.bookstore.repository.ProductRepository;
 import com.tomato.bookstore.repository.UserRepository;
 import com.tomato.bookstore.service.NoteService;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class NoteServiceImpl implements NoteService {
-
   private final NoteRepository noteRepository;
   private final NoteFeedbackRepository noteFeedbackRepository;
   private final NoteCommentRepository noteCommentRepository;
@@ -56,36 +54,20 @@ public class NoteServiceImpl implements NoteService {
       return List.of();
     }
 
-    // 获取所有笔记的用户ID
-    List<Long> userIds =
-        notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
-
-    // 批量获取用户信息
-    List<User> users = userRepository.findAllById(userIds);
-    Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
-
     // 创建产品映射
-    Map<Long, Product> productMap = new HashMap<>();
-    productMap.put(productId, product);
+    Map<Long, Product> productMap = Map.of(productId, product);
 
-    // 批量获取点赞和点踩统计信息
+    // 获取用户信息
+    Map<Long, User> userMap = fetchUserMapForNotes(notes);
+
+    // 获取统计信息
     Map<Long, Long> likesCountMap = getNoteLikesCountMap(notes);
     Map<Long, Long> dislikesCountMap = getNoteDislikesCountMap(notes);
     Map<Long, Long> commentCountMap = getNoteCommentsCountMap(notes);
 
     // 批量转换为 DTO
-    return notes.stream()
-        .map(
-            note ->
-                convertToDTO(
-                    note,
-                    userMap,
-                    productMap,
-                    likesCountMap,
-                    dislikesCountMap,
-                    commentCountMap,
-                    null))
-        .collect(Collectors.toList());
+    return convertNotesToDTOs(
+        notes, userMap, productMap, likesCountMap, dislikesCountMap, commentCountMap, null);
   }
 
   @Override
@@ -100,37 +82,20 @@ public class NoteServiceImpl implements NoteService {
       return List.of();
     }
 
-    // 获取所有笔记的商品ID
-    List<Long> productIds =
-        notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
-
-    // 批量获取商品信息
-    List<Product> products = productRepository.findAllById(productIds);
-    Map<Long, Product> productMap =
-        products.stream().collect(Collectors.toMap(Product::getId, product -> product));
-
     // 创建用户映射
-    Map<Long, User> userMap = new HashMap<>();
-    userMap.put(userId, user);
+    Map<Long, User> userMap = Map.of(userId, user);
 
-    // 批量获取点赞和点踩统计信息
+    // 获取商品信息
+    Map<Long, Product> productMap = fetchProductMapForNotes(notes);
+
+    // 获取统计信息
     Map<Long, Long> likesCountMap = getNoteLikesCountMap(notes);
     Map<Long, Long> dislikesCountMap = getNoteDislikesCountMap(notes);
     Map<Long, Long> commentCountMap = getNoteCommentsCountMap(notes);
 
     // 批量转换为 DTO
-    return notes.stream()
-        .map(
-            note ->
-                convertToDTO(
-                    note,
-                    userMap,
-                    productMap,
-                    likesCountMap,
-                    dislikesCountMap,
-                    commentCountMap,
-                    null))
-        .collect(Collectors.toList());
+    return convertNotesToDTOs(
+        notes, userMap, productMap, likesCountMap, dislikesCountMap, commentCountMap, null);
   }
 
   @Override
@@ -141,38 +106,18 @@ public class NoteServiceImpl implements NoteService {
       return List.of();
     }
 
-    // 获取所有笔记的用户 ID 和商品 ID
-    List<Long> userIds =
-        notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
-    List<Long> productIds =
-        notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
+    // 获取用户和商品信息
+    Map<Long, User> userMap = fetchUserMapForNotes(notes);
+    Map<Long, Product> productMap = fetchProductMapForNotes(notes);
 
-    // 批量获取用户信息和商品信息
-    List<User> users = userRepository.findAllById(userIds);
-    Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
-
-    List<Product> products = productRepository.findAllById(productIds);
-    Map<Long, Product> productMap =
-        products.stream().collect(Collectors.toMap(Product::getId, product -> product));
-
-    // 批量获取点赞和点踩统计信息
+    // 获取统计信息
     Map<Long, Long> likesCountMap = getNoteLikesCountMap(notes);
     Map<Long, Long> dislikesCountMap = getNoteDislikesCountMap(notes);
     Map<Long, Long> commentCountMap = getNoteCommentsCountMap(notes);
 
     // 批量转换为 DTO
-    return notes.stream()
-        .map(
-            note ->
-                convertToDTO(
-                    note,
-                    userMap,
-                    productMap,
-                    likesCountMap,
-                    dislikesCountMap,
-                    commentCountMap,
-                    null))
-        .collect(Collectors.toList());
+    return convertNotesToDTOs(
+        notes, userMap, productMap, likesCountMap, dislikesCountMap, commentCountMap, null);
   }
 
   @Override
@@ -500,6 +445,73 @@ public class NoteServiceImpl implements NoteService {
         .createdAt(note.getCreatedAt())
         .updatedAt(note.getUpdatedAt())
         .build();
+  }
+
+  /**
+   * 批量将笔记实体转换为笔记 DTO
+   *
+   * @param notes 笔记实体列表
+   * @param userMap 用户映射
+   * @param productMap 商品映射
+   * @param likesCountMap 点赞数量映射
+   * @param dislikesCountMap 点踩数量映射
+   * @param commentCountMap 评论数量映射
+   * @param userFeedback 用户反馈状态
+   * @return 笔记 DTO 列表
+   */
+  private List<NoteDTO> convertNotesToDTOs(
+      List<Note> notes,
+      Map<Long, User> userMap,
+      Map<Long, Product> productMap,
+      Map<Long, Long> likesCountMap,
+      Map<Long, Long> dislikesCountMap,
+      Map<Long, Long> commentCountMap,
+      FeedbackType userFeedback) {
+
+    return notes.stream()
+        .map(
+            note ->
+                convertToDTO(
+                    note,
+                    userMap,
+                    productMap,
+                    likesCountMap,
+                    dislikesCountMap,
+                    commentCountMap,
+                    userFeedback))
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 为笔记列表获取用户映射
+   *
+   * @param notes 笔记列表
+   * @return 用户 ID 到用户实体的映射
+   */
+  private Map<Long, User> fetchUserMapForNotes(List<Note> notes) {
+    // 获取所有笔记的用户 ID
+    List<Long> userIds =
+        notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
+
+    // 批量获取用户信息
+    List<User> users = userRepository.findAllById(userIds);
+    return users.stream().collect(Collectors.toMap(User::getId, user -> user));
+  }
+
+  /**
+   * 为笔记列表获取商品映射
+   *
+   * @param notes 笔记列表
+   * @return 商品 ID 到商品实体的映射
+   */
+  private Map<Long, Product> fetchProductMapForNotes(List<Note> notes) {
+    // 获取所有笔记的商品 ID
+    List<Long> productIds =
+        notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
+
+    // 批量获取商品信息
+    List<Product> products = productRepository.findAllById(productIds);
+    return products.stream().collect(Collectors.toMap(Product::getId, product -> product));
   }
 
   /**
