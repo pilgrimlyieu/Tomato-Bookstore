@@ -221,45 +221,45 @@ public class NoteServiceImpl implements NoteService {
     // 确认用户存在
     getUserById(userId);
 
-    try {
-      // 检查用户是否已经反馈过该笔记
-      Optional<NoteFeedback> existingFeedback =
-          noteFeedbackRepository.findByNoteIdAndUserId(noteId, userId);
+    // 检查用户是否已经反馈过该笔记
+    Optional<NoteFeedback> existingFeedback =
+        noteFeedbackRepository.findByNoteIdAndUserId(noteId, userId);
 
-      if (existingFeedback.isPresent()) {
-        NoteFeedback feedback = existingFeedback.get();
-        // 如果反馈类型相同，则视为取消反馈
-        if (feedback.getFeedbackType() == feedbackType) {
-          noteFeedbackRepository.delete(feedback);
-          log.info("用户 {} 取消了对笔记 {} 的反馈", userId, noteId);
-        } else {
-          // 更新为新的反馈类型
-          feedback.setFeedbackType(feedbackType);
-          feedback.setUpdatedAt(LocalDateTime.now());
-          noteFeedbackRepository.save(feedback);
-          log.info(
-              "用户 {} 将对笔记 {} 的反馈从 {} 更改为 {}",
-              userId,
-              noteId,
-              existingFeedback.get().getFeedbackType(),
-              feedbackType);
-        }
+    if (existingFeedback.isPresent()) {
+      NoteFeedback feedback = existingFeedback.get();
+      // 如果反馈类型相同，则视为取消反馈
+      if (feedback.getFeedbackType() == feedbackType) {
+        noteFeedbackRepository.delete(feedback);
+        log.info("用户 {} 取消了对笔记 {} 的反馈", userId, noteId);
       } else {
-        // 创建新的反馈
-        NoteFeedback feedback =
-            NoteFeedback.builder()
-                .noteId(noteId)
-                .userId(userId)
-                .feedbackType(feedbackType)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        // 更新为新的反馈类型
+        feedback.setFeedbackType(feedbackType);
+        feedback.setUpdatedAt(LocalDateTime.now());
         noteFeedbackRepository.save(feedback);
-        log.info("用户 {} 对笔记 {} 添加了 {} 反馈", userId, noteId, feedbackType);
+        log.info(
+            "用户 {} 将对笔记 {} 的反馈从 {} 更改为 {}",
+            userId,
+            noteId,
+            existingFeedback.get().getFeedbackType(),
+            feedbackType);
       }
-    } catch (DataIntegrityViolationException e) {
-      log.warn("并发冲突：用户 {} 对笔记 {} 的反馈操作冲突，重新获取最新状态", userId, noteId);
-      // 冲突发生，说明另一个线程已创建了记录，直接返回最新状态
+    } else {
+      // 创建新的反馈
+      NoteFeedback feedback =
+          NoteFeedback.builder()
+              .noteId(noteId)
+              .userId(userId)
+              .feedbackType(feedbackType)
+              .createdAt(LocalDateTime.now())
+              .updatedAt(LocalDateTime.now())
+              .build();
+      try {
+        noteFeedbackRepository.save(feedback);
+      } catch (DataIntegrityViolationException e) {
+        log.warn("并发冲突：用户 {} 对笔记 {} 的反馈操作冲突，重新获取最新状态", userId, noteId);
+        // 冲突发生，说明另一个线程已创建了记录，直接返回最新状态
+      }
+      log.info("用户 {} 对笔记 {} 添加了 {} 反馈", userId, noteId, feedbackType);
     }
 
     return getNoteById(noteId, userId);
