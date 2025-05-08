@@ -243,66 +243,28 @@ public class NoteServiceImpl implements NoteService {
   @Transactional
   public NoteDTO updateNote(Long noteId, Long userId, NoteCreateDTO noteCreateDTO) {
     Note note = getNoteEntityById(noteId);
-
-    // 检查权限
-    if (!note.getUserId().equals(userId)) {
-      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
-    }
-
-    note.setTitle(noteCreateDTO.getTitle());
-    note.setContent(noteCreateDTO.getContent());
-    note.setUpdatedAt(LocalDateTime.now());
-
-    Note updatedNote = noteRepository.save(note);
-    log.info("用户 {} 更新了笔记 {}", userId, noteId);
-
-    return convertToDTO(updatedNote);
+    return updateNoteCommon(note, noteCreateDTO, false, userId);
   }
 
   @Override
   @Transactional
   public NoteDTO updateNoteByAdmin(Long noteId, NoteCreateDTO noteCreateDTO) {
     Note note = getNoteEntityById(noteId);
-
-    note.setTitle(noteCreateDTO.getTitle());
-    note.setContent(noteCreateDTO.getContent());
-    note.setUpdatedAt(LocalDateTime.now());
-
-    Note updatedNote = noteRepository.save(note);
-    log.info("管理员更新了笔记 {}", noteId);
-
-    return convertToDTO(updatedNote);
+    return updateNoteCommon(note, noteCreateDTO, true, null);
   }
 
   @Override
   @Transactional
   public void deleteNote(Long noteId, Long userId) {
     Note note = getNoteEntityById(noteId);
-
-    // 检查权限
-    if (!note.getUserId().equals(userId)) {
-      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
-    }
-
-    // 删除笔记相关的所有评论
-    noteCommentRepository.deleteByNoteId(noteId);
-
-    // 删除笔记
-    noteRepository.delete(note);
-    log.info("用户 {} 删除了笔记 {}", userId, noteId);
+    deleteNoteCommon(note, false, userId);
   }
 
   @Override
   @Transactional
   public void deleteNoteByAdmin(Long noteId) {
     Note note = getNoteEntityById(noteId);
-
-    // 删除笔记相关的所有评论
-    noteCommentRepository.deleteByNoteId(noteId);
-
-    // 删除笔记
-    noteRepository.delete(note);
-    log.info("管理员删除了笔记 {}", noteId);
+    deleteNoteCommon(note, true, null);
   }
 
   @Override
@@ -704,5 +666,59 @@ public class NoteServiceImpl implements NoteService {
     return noteCommentRepository
         .findById(commentId)
         .orElseThrow(() -> ResourceNotFoundException.create("笔记评论", "id", commentId));
+  }
+
+  /**
+   * 更新笔记的公共逻辑
+   *
+   * @param note 笔记实体
+   * @param noteCreateDTO 笔记创建 DTO
+   * @param isAdmin 是否为管理员操作
+   * @param userId 用户 ID（非管理员操作时必须提供）
+   * @return 更新后的笔记 DTO
+   */
+  private NoteDTO updateNoteCommon(
+      Note note, NoteCreateDTO noteCreateDTO, boolean isAdmin, Long userId) {
+    // 非管理员操作需要检查权限
+    if (!isAdmin && !note.getUserId().equals(userId)) {
+      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
+    }
+
+    note.setTitle(noteCreateDTO.getTitle());
+    note.setContent(noteCreateDTO.getContent());
+    note.setUpdatedAt(LocalDateTime.now());
+
+    Note updatedNote = noteRepository.save(note);
+
+    if (isAdmin) {
+      log.info("管理员更新了笔记 {}", note.getId());
+    } else {
+      log.info("用户 {} 更新了笔记 {}", userId, note.getId());
+    }
+
+    return convertToDTO(updatedNote);
+  }
+
+  /**
+   * 删除笔记的公共逻辑
+   *
+   * @param note 笔记实体
+   * @param isAdmin 是否为管理员操作
+   * @param userId 用户 ID（非管理员操作时必须提供）
+   */
+  private void deleteNoteCommon(Note note, boolean isAdmin, Long userId) {
+    // 非管理员操作需要检查权限
+    if (!isAdmin && !note.getUserId().equals(userId)) {
+      throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
+    }
+
+    // 删除笔记
+    noteRepository.delete(note);
+
+    if (isAdmin) {
+      log.info("管理员删除了笔记 {}", note.getId());
+    } else {
+      log.info("用户 {} 删除了笔记 {}", userId, note.getId());
+    }
   }
 }
