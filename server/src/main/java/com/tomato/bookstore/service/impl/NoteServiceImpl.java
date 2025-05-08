@@ -309,16 +309,8 @@ public class NoteServiceImpl implements NoteService {
     NoteComment savedComment = noteCommentRepository.save(comment);
     log.info("用户 {} 为笔记 {} 添加了评论", userId, noteId);
 
-    return NoteCommentDTO.builder()
-        .id(savedComment.getId())
-        .noteId(savedComment.getNoteId())
-        .userId(savedComment.getUserId())
-        .username(user.getUsername())
-        .userAvatar(user.getAvatar())
-        .content(savedComment.getContent())
-        .createdAt(savedComment.getCreatedAt())
-        .updatedAt(savedComment.getUpdatedAt())
-        .build();
+    Map<Long, User> userMap = Map.of(user.getId(), user);
+    return convertToCommentDTO(savedComment, userMap);
   }
 
   @Override
