@@ -406,83 +406,18 @@ public class NoteServiceImpl implements NoteService {
    * @return 笔记 DTO
    */
   private NoteDTO convertToDTO(Note note) {
-    User user = getUserById(note.getUserId());
-    Product product = getProductById(note.getProductId());
-
-    // 获取点赞和点踩数
-    long likeCount =
-        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
-    long dislikeCount =
-        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.DISLIKE);
-
-    // 获取评论数
-    long commentCount = noteCommentRepository.countByNoteId(note.getId());
-
-    return NoteDTO.builder()
-        .id(note.getId())
-        .title(note.getTitle())
-        .content(note.getContent())
-        .productId(note.getProductId())
-        .productTitle(product.getTitle())
-        .userId(note.getUserId())
-        .username(user.getUsername())
-        .userAvatar(user.getAvatar())
-        .likeCount((int) likeCount)
-        .dislikeCount((int) dislikeCount)
-        .commentCount((int) commentCount)
-        .userFeedback(null)
-        .createdAt(note.getCreatedAt())
-        .updatedAt(note.getUpdatedAt())
-        .build();
+    return convertToDTO(note, null, null, null, null, null, null);
   }
 
   /**
-   * 将 Note 实体转换为 NoteDTO，包括用户反馈状态
+   * 将 Note 实体转换为 NoteDTO
    *
    * @param note 笔记实体
-   * @param userFeedback 用户反馈状态，null 表示无反馈
-   * @return 笔记 DTO
-   */
-  private NoteDTO convertToDTO(Note note, FeedbackType userFeedback) {
-    User user = getUserById(note.getUserId());
-    Product product = getProductById(note.getProductId());
-
-    // 获取点赞和点踩数
-    long likeCount =
-        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
-    long dislikeCount =
-        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.DISLIKE);
-
-    // 获取评论数
-    long commentCount = noteCommentRepository.countByNoteId(note.getId());
-
-    return NoteDTO.builder()
-        .id(note.getId())
-        .title(note.getTitle())
-        .content(note.getContent())
-        .productId(note.getProductId())
-        .productTitle(product.getTitle())
-        .userId(note.getUserId())
-        .username(user.getUsername())
-        .userAvatar(user.getAvatar())
-        .likeCount((int) likeCount)
-        .dislikeCount((int) dislikeCount)
-        .commentCount((int) commentCount)
-        .userFeedback(userFeedback)
-        .createdAt(note.getCreatedAt())
-        .updatedAt(note.getUpdatedAt())
-        .build();
-  }
-
-  /**
-   * 将 Note 实体转换为 NoteDTO，使用缓存映射提高性能
-   *
-   * @param note 笔记实体
-   * @param userMap 用户缓存映射
-   * @param productMap 商品缓存映射
-   * @param likesCountMap 点赞数量映射
-   * @param dislikesCountMap 点踩数量映射
-   * @param commentCountMap 评论数量映射
+   * @param userMap 用户缓存映射，为 null 时将单独查询
+   * @param productMap 商品缓存映射，为 null 时将单独查询
+   * @param likesCountMap 点赞数量映射，为 null 时将单独查询
+   * @param dislikesCountMap 点踩数量映射，为 null 时将单独查询
+   * @param commentCountMap 评论数量映射，为 null 时将单独查询
    * @param userFeedback 用户反馈状态，null 表示无反馈
    * @return 笔记 DTO
    */
@@ -495,8 +430,22 @@ public class NoteServiceImpl implements NoteService {
       Map<Long, Long> commentCountMap,
       FeedbackType userFeedback) {
 
-    User user = userMap.get(note.getUserId());
-    Product product = productMap.get(note.getProductId());
+    User user;
+    Product product;
+
+    // 获取用户信息
+    if (userMap != null && userMap.containsKey(note.getUserId())) {
+      user = userMap.get(note.getUserId());
+    } else {
+      user = getUserById(note.getUserId());
+    }
+
+    // 获取商品信息
+    if (productMap != null && productMap.containsKey(note.getProductId())) {
+      product = productMap.get(note.getProductId());
+    } else {
+      product = getProductById(note.getProductId());
+    }
 
     if (user == null) {
       throw DataInconsistencyException.create("笔记", note.getId(), "用户", note.getUserId());
@@ -506,10 +455,34 @@ public class NoteServiceImpl implements NoteService {
       throw DataInconsistencyException.create("笔记", note.getId(), "商品", note.getProductId());
     }
 
-    // 获取点赞、点踩和评论数
-    int likeCount = likesCountMap.getOrDefault(note.getId(), 0L).intValue();
-    int dislikeCount = dislikesCountMap.getOrDefault(note.getId(), 0L).intValue();
-    int commentCount = commentCountMap.getOrDefault(note.getId(), 0L).intValue();
+    // 获取点赞数
+    int likeCount;
+    if (likesCountMap != null && likesCountMap.containsKey(note.getId())) {
+      likeCount = likesCountMap.getOrDefault(note.getId(), 0L).intValue();
+    } else {
+      likeCount =
+          (int)
+              noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
+    }
+
+    // 获取点踩数
+    int dislikeCount;
+    if (dislikesCountMap != null && dislikesCountMap.containsKey(note.getId())) {
+      dislikeCount = dislikesCountMap.getOrDefault(note.getId(), 0L).intValue();
+    } else {
+      dislikeCount =
+          (int)
+              noteFeedbackRepository.countByNoteIdAndFeedbackType(
+                  note.getId(), FeedbackType.DISLIKE);
+    }
+
+    // 获取评论数
+    int commentCount;
+    if (commentCountMap != null && commentCountMap.containsKey(note.getId())) {
+      commentCount = commentCountMap.getOrDefault(note.getId(), 0L).intValue();
+    } else {
+      commentCount = (int) noteCommentRepository.countByNoteId(note.getId());
+    }
 
     return NoteDTO.builder()
         .id(note.getId())
