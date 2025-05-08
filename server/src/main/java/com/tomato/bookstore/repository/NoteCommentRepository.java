@@ -11,6 +11,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> {
   /**
+   * 评论数量统计投影接口
+   */
+  interface NoteCommentCountProjection {
+    Long getNoteId();
+
+    Long getCount();
+  }
+
+  /**
    * 根据笔记 ID 查找所有评论，按创建时间倒序排序
    *
    * @param noteId 笔记 ID
@@ -36,10 +45,10 @@ public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> 
   /**
    * 批量统计多个笔记的评论数量
    *
-   * @param noteIds 笔记ID列表
-   * @return 笔记ID和对应的评论数量数组 [noteId, count]
+   * @param noteIds 笔记 ID 列表
+   * @return 笔记 ID 和对应的评论数量的投影对象列表
    */
   @Query(
-      "SELECT c.noteId, COUNT(c) FROM NoteComment c WHERE c.noteId IN :noteIds GROUP BY c.noteId")
-  List<Object[]> countByNoteIds(@Param("noteIds") List<Long> noteIds);
+  "SELECT c.noteId AS noteId, COUNT(c) AS count FROM NoteComment c WHERE c.noteId IN :noteIds GROUP BY c.noteId")
+  List<NoteCommentCountProjection> countByNoteIds(@Param("noteIds") List<Long> noteIds);
 }
