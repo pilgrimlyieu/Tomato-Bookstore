@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 /** 读书笔记评论仓库接口 */
 @Repository
 public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> {
-  /**
-   * 评论数量统计投影接口
-   */
+  /** 评论数量统计投影接口 */
   interface NoteCommentCountProjection {
     Long getNoteId();
 
@@ -49,6 +47,6 @@ public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> 
    * @return 笔记 ID 和对应的评论数量的投影对象列表
    */
   @Query(
-  "SELECT c.noteId AS noteId, COUNT(c) AS count FROM NoteComment c WHERE c.noteId IN :noteIds GROUP BY c.noteId")
+      "SELECT c.noteId AS noteId, COUNT(c) AS count FROM NoteComment c WHERE c.noteId IN :noteIds GROUP BY c.noteId")
   List<NoteCommentCountProjection> countByNoteIds(@Param("noteIds") List<Long> noteIds);
 }

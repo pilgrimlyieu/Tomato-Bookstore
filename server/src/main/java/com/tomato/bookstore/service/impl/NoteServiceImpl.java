@@ -7,6 +7,7 @@ import com.tomato.bookstore.dto.NoteCommentDTO;
 import com.tomato.bookstore.dto.NoteCreateDTO;
 import com.tomato.bookstore.dto.NoteDTO;
 import com.tomato.bookstore.exception.BusinessException;
+import com.tomato.bookstore.exception.DataInconsistencyException;
 import com.tomato.bookstore.exception.ResourceNotFoundException;
 import com.tomato.bookstore.model.Note;
 import com.tomato.bookstore.model.NoteComment;
@@ -56,7 +57,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     // 获取所有笔记的用户ID
-    List<Long> userIds = notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
+    List<Long> userIds =
+        notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
 
     // 批量获取用户信息
     List<User> users = userRepository.findAllById(userIds);
@@ -74,14 +76,15 @@ public class NoteServiceImpl implements NoteService {
     // 批量转换为 DTO
     return notes.stream()
         .map(
-            note -> convertToDTO(
-                note,
-                userMap,
-                productMap,
-                likesCountMap,
-                dislikesCountMap,
-                commentCountMap,
-                null))
+            note ->
+                convertToDTO(
+                    note,
+                    userMap,
+                    productMap,
+                    likesCountMap,
+                    dislikesCountMap,
+                    commentCountMap,
+                    null))
         .collect(Collectors.toList());
   }
 
@@ -98,11 +101,13 @@ public class NoteServiceImpl implements NoteService {
     }
 
     // 获取所有笔记的商品ID
-    List<Long> productIds = notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
+    List<Long> productIds =
+        notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
 
     // 批量获取商品信息
     List<Product> products = productRepository.findAllById(productIds);
-    Map<Long, Product> productMap = products.stream().collect(Collectors.toMap(Product::getId, product -> product));
+    Map<Long, Product> productMap =
+        products.stream().collect(Collectors.toMap(Product::getId, product -> product));
 
     // 创建用户映射
     Map<Long, User> userMap = new HashMap<>();
@@ -116,14 +121,15 @@ public class NoteServiceImpl implements NoteService {
     // 批量转换为 DTO
     return notes.stream()
         .map(
-            note -> convertToDTO(
-                note,
-                userMap,
-                productMap,
-                likesCountMap,
-                dislikesCountMap,
-                commentCountMap,
-                null))
+            note ->
+                convertToDTO(
+                    note,
+                    userMap,
+                    productMap,
+                    likesCountMap,
+                    dislikesCountMap,
+                    commentCountMap,
+                    null))
         .collect(Collectors.toList());
   }
 
@@ -136,15 +142,18 @@ public class NoteServiceImpl implements NoteService {
     }
 
     // 获取所有笔记的用户 ID 和商品 ID
-    List<Long> userIds = notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
-    List<Long> productIds = notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
+    List<Long> userIds =
+        notes.stream().map(Note::getUserId).distinct().collect(Collectors.toList());
+    List<Long> productIds =
+        notes.stream().map(Note::getProductId).distinct().collect(Collectors.toList());
 
     // 批量获取用户信息和商品信息
     List<User> users = userRepository.findAllById(userIds);
     Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
 
     List<Product> products = productRepository.findAllById(productIds);
-    Map<Long, Product> productMap = products.stream().collect(Collectors.toMap(Product::getId, product -> product));
+    Map<Long, Product> productMap =
+        products.stream().collect(Collectors.toMap(Product::getId, product -> product));
 
     // 批量获取点赞和点踩统计信息
     Map<Long, Long> likesCountMap = getNoteLikesCountMap(notes);
@@ -154,14 +163,15 @@ public class NoteServiceImpl implements NoteService {
     // 批量转换为 DTO
     return notes.stream()
         .map(
-            note -> convertToDTO(
-                note,
-                userMap,
-                productMap,
-                likesCountMap,
-                dislikesCountMap,
-                commentCountMap,
-                null))
+            note ->
+                convertToDTO(
+                    note,
+                    userMap,
+                    productMap,
+                    likesCountMap,
+                    dislikesCountMap,
+                    commentCountMap,
+                    null))
         .collect(Collectors.toList());
   }
 
@@ -171,7 +181,8 @@ public class NoteServiceImpl implements NoteService {
 
     FeedbackType userFeedback = null; // 默认为 null，表示没有反馈
     if (currentUserId != null) {
-      Optional<NoteFeedback> feedback = noteFeedbackRepository.findByNoteIdAndUserId(noteId, currentUserId);
+      Optional<NoteFeedback> feedback =
+          noteFeedbackRepository.findByNoteIdAndUserId(noteId, currentUserId);
       if (feedback.isPresent()) {
         userFeedback = feedback.get().getFeedbackType();
       }
@@ -186,7 +197,8 @@ public class NoteServiceImpl implements NoteService {
 
     // 获取点赞、点踩和评论数
     long likeCount = noteFeedbackRepository.countByNoteIdAndFeedbackType(noteId, FeedbackType.LIKE);
-    long dislikeCount = noteFeedbackRepository.countByNoteIdAndFeedbackType(noteId, FeedbackType.DISLIKE);
+    long dislikeCount =
+        noteFeedbackRepository.countByNoteIdAndFeedbackType(noteId, FeedbackType.DISLIKE);
     long commentCount = noteCommentRepository.countByNoteId(noteId);
 
     Map<Long, Long> likesCountMap = Map.of(noteId, likeCount);
@@ -211,14 +223,15 @@ public class NoteServiceImpl implements NoteService {
       throw new BusinessException(BusinessErrorCode.NOTE_ALREADY_EXISTS);
     }
 
-    Note note = Note.builder()
-        .title(noteCreateDTO.getTitle())
-        .content(noteCreateDTO.getContent())
-        .productId(productId)
-        .userId(userId)
-        .createdAt(LocalDateTime.now())
-        .updatedAt(LocalDateTime.now())
-        .build();
+    Note note =
+        Note.builder()
+            .title(noteCreateDTO.getTitle())
+            .content(noteCreateDTO.getContent())
+            .productId(productId)
+            .userId(userId)
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .build();
 
     Note savedNote = noteRepository.save(note);
     log.info("用户 {} 为商品 {} 创建了读书笔记", userId, productId);
@@ -303,7 +316,8 @@ public class NoteServiceImpl implements NoteService {
 
     try {
       // 检查用户是否已经反馈过该笔记
-      Optional<NoteFeedback> existingFeedback = noteFeedbackRepository.findByNoteIdAndUserId(noteId, userId);
+      Optional<NoteFeedback> existingFeedback =
+          noteFeedbackRepository.findByNoteIdAndUserId(noteId, userId);
 
       if (existingFeedback.isPresent()) {
         NoteFeedback feedback = existingFeedback.get();
@@ -325,13 +339,14 @@ public class NoteServiceImpl implements NoteService {
         }
       } else {
         // 创建新的反馈
-        NoteFeedback feedback = NoteFeedback.builder()
-            .noteId(noteId)
-            .userId(userId)
-            .feedbackType(feedbackType)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
+        NoteFeedback feedback =
+            NoteFeedback.builder()
+                .noteId(noteId)
+                .userId(userId)
+                .feedbackType(feedbackType)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         noteFeedbackRepository.save(feedback);
         log.info("用户 {} 对笔记 {} 添加了 {} 反馈", userId, noteId, feedbackType);
       }
@@ -351,7 +366,8 @@ public class NoteServiceImpl implements NoteService {
     List<NoteComment> comments = noteCommentRepository.findByNoteIdOrderByCreatedAtDesc(noteId);
 
     // 获取所有评论的用户 ID
-    List<Long> userIds = comments.stream().map(NoteComment::getUserId).distinct().collect(Collectors.toList());
+    List<Long> userIds =
+        comments.stream().map(NoteComment::getUserId).distinct().collect(Collectors.toList());
 
     // 一次性获取所有用户信息
     List<User> users = userRepository.findAllById(userIds);
@@ -374,13 +390,14 @@ public class NoteServiceImpl implements NoteService {
     // 确认用户存在
     User user = getUserById(userId);
 
-    NoteComment comment = NoteComment.builder()
-        .noteId(noteId)
-        .userId(userId)
-        .content(commentCreateDTO.getContent())
-        .createdAt(LocalDateTime.now())
-        .updatedAt(LocalDateTime.now())
-        .build();
+    NoteComment comment =
+        NoteComment.builder()
+            .noteId(noteId)
+            .userId(userId)
+            .content(commentCreateDTO.getContent())
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .build();
 
     NoteComment savedComment = noteCommentRepository.save(comment);
     log.info("用户 {} 为笔记 {} 添加了评论", userId, noteId);
@@ -431,8 +448,10 @@ public class NoteServiceImpl implements NoteService {
     Product product = getProductById(note.getProductId());
 
     // 获取点赞和点踩数
-    long likeCount = noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
-    long dislikeCount = noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.DISLIKE);
+    long likeCount =
+        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
+    long dislikeCount =
+        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.DISLIKE);
 
     // 获取评论数
     long commentCount = noteCommentRepository.countByNoteId(note.getId());
@@ -458,7 +477,7 @@ public class NoteServiceImpl implements NoteService {
   /**
    * 将 Note 实体转换为 NoteDTO，包括用户反馈状态
    *
-   * @param note         笔记实体
+   * @param note 笔记实体
    * @param userFeedback 用户反馈状态，null 表示无反馈
    * @return 笔记 DTO
    */
@@ -467,8 +486,10 @@ public class NoteServiceImpl implements NoteService {
     Product product = getProductById(note.getProductId());
 
     // 获取点赞和点踩数
-    long likeCount = noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
-    long dislikeCount = noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.DISLIKE);
+    long likeCount =
+        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.LIKE);
+    long dislikeCount =
+        noteFeedbackRepository.countByNoteIdAndFeedbackType(note.getId(), FeedbackType.DISLIKE);
 
     // 获取评论数
     long commentCount = noteCommentRepository.countByNoteId(note.getId());
@@ -494,13 +515,13 @@ public class NoteServiceImpl implements NoteService {
   /**
    * 将 Note 实体转换为 NoteDTO，使用缓存映射提高性能
    *
-   * @param note             笔记实体
-   * @param userMap          用户缓存映射
-   * @param productMap       商品缓存映射
-   * @param likesCountMap    点赞数量映射
+   * @param note 笔记实体
+   * @param userMap 用户缓存映射
+   * @param productMap 商品缓存映射
+   * @param likesCountMap 点赞数量映射
    * @param dislikesCountMap 点踩数量映射
-   * @param commentCountMap  评论数量映射
-   * @param userFeedback     用户反馈状态，null 表示无反馈
+   * @param commentCountMap 评论数量映射
+   * @param userFeedback 用户反馈状态，null 表示无反馈
    * @return 笔记 DTO
    */
   private NoteDTO convertToDTO(
@@ -516,13 +537,11 @@ public class NoteServiceImpl implements NoteService {
     Product product = productMap.get(note.getProductId());
 
     if (user == null) {
-      log.error("严重的数据一致性问题：用户 {} 不存在但关联了笔记 {}", note.getUserId(), note.getId());
-      user = User.builder().username("未知用户").build();
+      throw DataInconsistencyException.create("笔记", note.getId(), "用户", note.getUserId());
     }
 
     if (product == null) {
-      log.error("严重的数据一致性问题：商品 {} 不存在但关联了笔记 {}", note.getProductId(), note.getId());
-      product = Product.builder().title("未知商品").build();
+      throw DataInconsistencyException.create("笔记", note.getId(), "商品", note.getProductId());
     }
 
     // 获取点赞、点踩和评论数
@@ -566,7 +585,7 @@ public class NoteServiceImpl implements NoteService {
                 NoteFeedbackRepository.NoteFeedbackCountProjection::getNoteId, // noteId
                 NoteFeedbackRepository.NoteFeedbackCountProjection::getCount, // count
                 (a, b) -> a // 如果有重复键，保留第一个值
-            ));
+                ));
   }
 
   /**
@@ -589,7 +608,7 @@ public class NoteServiceImpl implements NoteService {
                 NoteFeedbackRepository.NoteFeedbackCountProjection::getNoteId, // noteId
                 NoteFeedbackRepository.NoteFeedbackCountProjection::getCount, // count
                 (a, b) -> a // 如果有重复键，保留第一个值
-            ));
+                ));
   }
 
   /**
@@ -610,7 +629,7 @@ public class NoteServiceImpl implements NoteService {
                 NoteCommentRepository.NoteCommentCountProjection::getNoteId, // noteId
                 NoteCommentRepository.NoteCommentCountProjection::getCount, // count
                 (a, b) -> a // 如果有重复键，保留第一个值
-            ));
+                ));
   }
 
   /**
@@ -624,17 +643,7 @@ public class NoteServiceImpl implements NoteService {
     User user = userMap.get(comment.getUserId());
 
     if (user == null) {
-      log.error("严重的数据一致性问题：用户 {} 不存在但关联了评论 {}", comment.getUserId(), comment.getId());
-      return NoteCommentDTO.builder()
-          .id(comment.getId())
-          .noteId(comment.getNoteId())
-          .userId(comment.getUserId())
-          .username("未知用户")
-          .userAvatar(null)
-          .content(comment.getContent())
-          .createdAt(comment.getCreatedAt())
-          .updatedAt(comment.getUpdatedAt())
-          .build();
+      throw DataInconsistencyException.create("评论", comment.getId(), "用户", comment.getUserId());
     }
 
     return NoteCommentDTO.builder()

@@ -12,9 +12,7 @@ import org.springframework.stereotype.Repository;
 /** 读书笔记反馈仓库接口 */
 @Repository
 public interface NoteFeedbackRepository extends JpaRepository<NoteFeedback, Long> {
-  /**
-   * 反馈数量统计投影接口
-   */
+  /** 反馈数量统计投影接口 */
   interface NoteFeedbackCountProjection {
     Long getNoteId();
 
@@ -50,12 +48,12 @@ public interface NoteFeedbackRepository extends JpaRepository<NoteFeedback, Long
   /**
    * 批量统计多个笔记的指定反馈类型数量
    *
-   * @param noteIds      笔记 ID 列表
+   * @param noteIds 笔记 ID 列表
    * @param feedbackType 反馈类型
    * @return 笔记 ID 和对应的反馈数量的投影对象列表
    */
   @Query(
-  "SELECT f.noteId AS noteId, COUNT(f) AS count FROM NoteFeedback f WHERE f.noteId IN :noteIds AND f.feedbackType = :feedbackType GROUP BY f.noteId")
+      "SELECT f.noteId AS noteId, COUNT(f) AS count FROM NoteFeedback f WHERE f.noteId IN :noteIds AND f.feedbackType = :feedbackType GROUP BY f.noteId")
   List<NoteFeedbackCountProjection> countByNoteIdsAndFeedbackType(
       @Param("noteIds") List<Long> noteIds, @Param("feedbackType") FeedbackType feedbackType);
 }
