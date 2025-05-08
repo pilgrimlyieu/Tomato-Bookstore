@@ -64,7 +64,11 @@ public enum BusinessErrorCode {
 
   // 笔记模块（70xxx）
   NOTE_NOT_FOUND(70001, "笔记不存在"),
-  NOTE_CONTENT_INVALID(70002, "笔记内容不符合规范"),
+  NOTE_ALREADY_EXISTS(70002, "已创建过此书的笔记"),
+  NOTE_CONTENT_INVALID(70003, "笔记内容不符合规范"),
+  NOTE_COMMENT_NOT_FOUND(70004, "笔记评论不存在"),
+  NOTE_FEEDBACK_ALREADY_EXISTS(70005, "已对此笔记进行过反馈"),
+  NOTE_FEEDBACK_NOT_FOUND(70006, "笔记反馈不存在"),
 
   // 系统通用（90xxx）
   SYSTEM_ERROR(90001, "系统错误"),

@@ -4,6 +4,7 @@ import com.tomato.bookstore.constant.BusinessErrorCode;
 import com.tomato.bookstore.dto.ReviewCreateDTO;
 import com.tomato.bookstore.dto.ReviewDTO;
 import com.tomato.bookstore.exception.BusinessException;
+import com.tomato.bookstore.exception.DataInconsistencyException;
 import com.tomato.bookstore.exception.ResourceNotFoundException;
 import com.tomato.bookstore.model.Product;
 import com.tomato.bookstore.model.Review;
@@ -71,21 +72,22 @@ public class ReviewServiceImpl implements ReviewService {
 
   @Override
   public List<ReviewDTO> getAllReviews() {
-      List<Review> reviews = reviewRepository.findAll();
+    List<Review> reviews = reviewRepository.findAll();
 
-      // 获取所有评论的 userId 列表
-      List<Long> userIds = reviews.stream().map(Review::getUserId).distinct().collect(Collectors.toList());
+    // 获取所有评论的 userId 列表
+    List<Long> userIds =
+        reviews.stream().map(Review::getUserId).distinct().collect(Collectors.toList());
 
-      // 一次性获取所有用户信息
-      List<User> users = userRepository.findAllById(userIds);
+    // 一次性获取所有用户信息
+    List<User> users = userRepository.findAllById(userIds);
 
-      // 构建 userId 到 User 的映射
-      Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
+    // 构建 userId 到 User 的映射
+    Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
 
-      // 转换为 DTO
-      return reviews.stream()
-              .map(review -> convertToDTO(review, userMap))
-              .collect(Collectors.toList());
+    // 转换为 DTO
+    return reviews.stream()
+        .map(review -> convertToDTO(review, userMap))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -190,18 +192,7 @@ public class ReviewServiceImpl implements ReviewService {
     User user = userMap.get(review.getUserId());
 
     if (user == null) {
-      log.error("严重的数据一致性问题：用户 {} 不存在但关联了书评 {}", review.getUserId(), review.getId());
-      return ReviewDTO.builder()
-          .id(review.getId())
-          .productId(review.getProductId())
-          .userId(review.getUserId())
-          .username("未知用户")
-          .userAvatar(null)
-          .rating(review.getRating())
-          .content(review.getContent())
-          .createdAt(review.getCreatedAt())
-          .updatedAt(review.getUpdatedAt())
-          .build();
+      throw DataInconsistencyException.create("书评", review.getId(), "用户", review.getUserId());
     }
 
     return ReviewDTO.builder()

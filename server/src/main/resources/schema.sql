@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS note_comments;
+DROP TABLE IF EXISTS note_feedbacks;
+DROP TABLE IF EXISTS notes;
 DROP TABLE IF EXISTS carts_orders_relation;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS carts;
@@ -116,6 +119,45 @@ CREATE TABLE reviews (
     UNIQUE KEY uk_product_user (product_id, user_id) COMMENT '一个用户对一本书只能有一个评价'
 ) COMMENT='书评表';
 
+-- 创建读书笔记表
+CREATE TABLE notes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '笔记 ID',
+    title VARCHAR(255) NOT NULL COMMENT '笔记标题',
+    content TEXT NOT NULL COMMENT '笔记内容',
+    product_id BIGINT NOT NULL COMMENT '书籍 ID，关联商品表',
+    user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
+    created_at TIMESTAMP NOT NULL COMMENT '创建时间',
+    updated_at TIMESTAMP COMMENT '更新时间',
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE KEY uk_product_user (product_id, user_id) COMMENT '一个用户对一本书只能有一个笔记'
+) COMMENT='读书笔记表';
+
+-- 创建读书笔记反馈表
+CREATE TABLE note_feedbacks (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '反馈 ID',
+    note_id BIGINT NOT NULL COMMENT '笔记 ID，关联笔记表',
+    user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
+    feedback_type ENUM('LIKE', 'DISLIKE') NOT NULL COMMENT '反馈类型：点赞或点踩',
+    created_at TIMESTAMP NOT NULL COMMENT '创建时间',
+    updated_at TIMESTAMP COMMENT '更新时间',
+    FOREIGN KEY (note_id) REFERENCES notes (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE KEY uk_note_user (note_id, user_id) COMMENT '一个用户对一个笔记只能有一个反馈'
+) COMMENT='读书笔记反馈表';
+
+-- 创建读书笔记评论表
+CREATE TABLE note_comments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '评论 ID',
+    note_id BIGINT NOT NULL COMMENT '笔记 ID，关联笔记表',
+    user_id BIGINT NOT NULL COMMENT '用户 ID，关联用户表',
+    content TEXT NOT NULL COMMENT '评论内容',
+    created_at TIMESTAMP NOT NULL COMMENT '创建时间',
+    updated_at TIMESTAMP COMMENT '更新时间',
+    FOREIGN KEY (note_id) REFERENCES notes (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) COMMENT='读书笔记评论表';
+
 -- 为外键创建索引以提高查询性能
 CREATE INDEX idx_stockpile_product ON stockpiles (product_id);
 CREATE INDEX idx_specification_product ON specifications (product_id);
@@ -129,3 +171,9 @@ CREATE INDEX idx_advertisement_product ON advertisements (product_id);
 CREATE INDEX idx_review_user ON reviews (user_id);
 CREATE INDEX idx_product_rate ON products (rate);
 CREATE INDEX idx_review_product_created ON reviews (product_id, created_at DESC);
+CREATE INDEX idx_note_user ON notes (user_id);
+CREATE INDEX idx_note_product ON notes (product_id);
+CREATE INDEX idx_note_feedback_note ON note_feedbacks (note_id);
+CREATE INDEX idx_note_feedback_user ON note_feedbacks (user_id);
+CREATE INDEX idx_note_comment_note ON note_comments (note_id);
+CREATE INDEX idx_note_comment_user ON note_comments (user_id);

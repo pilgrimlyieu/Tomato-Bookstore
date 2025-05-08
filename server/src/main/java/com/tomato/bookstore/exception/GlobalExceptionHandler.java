@@ -128,6 +128,22 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * 处理数据一致性异常
+   *
+   * <p>该异常通常表示系统中存在数据一致性问题，例如：外键关联的数据不存在等。
+   *
+   * @param e 数据一致性异常
+   * @return ApiResponse 统一格式的响应
+   */
+  @ExceptionHandler(DataInconsistencyException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ApiResponse<Void> handleDataInconsistencyException(DataInconsistencyException e) {
+    // 这里使用 error 级别，因为数据一致性问题是严重的系统错误
+    log.error("数据一致性异常：{}", e.getMessage());
+    return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "系统遇到数据一致性问题，请联系管理员");
+  }
+
+  /**
    * 处理其他所有异常
    *
    * <p>该异常通常用于表示系统内部错误，例如：数据库连接失败、网络异常等。

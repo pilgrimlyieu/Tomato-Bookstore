@@ -26,6 +26,51 @@ WHERE
             title LIKE 'test_%'
     );
 
+-- 清理笔记评论数据
+DELETE FROM note_comments
+WHERE
+    note_id IN (
+        SELECT id
+        FROM notes
+        WHERE
+            title LIKE 'test_%'
+            OR user_id IN (
+                SELECT id
+                FROM users
+                WHERE username LIKE 'test_%'
+            )
+    );
+
+-- 清理笔记反馈数据
+DELETE FROM note_feedbacks
+WHERE
+    note_id IN (
+        SELECT id
+        FROM notes
+        WHERE
+            title LIKE 'test_%'
+            OR user_id IN (
+                SELECT id
+                FROM users
+                WHERE username LIKE 'test_%'
+            )
+    );
+
+-- 清理笔记数据
+DELETE FROM notes
+WHERE
+    title LIKE 'test_%'
+    OR user_id IN (
+        SELECT id
+        FROM users
+        WHERE username LIKE 'test_%'
+    )
+    OR product_id IN (
+        SELECT id
+        FROM products
+        WHERE title LIKE 'test_%'
+    );
+
 DELETE FROM carts_orders_relation
 WHERE
     cart_id IN (

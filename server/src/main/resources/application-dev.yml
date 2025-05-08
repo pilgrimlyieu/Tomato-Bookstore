@@ -18,3 +18,4 @@ spring:
         - classpath:data/carts.sql
         - classpath:data/orders.sql
         - classpath:data/reviews.sql
+        - classpath:data/notes.sql
