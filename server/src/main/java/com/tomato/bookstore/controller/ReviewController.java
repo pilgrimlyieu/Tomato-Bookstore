@@ -48,7 +48,7 @@ public class ReviewController {
    * @return 书评列表
    */
   @GetMapping("/user")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<List<ReviewDTO>> getUserReviews(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
     log.info("用户 {} 查看自己的书评列表", userPrincipal.getUsername());
@@ -92,7 +92,7 @@ public class ReviewController {
    * @return 创建的书评
    */
   @PostMapping("/product/{productId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<ReviewDTO> createReview(
       @PathVariable Long productId,
       @RequestBody @Valid ReviewCreateDTO reviewCreateDTO,
@@ -112,7 +112,7 @@ public class ReviewController {
    * @return 更新后的书评
    */
   @PutMapping("/{reviewId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<ReviewDTO> updateReview(
       @PathVariable Long reviewId,
       @RequestBody @Valid ReviewCreateDTO reviewCreateDTO,
@@ -150,7 +150,7 @@ public class ReviewController {
    * @return 删除结果
    */
   @DeleteMapping("/{reviewId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<String> deleteReview(
       @PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
     log.info("用户 {} 删除书评 {}", userPrincipal.getUsername(), reviewId);

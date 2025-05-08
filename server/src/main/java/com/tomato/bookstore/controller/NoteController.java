@@ -51,7 +51,7 @@ public class NoteController {
    * @return 读书笔记列表
    */
   @GetMapping("/user")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<List<NoteDTO>> getUserNotes(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
     log.info("用户 {} 查看自己的读书笔记列表", userPrincipal.getUsername());
@@ -110,7 +110,7 @@ public class NoteController {
    * @return 创建的读书笔记
    */
   @PostMapping("/product/{productId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<NoteDTO> createNote(
       @PathVariable Long productId,
       @RequestBody @Valid NoteCreateDTO noteCreateDTO,
@@ -130,7 +130,7 @@ public class NoteController {
    * @return 更新后的读书笔记
    */
   @PutMapping("/{noteId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<NoteDTO> updateNote(
       @PathVariable Long noteId,
       @RequestBody @Valid NoteCreateDTO noteCreateDTO,
@@ -167,7 +167,7 @@ public class NoteController {
    * @return 删除结果
    */
   @DeleteMapping("/{noteId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<String> deleteNote(
       @PathVariable Long noteId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
     log.info("用户 {} 删除读书笔记 {}", userPrincipal.getUsername(), noteId);
@@ -200,7 +200,7 @@ public class NoteController {
    * @return 更新后的读书笔记
    */
   @PostMapping("/{noteId}/feedback")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<NoteDTO> addFeedback(
       @PathVariable Long noteId,
       @RequestBody @Valid NoteFeedbackDTO feedbackDTO,
@@ -238,7 +238,7 @@ public class NoteController {
    * @return 创建的评论
    */
   @PostMapping("/{noteId}/comments")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<NoteCommentDTO> addComment(
       @PathVariable Long noteId,
       @RequestBody @Valid NoteCommentCreateDTO commentCreateDTO,
@@ -258,7 +258,7 @@ public class NoteController {
    * @return 删除结果
    */
   @DeleteMapping("/{noteId}/comments/{commentId}")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("RoleConstants.HAS_ANY_ROLE")
   public ApiResponse<String> deleteComment(
       @PathVariable Long noteId,
       @PathVariable Long commentId,
