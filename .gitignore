@@ -9,4 +9,5 @@
 
 # GitHub Copilot prompts
 .github/copilot-instructions.md
+.github/instructions
 .github/prompts
