@@ -15,32 +15,32 @@
     </div>
 
     <el-table
-      :data="filteredNotes"
+      :data="paginatedNotes"
       style="width: 100%"
       v-loading="!!loading"
       border
       stripe
     >
-      <el-table-column label="ID" prop="id" width="80" sortable />
+      <el-table-column label="ID" prop="id" width="60" />
 
-      <el-table-column label="笔记标题" min-width="180" prop="title">
+      <el-table-column label="笔记标题" width="160" prop="title">
         <template #default="{ row }">
           <el-tooltip
             :content="row.title"
-            :disabled="row.title.length < 20"
+            :disabled="row.title.length < 15"
             placement="top"
           >
             <router-link
               :to="buildRoute(Routes.NOTE_DETAIL, { noteId: row.id })"
               class="text-primary hover:underline"
             >
-              {{ truncateText(row.title, 20) }}
+              {{ truncateText(row.title, 15) }}
             </router-link>
           </el-tooltip>
         </template>
       </el-table-column>
 
-      <el-table-column label="内容预览" min-width="200">
+      <el-table-column label="内容预览" width="180">
         <template #default="{ row }">
           <el-tooltip
             :content="row.content"
@@ -48,36 +48,36 @@
             :show-after="500"
             :hide-after="0"
           >
-            <span class="text-gray-600">{{ truncateText(row.content, 30) }}</span>
+            <span class="text-gray-600">{{ truncateText(row.content, 20) }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
 
-      <el-table-column label="用户" min-width="120">
+      <el-table-column label="用户" width="100">
         <template #default="{ row }">
-          <div class="flex items-center">
-            <el-avatar :size="24" :src="row.userAvatar" class="mr-2">
+          <div class="items-center">
+            <el-avatar :size="24" :src="row.userAvatar" class="mr-1">
               {{ row.username ? row.username.charAt(0).toUpperCase() : "?" }}
             </el-avatar>
-            <span>{{ row.username }}</span>
+            <span class="truncate" style="max-width: 60px;">{{ row.username }}</span>
           </div>
         </template>
       </el-table-column>
 
-      <el-table-column label="关联书籍" min-width="140">
+      <el-table-column label="关联书籍" width="120">
         <template #default="{ row }">
           <router-link
             :to="buildRoute(Routes.PRODUCT_DETAIL, { id: row.productId })"
             class="text-primary hover:underline"
           >
-            {{ truncateText(row.productTitle, 15) }}
+            {{ truncateText(row.productTitle, 10) }}
           </router-link>
         </template>
       </el-table-column>
 
-      <el-table-column label="互动数据" width="150">
+      <el-table-column label="互动数据" width="120">
         <template #default="{ row }">
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
             <el-tooltip content="点赞">
               <div class="flex items-center">
                 <el-icon><Pointer /></el-icon>
@@ -100,13 +100,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="180" sortable>
+      <el-table-column label="创建时间" width="160">
         <template #default="{ row }">
           {{ formatDate(row.createdAt) }}
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="150" fixed="right">
+      <el-table-column label="操作" width="100" fixed="right">
         <template #default="{ row }">
           <div class="flex space-x-1">
             <el-button
@@ -128,7 +128,7 @@
       </el-table-column>
     </el-table>
 
-    <div class="flex justify-end mt-4">
+    <div class="pagination-container flex justify-end mt-4">
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
@@ -246,5 +246,42 @@ const truncateText = (text: string, length: number): string => {
 
 .transform.rotate-180 {
   transform: rotate(180deg);
+}
+
+.pagination-container {
+  white-space: nowrap;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detection-table-container {
+  /* 确保表格容器和表格本身宽度一致 */
+  width: 100%;
+}
+
+.detection-table {
+  /* 强制表格头部和内容使用相同的显示模式 */
+  width: 100% !important;
+}
+
+/* 调整表头样式 */
+:deep(.el-table__header-wrapper) {
+  width: 100%;
+}
+
+/* 调整表身样式 */
+:deep(.el-table__body-wrapper) {
+  width: 100%;
+}
+
+/* 确保表头和表身对齐 */
+:deep(.el-table__header),
+:deep(.el-table__body) {
+  width: 100% !important;
+  table-layout: fixed;
 }
 </style>

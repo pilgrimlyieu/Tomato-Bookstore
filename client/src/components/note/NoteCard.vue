@@ -42,12 +42,12 @@
 
     <!-- 笔记相关的商品 -->
     <div class="text-sm text-gray-500 mb-3">
-      <span>关联书籍: </span>
+      <span>关联书籍：</span>
       <router-link
         :to="`/products/${note.productId}`"
         class="text-primary hover:underline"
       >
-        {{ note.productTitle }}
+        《{{ note.productTitle }}》
       </router-link>
     </div>
 
