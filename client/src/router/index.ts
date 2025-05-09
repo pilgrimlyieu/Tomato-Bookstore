@@ -36,6 +36,12 @@ const router = createRouter({
       meta: { title: "我的书评", requiresAuth: true },
     },
     {
+      path: Routes.USER_NOTES,
+      name: "userNotes",
+      component: () => import("@/views/Note/UserNotes.vue"),
+      meta: { title: "我的读书笔记", requiresAuth: true },
+    },
+    {
       path: Routes.PRODUCT_LIST,
       name: "products",
       component: () => import("@/views/Product/List.vue"),
@@ -46,6 +52,25 @@ const router = createRouter({
       name: "productDetail",
       component: () => import("@/views/Product/Detail.vue"),
       meta: { title: "商品详情" },
+    },
+    // 读书笔记路由
+    {
+      path: Routes.NOTE_DETAIL,
+      name: "noteDetail",
+      component: () => import("@/views/Note/Detail.vue"),
+      meta: { title: "笔记详情" },
+    },
+    {
+      path: Routes.NOTE_CREATE,
+      name: "noteCreate",
+      component: () => import("@/views/Note/Create.vue"),
+      meta: { title: "创建笔记", requiresAuth: true },
+    },
+    {
+      path: Routes.NOTE_EDIT,
+      name: "noteEdit",
+      component: () => import("@/views/Note/Edit.vue"),
+      meta: { title: "编辑笔记", requiresAuth: true },
     },
     {
       path: Routes.ADMIN,
@@ -76,6 +101,12 @@ const router = createRouter({
           name: "adminReviews",
           component: () => import("@/views/Admin/Review/List.vue"),
           meta: { title: "书评管理", requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: Routes.ADMIN_NOTES,
+          name: "adminNotes",
+          component: () => import("@/views/Admin/Note/List.vue"),
+          meta: { title: "笔记管理", requiresAuth: true, requiresAdmin: true },
         },
       ],
     },
