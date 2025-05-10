@@ -130,7 +130,7 @@ export function useNote() {
 
       return success;
     } catch (error) {
-      if (error === "cancel") {
+      if (error === "cancel" || error === "close") {
         return false;
       }
       console.error("删除读书笔记失败：", error);
@@ -222,7 +222,7 @@ export function useNote() {
 
       return await noteStore.deleteComment(noteId, commentId);
     } catch (error) {
-      if (error === "cancel") {
+      if (error === "cancel" || error === "close") {
         return false;
       }
       console.error("删除评论失败：", error);

@@ -64,7 +64,7 @@ export function useAdminNote() {
 
       return await noteStore.deleteNoteByAdmin(noteId);
     } catch (error) {
-      if (error === "cancel") {
+      if (error === "cancel" || error === "close") {
         return false;
       }
       console.error("管理员删除读书笔记失败：", error);
@@ -100,7 +100,7 @@ export function useAdminNote() {
 
       return await noteStore.deleteCommentByAdmin(noteId, commentId);
     } catch (error) {
-      if (error === "cancel") {
+      if (error === "cancel" || error === "close") {
         return false;
       }
       console.error("管理员删除评论失败：", error);
