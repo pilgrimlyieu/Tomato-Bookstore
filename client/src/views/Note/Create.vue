@@ -63,6 +63,7 @@ import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 const productStore = useProductStore();
 const productId = Number(route.params.productId);
 
@@ -99,7 +100,6 @@ const hasUserNote = computed(() => {
 
 // 查看已有笔记
 const viewExistingNote = () => {
-  const userStore = useUserStore();
   const userNote = productNotes.value.find(
     (note) =>
       note.userId === userStore.user?.id && note.productId === productId,
@@ -116,7 +116,7 @@ const handleSubmit = async (formData: NoteCreateParams) => {
   try {
     await createNote(productId, formData);
   } catch (error) {
-    console.error("创建笔记失败:", error);
+    console.error("创建笔记失败：", error);
     ElMessage.error("创建笔记失败，请重试");
   } finally {
     formLoading.value = false;
