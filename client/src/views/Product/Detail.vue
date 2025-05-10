@@ -201,6 +201,7 @@ const reviewStore = useReviewStore();
 const route = useRoute();
 const router = useRouter();
 const { addToCart } = useCart();
+const { deleteNote } = useNote();
 const { loading: notesLoading, productNotes, fetchProductNotes } = useNote();
 
 const productId = computed(() => Number(route.params.id));
@@ -284,7 +285,6 @@ const handleEditNote = (note: Note) => {
 
 // 删除笔记
 const handleDeleteNote = async (note: Note) => {
-  const { deleteNote } = useNote();
   await deleteNote(note.id, productId.value);
 };
 
