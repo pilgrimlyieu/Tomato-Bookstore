@@ -111,7 +111,7 @@ export const useNoteStore = defineStore("note", {
         (data) => {
           this.managedUserNotes = data;
         },
-        `获取用户读书笔记列表失败（用户ID: ${userId}）：`,
+        `获取用户读书笔记列表失败（用户 ID: ${userId}）：`,
         true,
       );
     },
@@ -181,10 +181,42 @@ export const useNoteStore = defineStore("note", {
           // 设置当前读书笔记
           this.currentNote = data;
         },
-        `创建读书笔记失败（商品ID: ${productId}）：`,
+        `创建读书笔记失败（商品 ID: ${productId}）：`,
         true,
         [HttpStatusCode.Created],
         "读书笔记发布成功",
+      );
+    },
+
+    /**
+     * 通用笔记更新方法
+     *
+     * @param {number} noteId 笔记 ID
+     * @param {NoteUpdateParams} params 更新参数
+     * @param {(id: number, params: NoteUpdateParams) => Promise<ApiResponse<Note>>} serviceCall 服务调用函数
+     * @param {string} errorMsg 错误信息
+     * @param {string} successMsg 成功信息
+     * @returns {Promise<boolean>} 是否更新成功
+     */
+    async updateNoteInternal(
+      noteId: number,
+      params: NoteUpdateParams,
+      serviceCall: (id: number, params: NoteUpdateParams) => Promise<any>,
+      errorMsg: string,
+      successMsg: string,
+    ): Promise<boolean> {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => serviceCall(noteId, params),
+        (data: Note) => {
+          // 更新本地数据
+          this.updateLocalNoteData(data);
+        },
+        `${errorMsg}（ID: ${noteId}）：`,
+        true,
+        [HttpStatusCode.Ok],
+        successMsg,
       );
     },
 
@@ -199,17 +231,11 @@ export const useNoteStore = defineStore("note", {
       noteId: number,
       params: NoteUpdateParams,
     ): Promise<boolean> {
-      return await performAsyncAction(
-        this,
-        "loading",
-        () => noteService.updateNote(noteId, params),
-        (data) => {
-          // 更新本地数据
-          this.updateLocalNoteData(data);
-        },
-        `更新读书笔记失败（ID: ${noteId}）：`,
-        true,
-        [HttpStatusCode.Ok],
+      return this.updateNoteInternal(
+        noteId,
+        params,
+        noteService.updateNote,
+        "更新读书笔记失败",
         "读书笔记更新成功",
       );
     },
@@ -225,18 +251,42 @@ export const useNoteStore = defineStore("note", {
       noteId: number,
       params: NoteUpdateParams,
     ): Promise<boolean> {
+      return this.updateNoteInternal(
+        noteId,
+        params,
+        noteService.updateNoteByAdmin,
+        "管理员更新读书笔记失败",
+        "读书笔记已修改",
+      );
+    },
+
+    /**
+     * 通用笔记删除方法
+     *
+     * @param {number} noteId 笔记 ID
+     * @param {(id: number) => Promise<ApiResponse<string>>} serviceCall 服务调用函数
+     * @param {string} errorMsg 错误信息
+     * @param {string} successMsg 成功信息
+     * @returns {Promise<boolean>} 是否删除成功
+     */
+    async deleteNoteInternal(
+      noteId: number,
+      serviceCall: (id: number) => Promise<any>,
+      errorMsg: string,
+      successMsg: string,
+    ): Promise<boolean> {
       return await performAsyncAction(
         this,
         "loading",
-        () => noteService.updateNoteByAdmin(noteId, params),
-        (data) => {
-          // 更新本地数据
-          this.updateLocalNoteData(data);
+        () => serviceCall(noteId),
+        () => {
+          // 从本地列表中移除
+          this.removeLocalNote(noteId);
         },
-        `管理员更新读书笔记失败（ID: ${noteId}）：`,
+        `${errorMsg}（ID: ${noteId}）：`,
         true,
         [HttpStatusCode.Ok],
-        "读书笔记已修改",
+        successMsg,
       );
     },
 
@@ -247,17 +297,10 @@ export const useNoteStore = defineStore("note", {
      * @returns {Promise<boolean>} 是否删除成功
      */
     async deleteNote(noteId: number): Promise<boolean> {
-      return await performAsyncAction(
-        this,
-        "loading",
-        () => noteService.deleteNote(noteId),
-        () => {
-          // 从本地列表中移除
-          this.removeLocalNote(noteId);
-        },
-        `删除读书笔记失败（ID: ${noteId}）：`,
-        true,
-        [HttpStatusCode.Ok],
+      return this.deleteNoteInternal(
+        noteId,
+        noteService.deleteNote,
+        "删除读书笔记失败",
         "读书笔记已删除",
       );
     },
@@ -269,17 +312,10 @@ export const useNoteStore = defineStore("note", {
      * @returns {Promise<boolean>} 是否删除成功
      */
     async deleteNoteByAdmin(noteId: number): Promise<boolean> {
-      return await performAsyncAction(
-        this,
-        "loading",
-        () => noteService.deleteNoteByAdmin(noteId),
-        () => {
-          // 从本地列表中移除
-          this.removeLocalNote(noteId);
-        },
-        `管理员删除读书笔记失败（ID: ${noteId}）：`,
-        true,
-        [HttpStatusCode.Ok],
+      return this.deleteNoteInternal(
+        noteId,
+        noteService.deleteNoteByAdmin,
+        "管理员删除读书笔记失败",
         "读书笔记已删除",
       );
     },
@@ -356,7 +392,7 @@ export const useNoteStore = defineStore("note", {
           // 在其他列表中也更新评论数
           this.updateCommentCountInLists(noteId, 1);
         },
-        `添加评论失败（笔记ID: ${noteId}）：`,
+        `添加评论失败（笔记 ID: ${noteId}）：`,
         true,
         [HttpStatusCode.Created],
         "评论发布成功",
@@ -364,17 +400,24 @@ export const useNoteStore = defineStore("note", {
     },
 
     /**
-     * 删除评论
+     * 通用评论删除方法
      *
      * @param {number} noteId 笔记 ID
      * @param {number} commentId 评论 ID
+     * @param {(noteId: number, commentId: number) => Promise<ApiResponse<string>>} serviceCall 服务调用函数
+     * @param {string} errorMsg 错误信息
      * @returns {Promise<boolean>} 是否删除成功
      */
-    async deleteComment(noteId: number, commentId: number): Promise<boolean> {
+    async deleteCommentInternal(
+      noteId: number,
+      commentId: number,
+      serviceCall: (noteId: number, commentId: number) => Promise<any>,
+      errorMsg: string,
+    ): Promise<boolean> {
       return await performAsyncAction(
         this,
         "commentLoading",
-        () => noteService.deleteComment(noteId, commentId),
+        () => serviceCall(noteId, commentId),
         () => {
           // 从列表中移除评论
           this.noteComments = this.noteComments.filter(
@@ -392,10 +435,26 @@ export const useNoteStore = defineStore("note", {
           // 在其他列表中也更新评论数
           this.updateCommentCountInLists(noteId, -1);
         },
-        `删除评论失败（ID: ${commentId}）：`,
+        `${errorMsg}（ID: ${commentId}）：`,
         true,
         [HttpStatusCode.Ok],
         "评论已删除",
+      );
+    },
+
+    /**
+     * 删除评论
+     *
+     * @param {number} noteId 笔记 ID
+     * @param {number} commentId 评论 ID
+     * @returns {Promise<boolean>} 是否删除成功
+     */
+    async deleteComment(noteId: number, commentId: number): Promise<boolean> {
+      return this.deleteCommentInternal(
+        noteId,
+        commentId,
+        noteService.deleteComment,
+        "删除评论失败",
       );
     },
 
@@ -410,31 +469,11 @@ export const useNoteStore = defineStore("note", {
       noteId: number,
       commentId: number,
     ): Promise<boolean> {
-      return await performAsyncAction(
-        this,
-        "commentLoading",
-        () => noteService.deleteCommentByAdmin(noteId, commentId),
-        () => {
-          // 从列表中移除评论
-          this.noteComments = this.noteComments.filter(
-            (comment) => comment.id !== commentId,
-          );
-
-          // 如果当前正在查看的是这条笔记，更新评论数
-          if (this.currentNote && this.currentNote.id === noteId) {
-            this.currentNote.commentCount = Math.max(
-              0,
-              this.currentNote.commentCount - 1,
-            );
-          }
-
-          // 在其他列表中也更新评论数
-          this.updateCommentCountInLists(noteId, -1);
-        },
-        `管理员删除评论失败（ID: ${commentId}）：`,
-        true,
-        [HttpStatusCode.Ok],
-        "评论已删除",
+      return this.deleteCommentInternal(
+        noteId,
+        commentId,
+        noteService.deleteCommentByAdmin,
+        "管理员删除评论失败",
       );
     },
 

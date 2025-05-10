@@ -13,7 +13,7 @@ import apiClient from "@/utils/apiClient";
 /**
  * 读书笔记服务
  */
-export default {
+const noteService = {
   /**
    * 获取指定商品的所有读书笔记
    *
@@ -192,3 +192,5 @@ export default {
     );
   },
 };
+
+export default noteService;
