@@ -6,6 +6,7 @@ import type {
   Note,
   NoteCommentCreateParams,
   NoteCreateParams,
+  NoteUpdateParams,
 } from "@/types/note";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -60,12 +61,12 @@ export function useNote() {
    * 更新读书笔记
    *
    * @param {number} noteId 笔记 ID
-   * @param {NoteCreateParams} params 笔记参数
+   * @param {NoteUpdateParams} params 笔记参数
    * @returns {Promise<boolean>} 是否更新成功
    */
   const updateNote = async (
     noteId: number,
-    params: NoteCreateParams,
+    params: NoteUpdateParams,
   ): Promise<boolean> => {
     // 先检查用户是否已登录
     if (!(await checkLogin())) {
