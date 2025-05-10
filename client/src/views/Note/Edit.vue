@@ -37,8 +37,8 @@
 
 <script setup lang="ts">
 import NoteForm from "@/components/note/NoteForm.vue";
-import { useAuth } from "@/composables/useAuth";
 import { useNote } from "@/composables/useNote";
+import { usePermissions } from "@/composables/usePermissions";
 import { Routes } from "@/constants/routes";
 import type { NoteCreateParams } from "@/types/note";
 import { buildRoute } from "@/utils/routeHelper";
@@ -49,7 +49,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const noteId = Number(route.params.noteId);
-const { currentUser } = useAuth();
+const { canEditNote } = usePermissions();
 
 const { loading, currentNote: note, fetchNoteById, updateNote } = useNote();
 const formLoading = ref(false);
@@ -67,13 +67,13 @@ onMounted(async () => {
 const loadNoteData = async () => {
   try {
     await fetchNoteById(noteId);
-
-    // 检查是否有权限编辑
-    if (
-      note.value &&
-      currentUser.value &&
-      note.value.userId !== currentUser.value.id
-    ) {
+    if (!note.value) {
+      ElMessage.error("笔记不存在或已被删除");
+      router.push(Routes.USER_NOTES);
+      return;
+    }
+    if (!canEditNote(note.value)) {
+      // 检查是否有权限编辑
       ElMessage.error("您没有权限编辑这篇笔记");
       router.push(Routes.USER_NOTES);
     }
