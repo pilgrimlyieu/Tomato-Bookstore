@@ -51,13 +51,7 @@ const router = useRouter();
 const noteId = Number(route.params.noteId);
 const { currentUser } = useAuth();
 
-const {
-  loading,
-  currentNote: note,
-  fetchNoteById,
-  updateNote,
-  clearCurrentNote,
-} = useNote();
+const { loading, currentNote: note, fetchNoteById, updateNote } = useNote();
 const formLoading = ref(false);
 
 // 加载笔记详情
@@ -102,7 +96,11 @@ const handleSubmit = async (formData: NoteCreateParams) => {
     }
   } catch (error) {
     console.error("更新笔记失败:", error);
-    ElMessage.error("更新笔记失败，请重试");
+    if (error instanceof Error) {
+      ElMessage.error(`更新笔记失败：${error.message || "请重试"}`);
+    } else {
+      ElMessage.error("更新笔记失败，请重试");
+    }
   } finally {
     formLoading.value = false;
   }
