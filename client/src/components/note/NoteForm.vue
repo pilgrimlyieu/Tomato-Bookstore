@@ -57,7 +57,6 @@ const props = defineProps<{
   initialData?: Note;
   isEdit?: boolean;
   loading?: boolean;
-  productTitle?: string;
 }>();
 
 // Emits
@@ -102,21 +101,28 @@ watchEffect(() => {
   if (props.initialData) {
     form.title = props.initialData.title;
     form.content = props.initialData.content;
+    if (formRef.value) {
+      // 重置表单验证状态
+      formRef.value.clearValidate();
+    }
   }
 });
 
 // 处理表单提交
 const handleSubmit = async () => {
   if (!formRef.value) return;
-
-  await formRef.value.validate((valid) => {
+  try {
+    const valid = await formRef.value.validate();
     if (valid) {
       emit("submit", {
         title: form.title,
         content: form.content,
       });
     }
-  });
+  } catch (errors) {
+    console.error("表单验证失败：", errors);
+    ElMessage.warning("请正确填写表单内容");
+  }
 };
 </script>
 
