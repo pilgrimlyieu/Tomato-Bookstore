@@ -8,7 +8,7 @@
       <!-- 返回链接 -->
       <div class="mb-4">
         <router-link
-          :to="`/products/${note.productId}`"
+          :to="buildRoute(Routes.PRODUCT_DETAIL, { id: note.productId })"
           class="text-gray-500 hover:text-primary flex items-center"
         >
           <el-icon class="mr-1"><ArrowLeft /></el-icon>
@@ -129,8 +129,10 @@
 
 <script setup lang="ts">
 import { usePermissions } from "@/composables/usePermissions";
+import { Routes } from "@/constants/routes";
 import type { Note, NoteComment } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
+import { buildRoute } from "@/utils/routeHelper";
 import {
   ArrowDownBold,
   ArrowLeft,

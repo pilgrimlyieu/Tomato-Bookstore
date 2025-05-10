@@ -266,13 +266,6 @@ const scrollToReviews = () => {
   }
 };
 
-// 滚动到笔记区域
-const scrollToNotes = () => {
-  if (noteSection.value) {
-    noteSection.value.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-};
-
 // 查看笔记
 const handleViewNote = (note: Note) => {
   router.push(buildRoute(Routes.NOTE_DETAIL, { noteId: note.id }));
