@@ -13,17 +13,17 @@
       </div>
 
       <!-- 操作按钮 -->
-      <div v-if="canEdit || isAdmin">
+      <div v-if="canEditNote(note) || isAdmin">
         <el-dropdown trigger="hover">
           <el-button type="text">
             <el-icon><MoreFilled /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-if="canEdit" @click="$emit('edit', note)">
+              <el-dropdown-item v-if="canEditNote(note)" @click="$emit('edit', note)">
                 编辑
               </el-dropdown-item>
-              <el-dropdown-item v-if="canEdit || isAdmin" @click="$emit('delete', note)" class="text-red-500">
+              <el-dropdown-item v-if="canDeleteNote(note)" @click="$emit('delete', note)" class="text-red-500">
                 删除
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -44,7 +44,7 @@
     <div class="text-sm text-gray-500 mb-3">
       <span>关联书籍：</span>
       <router-link
-        :to="`/products/${note.productId}`"
+        :to="{ name: Routes.PRODUCT_DETAIL, params: { id: note.productId } }"
         class="text-primary hover:underline"
       >
         《{{ note.productTitle }}》
@@ -106,7 +106,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
+import { usePermissions } from "@/composables/usePermissions";
+import { Routes } from "@/constants/routes";
 import type { Note } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
 import { ArrowRight, ChatDotRound, MoreFilled } from "@element-plus/icons-vue";
@@ -162,16 +163,8 @@ const emit = defineEmits<{
   (e: "dislike", note: Note): void;
 }>();
 
-// 获取用户 store
-const userStore = useUserStore();
-
-// 当前用户是否可以编辑该笔记
-const canEdit = computed(() => {
-  return userStore.user && userStore.user.id === props.note.userId;
-});
-
-// 当前用户是否为管理员
-const isAdmin = computed(() => userStore.isAdmin);
+// 获取权限相关功能
+const { canEditNote, canDeleteNote, isAdmin } = usePermissions();
 </script>
 
 <style scoped>
