@@ -82,7 +82,7 @@
                 :type="note.userFeedback === 'LIKE' ? 'primary' : 'default'"
                 @click="$emit('like', note)"
               >
-                <el-icon class="mr-1"><Pointer /></el-icon>
+                <el-icon class="mr-1"><ArrowUpBold /></el-icon>
                 {{ note.likeCount || 0 }}
               </el-button>
 
@@ -90,7 +90,7 @@
                 :type="note.userFeedback === 'DISLIKE' ? 'danger' : 'default'"
                 @click="$emit('dislike', note)"
               >
-                <el-icon class="mr-1 transform rotate-180"><Pointer /></el-icon>
+                <el-icon class="mr-1"><ArrowDownBold /></el-icon>
                 {{ note.dislikeCount || 0 }}
               </el-button>
             </div>
@@ -127,28 +127,16 @@
 import { useUserStore } from "@/stores/user";
 import type { Note, NoteComment } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
-import { ArrowLeft, ChatDotRound, MoreFilled } from "@element-plus/icons-vue";
+import {
+  ArrowDownBold,
+  ArrowLeft,
+  ArrowUpBold,
+  ChatDotRound,
+  MoreFilled,
+} from "@element-plus/icons-vue";
 import { computed } from "vue";
 import NoteCommentForm from "./NoteCommentForm.vue";
 import NoteCommentList from "./NoteCommentList.vue";
-
-// 自定义图标
-const Pointer = markRaw(
-  h(
-    "svg",
-    {
-      viewBox: "0 0 24 24",
-      width: "1em",
-      height: "1em",
-      fill: "currentColor",
-    },
-    [
-      h("path", {
-        d: "M7.96 12.73c-.19 0-.38-.07-.53-.22l-2.53-2.53c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l2 2 5.35-5.37c.29-.29.77-.29 1.06 0s.29.77 0 1.06l-5.88 5.9c-.15.15-.34.22-.53.22zm9.07 4.82c-.12 0-.24-.02-.35-.06-.52-.22-.84-.81-.72-1.45l.3-1.57c.03-.15-.03-.31-.15-.43l-1.61-1.6c-.14-.14-.31-.19-.48-.14l-1.49.31c-.65.13-1.23-.2-1.45-.72-.21-.52-.06-1.22.46-1.65l5.87-4.83c.4-.33.9-.48 1.4-.43.54.06 1.03.36 1.34.84l.93 1.47c.17.27.25.58.25.89 0 .29-.08.57-.22.81l-3.35 7.16c-.25.56-.77.84-1.26.84-.08 0-.17-.01-.25-.02-.52-.05-.9-.14-1.09-.41z",
-      }),
-    ],
-  ),
-);
 
 // Props
 const props = defineProps<{
@@ -182,7 +170,5 @@ const isAdmin = computed(() => userStore.isAdmin);
 </script>
 
 <style scoped>
-.transform.rotate-180 {
-  transform: rotate(180deg);
-}
+/* 不需要旋转的样式了，可以删除 */
 </style>

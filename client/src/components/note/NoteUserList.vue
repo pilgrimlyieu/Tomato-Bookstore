@@ -44,14 +44,14 @@
               <div class="flex items-center space-x-2">
                 <el-tooltip content="点赞">
                   <div class="flex items-center text-gray-600">
-                    <el-icon><Pointer /></el-icon>
+                    <el-icon><ArrowUpBold /></el-icon>
                     <span class="ml-1">{{ row.likeCount }}</span>
                   </div>
                 </el-tooltip>
 
                 <el-tooltip content="点踩">
                   <div class="flex items-center text-gray-600">
-                    <el-icon class="transform rotate-180"><Pointer /></el-icon>
+                    <el-icon><ArrowDownBold /></el-icon>
                     <span class="ml-1">{{ row.dislikeCount }}</span>
                   </div>
                 </el-tooltip>
@@ -109,25 +109,12 @@ import { Routes } from "@/constants/routes";
 import type { Note } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
-import { ChatDotRound, Plus } from "@element-plus/icons-vue";
-
-// 自定义图标
-const Pointer = markRaw(
-  h(
-    "svg",
-    {
-      viewBox: "0 0 24 24",
-      width: "1em",
-      height: "1em",
-      fill: "currentColor",
-    },
-    [
-      h("path", {
-        d: "M7.96 12.73c-.19 0-.38-.07-.53-.22l-2.53-2.53c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l2 2 5.35-5.37c.29-.29.77-.29 1.06 0s.29.77 0 1.06l-5.88 5.9c-.15.15-.34.22-.53.22zm9.07 4.82c-.12 0-.24-.02-.35-.06-.52-.22-.84-.81-.72-1.45l.3-1.57c.03-.15-.03-.31-.15-.43l-1.61-1.6c-.14-.14-.31-.19-.48-.14l-1.49.31c-.65.13-1.23-.2-1.45-.72-.21-.52-.06-1.22.46-1.65l5.87-4.83c.4-.33.9-.48 1.4-.43.54.06 1.03.36 1.34.84l.93 1.47c.17.27.25.58.25.89 0 .29-.08.57-.22.81l-3.35 7.16c-.25.56-.77.84-1.26.84-.08 0-.17-.01-.25-.02-.52-.05-.9-.14-1.09-.41z",
-      }),
-    ],
-  ),
-);
+import {
+  ArrowDownBold,
+  ArrowUpBold,
+  ChatDotRound,
+  Plus,
+} from "@element-plus/icons-vue";
 
 // Props
 const props = defineProps<{
@@ -145,9 +132,5 @@ const emit = defineEmits<{
 <style scoped>
 .note-user-list {
   width: 100%;
-}
-
-.transform.rotate-180 {
-  transform: rotate(180deg);
 }
 </style>
