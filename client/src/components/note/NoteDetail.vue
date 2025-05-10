@@ -40,7 +40,7 @@
           </div>
 
           <!-- 操作菜单 -->
-          <div v-if="canEditNote(note) || isAdmin">
+          <div v-if="canEditNote(note) || canDeleteNote(note)">
             <el-dropdown trigger="click">
               <el-button type="text">
                 <el-icon><MoreFilled /></el-icon>
@@ -168,7 +168,3 @@ defineExpose({
   commentFormRef,
 });
 </script>
-
-<style scoped>
-/* 不需要旋转的样式了，可以删除 */
-</style>

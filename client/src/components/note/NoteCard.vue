@@ -13,7 +13,7 @@
       </div>
 
       <!-- 操作按钮 -->
-      <div v-if="canEditNote(note) || isAdmin">
+      <div v-if="canEditNote(note) || canDeleteNote(note)">
         <el-dropdown trigger="hover">
           <el-button type="text">
             <el-icon><MoreFilled /></el-icon>
