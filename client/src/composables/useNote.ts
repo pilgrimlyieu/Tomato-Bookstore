@@ -241,12 +241,13 @@ export function useNote() {
    * 笔记列表与对应的商品名称
    */
   const userNotesWithProductNames = computed(() => {
+    const productMap = new Map(
+      productStore.products.map((product) => [product.id, product.title]),
+    );
     return noteStore.userNotes.map((note) => ({
       ...note,
       productName:
-        productStore.products.find((p) => p.id === note.productId)?.title ||
-        note.productTitle ||
-        "未知书名",
+        productMap.get(note.productId) || note.productTitle || "未知书名",
     }));
   });
 
