@@ -91,11 +91,18 @@ const handleSubmit = async () => {
   await formRef.value.validate((valid) => {
     if (valid) {
       emit("submit", form.content);
-      form.content = ""; // 提交后清空表单
-      formRef.value?.resetFields();
     }
   });
 };
+
+const resetForm = () => {
+  form.content = ""; // 重置表单内容
+  formRef.value?.resetFields(); // 重置表单验证状态
+};
+
+defineExpose({
+  resetForm,
+});
 </script>
 
 <style scoped>

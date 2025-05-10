@@ -42,18 +42,18 @@
           </div>
 
           <!-- 操作菜单 -->
-          <div v-if="canEdit || isAdmin">
+          <div v-if="canEditNote(note) || isAdmin">
             <el-dropdown trigger="click">
               <el-button type="text">
                 <el-icon><MoreFilled /></el-icon>
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-if="canEdit" @click="$emit('edit', note)">
+                  <el-dropdown-item v-if="canEditNote(note)" @click="$emit('edit', note)">
                     编辑笔记
                   </el-dropdown-item>
                   <el-dropdown-item
-                    v-if="canEdit || isAdmin"
+                    v-if="canDeleteNote(note)"
                     @click="$emit('delete', note)"
                     class="text-red-500"
                   >
@@ -112,7 +112,11 @@
       />
 
       <!-- 添加评论 -->
-      <NoteCommentForm @submit="$emit('addComment', $event)" />
+      <NoteCommentForm
+        ref="commentFormRef"
+        @submit="$emit('addComment', $event)"
+        :loading="commentLoading"
+      />
     </template>
 
     <el-empty description="笔记不存在" v-else>
@@ -124,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
+import { usePermissions } from "@/composables/usePermissions";
 import type { Note, NoteComment } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
 import {
@@ -134,7 +138,7 @@ import {
   ChatDotRound,
   MoreFilled,
 } from "@element-plus/icons-vue";
-import { computed } from "vue";
+import { ref } from "vue";
 import NoteCommentForm from "./NoteCommentForm.vue";
 import NoteCommentList from "./NoteCommentList.vue";
 
@@ -156,17 +160,13 @@ const emit = defineEmits<{
   (e: "deleteComment", comment: NoteComment): void;
 }>();
 
-// 获取用户 store
-const userStore = useUserStore();
+const { canEditNote, canDeleteNote, isAdmin } = usePermissions();
 
-// 当前用户是否可以编辑该笔记
-const canEdit = computed(() => {
-  if (!props.note || !userStore.user) return false;
-  return userStore.user.id === props.note.userId;
+const commentFormRef = ref();
+
+defineExpose({
+  commentFormRef,
 });
-
-// 当前用户是否为管理员
-const isAdmin = computed(() => userStore.isAdmin);
 </script>
 
 <style scoped>

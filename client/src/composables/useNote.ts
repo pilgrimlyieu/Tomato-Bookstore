@@ -168,11 +168,13 @@ export function useNote() {
    *
    * @param {number} noteId 笔记 ID
    * @param {NoteCommentCreateParams} params 评论参数
+   * @param {() => void} [resetForm] 重置表单的回调函数
    * @returns {Promise<boolean>} 是否添加成功
    */
   const addComment = async (
     noteId: number,
     params: NoteCommentCreateParams,
+    resetForm?: () => void,
   ): Promise<boolean> => {
     // 先检查用户是否已登录
     if (!(await checkLogin())) {
@@ -180,7 +182,12 @@ export function useNote() {
     }
 
     try {
-      return await noteStore.addComment(noteId, params);
+      const success = await noteStore.addComment(noteId, params);
+      if (success && resetForm) {
+        resetForm();
+      }
+
+      return success;
     } catch (error) {
       console.error("添加评论失败：", error);
       ElMessage.error("添加评论失败，请稍后再试");

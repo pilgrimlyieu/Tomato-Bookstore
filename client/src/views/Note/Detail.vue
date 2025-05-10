@@ -3,6 +3,7 @@
     <div class="max-w-4xl mx-auto">
       <div v-loading="loading">
         <div v-if="note" class="bg-white/90 backdrop-blur-md rounded-xl shadow-md overflow-hidden">
+          <!-- 评论区 -->
           <NoteDetail
             :note="note"
             :comments="noteComments"
@@ -82,6 +83,7 @@ const {
 
 const dialogVisible = ref(false);
 const formLoading = ref(false);
+const commentFormRef = ref();
 
 // 加载笔记详情和评论
 onMounted(async () => {
@@ -131,7 +133,10 @@ const handleDislike = async () => {
 // 添加评论
 const handleAddComment = async (content: string) => {
   if (!note.value) return;
-  await addComment(note.value.id, { content });
+  await addComment(note.value.id, { content }, () => {
+    // 提交成功后重置表单
+    commentFormRef.value?.resetForm();
+  });
 };
 
 // 删除评论
