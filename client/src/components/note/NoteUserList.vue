@@ -122,11 +122,6 @@ const props = defineProps<{
   loading?: boolean;
 }>();
 
-// Emits
-const emit = defineEmits<{
-  (e: "edit", note: Note): void;
-  (e: "delete", note: Note): void;
-}>();
 </script>
 
 <style scoped>

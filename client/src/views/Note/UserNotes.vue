@@ -61,10 +61,8 @@ import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import type { Note, NoteCreateParams } from "@/types/note";
 import { ElMessage } from "element-plus";
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
 
-const router = useRouter();
 const productStore = useProductStore();
 const {
   loading,

@@ -78,10 +78,8 @@
 <script setup lang="ts">
 import NoteAdminList from "@/components/note/NoteAdminList.vue";
 import NoteForm from "@/components/note/NoteForm.vue";
-import { Routes } from "@/constants/routes";
 import { useNoteStore } from "@/stores/note";
 import type { Note, NoteUpdateParams } from "@/types/note";
-import { buildRoute } from "@/utils/routeHelper";
 import { ElMessageBox } from "element-plus";
 import { debounce } from "lodash-es";
 import { computed, onMounted, reactive, ref, watch } from "vue";

@@ -1,5 +1,4 @@
 import type { Note, NoteComment } from "@/types/note";
-import { computed } from "vue";
 import { useAuth } from "./useAuth";
 
 /**

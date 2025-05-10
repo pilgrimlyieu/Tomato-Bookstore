@@ -77,8 +77,6 @@ const {
   addFeedback,
   addComment,
   deleteComment,
-  clearCurrentNote,
-  clearComments,
 } = useNote();
 
 const dialogVisible = ref(false);

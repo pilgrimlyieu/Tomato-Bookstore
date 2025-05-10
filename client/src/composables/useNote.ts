@@ -21,7 +21,7 @@ export function useNote() {
   const noteStore = useNoteStore();
   const productStore = useProductStore();
   const router = useRouter();
-  const { checkLogin, currentUser } = useAuth();
+  const { checkLogin } = useAuth();
 
   /**
    * 创建读书笔记
