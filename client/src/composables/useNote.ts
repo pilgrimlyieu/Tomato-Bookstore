@@ -230,7 +230,9 @@ export function useNote() {
    * @returns {boolean} 是否可编辑
    */
   const canEditNote = (note: Note): boolean => {
-    if (!currentUser.value) return false;
+    if (!currentUser.value) {
+      return false;
+    }
     return note.userId === currentUser.value.id;
   };
 
@@ -241,7 +243,9 @@ export function useNote() {
    * @returns {boolean} 是否可删除
    */
   const canDeleteComment = (userId: number): boolean => {
-    if (!currentUser.value) return false;
+    if (!currentUser.value) {
+      return false;
+    }
     return userId === currentUser.value.id;
   };
 
