@@ -34,7 +34,7 @@
                 :to="buildRoute(Routes.PRODUCT_DETAIL, { id: row.productId })"
                 class="text-primary hover:underline"
               >
-                {{ row.productTitle }}
+                《{{ row.productTitle }}》
               </router-link>
             </template>
           </el-table-column>
@@ -121,7 +121,6 @@ const props = defineProps<{
   notes: Note[];
   loading?: boolean;
 }>();
-
 </script>
 
 <style scoped>
