@@ -1,6 +1,7 @@
 import { Routes } from "@/constants/routes";
 import { useUserStore } from "@/stores/user";
 import { ElMessageBox } from "element-plus";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 /**
@@ -45,7 +46,19 @@ export function useAuth() {
     }
   };
 
+  /**
+   * 当前登录用户
+   */
+  const currentUser = computed(() => userStore.user);
+
+  /**
+   * 当前用户是否为管理员
+   */
+  const isAdmin = computed(() => userStore.isAdmin);
+
   return {
     checkLogin,
+    currentUser,
+    isAdmin,
   };
 }

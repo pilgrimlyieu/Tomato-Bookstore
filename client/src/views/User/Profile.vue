@@ -98,6 +98,65 @@
                   </el-empty>
                 </div>
               </el-tab-pane>
+              <el-tab-pane label="我的读书笔记">
+                <div class="py-4">
+                  <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-medium text-gray-800">
+                      我的读书笔记
+                      <el-badge :value="userNotes.length" type="primary" class="ml-2" v-if="userNotes.length > 0" />
+                    </h3>
+                    <router-link :to="{ path: Routes.USER_NOTES }">
+                      <el-button type="primary" size="small" class="rounded-lg" :disabled="userNotes.length === 0">
+                        查看全部 <el-icon class="ml-1"><arrow-right /></el-icon>
+                      </el-button>
+                    </router-link>
+                  </div>
+
+                  <div v-if="userNotes.length > 0">
+                    <div v-for="note in notesWithProductNames.slice(0, 2)" :key="note.id" class="mb-4 border-b pb-4">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <div class="font-medium text-gray-900 mb-1">
+                            {{ note.title }}
+                          </div>
+                          <router-link
+                            :to="buildRoute(Routes.PRODUCT_DETAIL, { id: note.productId })"
+                            class="text-primary hover:underline mb-2 block text-sm"
+                          >
+                            《{{ note.productName }}》
+                          </router-link>
+                        </div>
+                        <div class="text-gray-500 text-sm">
+                          {{ formatDate(note.createdAt) }}
+                        </div>
+                      </div>
+                      <div class="mt-2 text-gray-700 line-clamp-2">
+                        {{ note.content }}
+                      </div>
+                      <div class="mt-3 flex justify-end">
+                        <router-link :to="buildRoute(Routes.NOTE_DETAIL, { noteId: note.id })">
+                          <el-button type="primary" size="small" class="rounded-lg" text>
+                            阅读全文 <el-icon class="ml-1"><arrow-right /></el-icon>
+                          </el-button>
+                        </router-link>
+                      </div>
+                    </div>
+
+                    <div v-if="userNotes.length > 2" class="text-center mt-4">
+                      <router-link :to="{ path: Routes.USER_NOTES }" class="inline-flex items-center text-primary hover:underline hover:shadow-sm p-2 rounded-lg transition-all">
+                        <span>查看剩余 {{ userNotes.length - 2 }} 篇读书笔记</span>
+                        <el-icon class="ml-1"><arrow-right /></el-icon>
+                      </router-link>
+                    </div>
+                  </div>
+
+                  <el-empty v-else description="您还没有创建过任何读书笔记">
+                    <router-link :to="Routes.PRODUCT_LIST">
+                      <el-button type="primary" class="rounded-lg">浏览商品</el-button>
+                    </router-link>
+                  </el-empty>
+                </div>
+              </el-tab-pane>
               <el-tab-pane label="安全设置">
                 <div class="py-4">
                   <h3 class="text-xl font-medium text-gray-800 mb-6">修改密码</h3>
@@ -222,6 +281,7 @@
 
 <script setup lang="ts">
 import ProfileForm from "@/components/user/ProfileForm.vue";
+import { useNote } from "@/composables/useNote";
 import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import { useReviewStore } from "@/stores/review";
@@ -238,25 +298,29 @@ import { computed, onMounted, ref } from "vue";
 const userStore = useUserStore();
 const reviewStore = useReviewStore();
 const productStore = useProductStore();
+const { userNotes, fetchUserNotes, userNotesWithProductNames } = useNote();
 
 // 加载状态
 const loading = ref(false);
 
-// 获取用户书评
+// 获取用户书评和读书笔记
 onMounted(async () => {
   loading.value = true;
   try {
-    await reviewStore.fetchUserReviews();
-    await productStore.fetchAllProducts();
+    await Promise.all([
+      reviewStore.fetchUserReviews(),
+      productStore.fetchAllProducts(),
+      fetchUserNotes(),
+    ]);
   } catch (error) {
-    console.error("获取用户书评失败：", error);
-    ElMessage.error("获取书评数据失败，请刷新重试");
+    console.error("获取用户数据失败：", error);
+    ElMessage.error("获取数据失败，请刷新重试");
   } finally {
     loading.value = false;
   }
 });
 
-// 用户书评列表
+// 用户书评列表与读书笔记列表计算属性
 const userReviews = computed(() => {
   return reviewStore.userReviews;
 });
@@ -268,6 +332,10 @@ const reviewsWithProductNames = computed(() => {
       productStore.products.find((p) => p.id === review.productId)?.title ||
       "未知书名",
   }));
+});
+
+const notesWithProductNames = computed(() => {
+  return userNotesWithProductNames.value;
 });
 
 // 修改密码相关
@@ -400,5 +468,12 @@ const handleUploadAvatar = async () => {
 .modern-tabs :deep(.el-tabs__nav-wrap::after) {
   height: 1px;
   background-color: rgba(229, 231, 235, 0.5);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>

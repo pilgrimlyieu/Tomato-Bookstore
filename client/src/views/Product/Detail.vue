@@ -147,6 +147,25 @@
             <div class="product-detail mt-6 prose max-w-none text-left" v-html="product.detail"></div>
         </div>
 
+        <!-- 读书笔记部分 -->
+        <div class="mt-10" ref="noteSection">
+          <el-divider>
+            <span class="text-lg font-medium">读书笔记</span>
+          </el-divider>
+          <div class="mt-6">
+            <NoteList
+              :notes="productNotes"
+              :loading="notesLoading"
+              :product-id="productId"
+              :show-create-button="true"
+              @view="handleViewNote"
+              @edit="handleEditNote"
+              @delete="handleDeleteNote"
+              @create="handleCreateNote"
+            />
+          </div>
+        </div>
+
         <!-- 书评部分 -->
         <div class="mt-10" ref="reviewSection">
           <el-divider>
@@ -162,12 +181,16 @@
 </template>
 
 <script setup lang="ts">
+import NoteList from "@/components/note/NoteList.vue";
 import ReviewList from "@/components/review/ReviewList.vue";
 import { useCart } from "@/composables/useCart";
+import { useNote } from "@/composables/useNote";
 import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import { useReviewStore } from "@/stores/review";
+import type { Note } from "@/types/note";
 import { formatPrice } from "@/utils/formatters";
+import { buildRoute } from "@/utils/routeHelper";
 import { ShoppingCart, Star } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { computed, onMounted, ref, watch } from "vue";
@@ -178,6 +201,8 @@ const reviewStore = useReviewStore();
 const route = useRoute();
 const router = useRouter();
 const { addToCart } = useCart();
+const { deleteNote } = useNote();
+const { loading: notesLoading, productNotes, fetchProductNotes } = useNote();
 
 const productId = computed(() => Number(route.params.id));
 const product = computed(() => productStore.currentProduct);
@@ -185,6 +210,7 @@ const stockpile = computed(() => productStore.currentStockpile);
 const quantity = ref(1);
 const adding = ref(false);
 const reviewSection = ref<HTMLElement | null>(null);
+const noteSection = ref<HTMLElement | null>(null);
 
 // 书评总数
 const totalReviews = computed(() => {
@@ -196,7 +222,10 @@ const totalReviews = computed(() => {
 const loadProductData = async () => {
   await productStore.fetchProductById(productId.value);
   if (productStore.currentProduct) {
-    await productStore.fetchStockpile(productId.value);
+    await Promise.all([
+      productStore.fetchStockpile(productId.value),
+      fetchProductNotes(productId.value),
+    ]);
   }
 };
 
@@ -235,6 +264,26 @@ const scrollToReviews = () => {
   if (reviewSection.value) {
     reviewSection.value.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+};
+
+// 查看笔记
+const handleViewNote = (note: Note) => {
+  router.push(buildRoute(Routes.NOTE_DETAIL, { noteId: note.id }));
+};
+
+// 编辑笔记
+const handleEditNote = (note: Note) => {
+  router.push(buildRoute(Routes.NOTE_EDIT, { noteId: note.id }));
+};
+
+// 删除笔记
+const handleDeleteNote = async (note: Note) => {
+  await deleteNote(note.id, productId.value);
+};
+
+// 创建笔记
+const handleCreateNote = () => {
+  router.push(buildRoute(Routes.NOTE_CREATE, { productId: productId.value }));
 };
 </script>
 

@@ -26,6 +26,12 @@ export const Routes = {
   // 书评
   USER_REVIEWS: "/user/reviews",
 
+  // 读书笔记
+  USER_NOTES: "/user/notes",
+  NOTE_DETAIL: "/notes/:noteId",
+  NOTE_CREATE: "/notes/create/:productId",
+  NOTE_EDIT: "/notes/edit/:noteId",
+
   // 管理员
   ADMIN: "/admin",
   ADMIN_PRODUCTS: "/admin/products",
@@ -34,5 +40,6 @@ export const Routes = {
   ADMIN_ORDERS: "/admin/orders",
   ADMIN_USERS: "/admin/users",
   ADMIN_REVIEWS: "/admin/reviews",
+  ADMIN_NOTES: "/admin/notes",
   ADMIN_SETTINGS: "/admin/settings",
 } as const;

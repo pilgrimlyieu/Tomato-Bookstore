@@ -48,7 +48,11 @@ export const BusinessErrorCode = {
 
   // 笔记模块（70xxx）
   NOTE_NOT_FOUND: 70001,
-  NOTE_CONTENT_INVALID: 70002,
+  NOTE_ALREADY_EXISTS: 70002,
+  NOTE_CONTENT_INVALID: 70003,
+  NOTE_COMMENT_NOT_FOUND: 70004,
+  NOTE_FEEDBACK_ALREADY_EXISTS: 70005,
+  NOTE_FEEDBACK_NOT_FOUND: 70006,
 
   // 系统通用（90xxx）
   SYSTEM_ERROR: 90001,
@@ -115,7 +119,11 @@ export const BusinessErrorMessages: Record<number, string> = {
 
   // 笔记模块（70xxx）
   [BusinessErrorCode.NOTE_NOT_FOUND]: "笔记不存在",
+  [BusinessErrorCode.NOTE_ALREADY_EXISTS]: "已创建过此书的笔记",
   [BusinessErrorCode.NOTE_CONTENT_INVALID]: "笔记内容不符合规范",
+  [BusinessErrorCode.NOTE_COMMENT_NOT_FOUND]: "笔记评论不存在",
+  [BusinessErrorCode.NOTE_FEEDBACK_ALREADY_EXISTS]: "已对此笔记进行过反馈",
+  [BusinessErrorCode.NOTE_FEEDBACK_NOT_FOUND]: "笔记反馈不存在",
 
   // 系统通用（90xxx）
   [BusinessErrorCode.SYSTEM_ERROR]: "系统错误",
