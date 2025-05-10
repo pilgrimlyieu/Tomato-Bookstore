@@ -21,7 +21,6 @@
         <div class="flex justify-between items-start mb-4">
           <!-- 用户信息 -->
           <div class="flex items-center">
-            <router-link :to="`/user/${note.userId}`" class="flex items-center">
               <el-avatar :size="40" :src="note.userAvatar" class="mr-3">
                 {{
                   note.username
@@ -34,11 +33,10 @@
                 <div class="text-sm text-gray-500">
                   {{ formatDate(note.createdAt) }}
                   <template v-if="note.updatedAt !== note.createdAt">
-                    (编辑于 {{ formatDate(note.updatedAt) }})
+                    （编辑于 {{ formatDate(note.updatedAt) }}）
                   </template>
                 </div>
               </div>
-            </router-link>
           </div>
 
           <!-- 操作菜单 -->

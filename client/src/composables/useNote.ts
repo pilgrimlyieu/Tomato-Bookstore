@@ -232,32 +232,6 @@ export function useNote() {
   };
 
   /**
-   * 检查当前用户是否可以编辑指定笔记
-   *
-   * @param {Note} note 笔记对象
-   * @returns {boolean} 是否可编辑
-   */
-  const canEditNote = (note: Note): boolean => {
-    if (!currentUser.value) {
-      return false;
-    }
-    return note.userId === currentUser.value.id;
-  };
-
-  /**
-   * 检查当前用户是否可以删除指定评论
-   *
-   * @param {number} userId 评论作者的用户ID
-   * @returns {boolean} 是否可删除
-   */
-  const canDeleteComment = (userId: number): boolean => {
-    if (!currentUser.value) {
-      return false;
-    }
-    return userId === currentUser.value.id;
-  };
-
-  /**
    * 笔记列表与对应的商品名称
    */
   const userNotesWithProductNames = computed(() => {
@@ -293,8 +267,6 @@ export function useNote() {
     deleteComment,
 
     // 工具函数
-    canEditNote,
-    canDeleteComment,
     setCurrentNote: noteStore.setCurrentNote,
     clearCurrentNote: noteStore.clearCurrentNote,
     clearComments: noteStore.clearComments,

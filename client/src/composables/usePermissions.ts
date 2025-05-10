@@ -15,7 +15,10 @@ export function usePermissions() {
    * @returns 是否有权限编辑
    */
   const canEditNote = (note: Note) => {
-    return currentUser.value && currentUser.value.id === note.userId;
+    return (
+      (currentUser.value && currentUser.value.id === note.userId) ||
+      isAdmin.value
+    );
   };
 
   /**
