@@ -179,6 +179,12 @@ export function useNote() {
   ): Promise<boolean> => {
     // 先检查用户是否已登录
     if (!(await checkLogin())) {
+      ElMessage.error("请先登录再进行操作");
+      router.push(
+        buildRoute(Routes.USER_LOGIN, {
+          redirect: router.currentRoute.value.fullPath,
+        }),
+      );
       return false;
     }
 
