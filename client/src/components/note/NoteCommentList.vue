@@ -26,7 +26,7 @@
               </div>
             </div>
 
-            <el-dropdown v-if="canDeleteComment(comment.userId) || isAdmin" trigger="click">
+            <el-dropdown v-if="canDeleteComment(comment)" trigger="click">
               <el-button type="text">
                 <el-icon><MoreFilled /></el-icon>
               </el-button>
@@ -57,11 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
+import { usePermissions } from "@/composables/usePermissions";
 import type { NoteComment } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
 import { MoreFilled } from "@element-plus/icons-vue";
-import { computed } from "vue";
 
 // Props
 const props = defineProps<{
@@ -69,21 +68,8 @@ const props = defineProps<{
   loading?: boolean;
 }>();
 
-// Emits
-const emit = defineEmits<{
-  (e: "delete", comment: NoteComment): void;
-}>();
-
-// 获取用户 store
-const userStore = useUserStore();
-
-// 当前用户是否是管理员
-const isAdmin = computed(() => userStore.isAdmin);
-
-// 当前用户是否可以删除指定评论
-const canDeleteComment = (userId: number) => {
-  return userStore.user && userStore.user.id === userId;
-};
+// 获取权限相关函数
+const { canDeleteComment } = usePermissions();
 </script>
 
 <style scoped>

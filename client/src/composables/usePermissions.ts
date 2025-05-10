@@ -1,4 +1,4 @@
-import type { Note } from "@/types/note";
+import type { Note, NoteComment } from "@/types/note";
 import { computed } from "vue";
 import { useAuth } from "./useAuth";
 
@@ -31,9 +31,23 @@ export function usePermissions() {
     );
   };
 
+  /**
+   * 检查用户是否有权限删除指定的评论
+   *
+   * @param comment 评论对象
+   * @returns 是否有权限删除
+   */
+  const canDeleteComment = (comment: NoteComment) => {
+    return (
+      (currentUser.value && currentUser.value.id === comment.userId) ||
+      isAdmin.value
+    );
+  };
+
   return {
     canEditNote,
     canDeleteNote,
+    canDeleteComment,
     isAdmin,
   };
 }
