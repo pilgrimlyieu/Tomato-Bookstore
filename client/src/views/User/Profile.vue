@@ -279,6 +279,7 @@
 import ProfileForm from "@/components/user/ProfileForm.vue";
 import { useNote } from "@/composables/useNote";
 import { Routes } from "@/constants/routes";
+import uploadService from "@/services/upload-service";
 import { useProductStore } from "@/stores/product";
 import { useReviewStore } from "@/stores/review";
 import { useUserStore } from "@/stores/user";
@@ -379,16 +380,19 @@ const loginNotifications = ref(true);
 const visibleUploadAvatar = ref(false);
 const avatarPreview = ref("");
 const uploadingAvatar = ref(false);
+const avatarFile = ref<File | null>(null);
 
 // 头像变更处理
 const handleAvatarChange = (file: UploadFile) => {
   const isImage =
     file.raw &&
-    ["image/jpeg", "image/png", "image/gif"].includes(file.raw.type);
+    ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(
+      file.raw.type,
+    );
   const isLt2M = file.raw && file.raw.size / 1024 / 1024 < 2;
 
   if (!isImage) {
-    ElMessage.error("上传头像图片只能是 JPG/PNG/GIF 格式！");
+    ElMessage.error("上传头像图片只能是 JPG/PNG/GIF/WebP 格式！");
     return false;
   }
   if (!isLt2M) {
@@ -401,6 +405,8 @@ const handleAvatarChange = (file: UploadFile) => {
   reader.readAsDataURL(file.raw!);
   reader.onload = () => {
     avatarPreview.value = reader.result as string;
+    // 存储原始文件用于上传
+    avatarFile.value = file.raw!;
 
     // 使用 GSAP 添加简单动画
     const avatar = document.querySelector(".el-avatar");
@@ -417,18 +423,21 @@ const handleAvatarChange = (file: UploadFile) => {
 
 // 上传头像处理
 const handleUploadAvatar = async () => {
-  if (!avatarPreview.value) {
+  if (!avatarFile.value) {
     ElMessage.warning("请先选择图片");
     return;
   }
 
   uploadingAvatar.value = true;
   try {
-    // 调用 API 上传头像
-    // await userStore.updateUserProfile({ avatar: avatarPreview.value });
-    // TODO: image service
+    const response = await uploadService.uploadAvatar(avatarFile.value);
+
+    // 更新用户头像
+    await userStore.updateUserProfile({ avatar: response.data });
 
     visibleUploadAvatar.value = false;
+    avatarPreview.value = "";
+    avatarFile.value = null;
     ElMessage.success("头像上传成功");
   } catch (error) {
     console.error("上传头像失败：", error);

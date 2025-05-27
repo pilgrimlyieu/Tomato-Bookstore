@@ -34,13 +34,36 @@
     </div>
 
     <el-form-item label="商品封面" prop="cover">
-      <el-input v-model="form.cover" placeholder="请输入封面图片 URL" />
-      <div class="mt-2 flex items-center gap-4">
-        <div v-if="form.cover" class="w-24 h-32 rounded overflow-hidden bg-gray-100 shadow-md">
-          <img :src="form.cover" class="w-full h-full object-cover object-center" />
+      <div class="space-y-3">
+        <div class="flex items-center gap-4">
+          <el-upload
+            class="upload-demo"
+            :show-file-list="false"
+            :before-upload="handleBeforeUpload"
+            :http-request="handleUploadCover"
+            accept="image/*"
+          >
+            <el-button type="primary" plain class="rounded-lg" :loading="uploadingCover">
+              <el-icon class="mr-1"><Upload /></el-icon>
+              {{ uploadingCover ? '上传中...' : '上传封面' }}
+            </el-button>
+          </el-upload>
+          <span class="text-gray-500 text-sm">支持 JPG、PNG、GIF、WebP 格式，最大 5MB</span>
         </div>
-        <div v-else class="w-24 h-32 rounded bg-gray-100 flex items-center justify-center text-gray-400 shadow-md">
-          无封面
+
+        <el-input
+          v-model="form.cover"
+          placeholder="或直接输入封面图片 URL"
+          clearable
+        />
+
+        <div class="mt-2 flex items-center gap-4">
+          <div v-if="form.cover" class="w-24 h-32 rounded overflow-hidden bg-gray-100 shadow-md">
+            <img :src="form.cover" class="w-full h-full object-cover object-center" />
+          </div>
+          <div v-else class="w-24 h-32 rounded bg-gray-100 flex items-center justify-center text-gray-400 shadow-md">
+            无封面
+          </div>
         </div>
       </div>
     </el-form-item>
@@ -117,9 +140,16 @@
 </template>
 
 <script setup lang="ts">
+import uploadService from "@/services/upload-service";
 import type { Product, Specification } from "@/types/product";
 import { getProductRules, getSpecificationRules } from "@/utils/validators";
-import type { FormInstance, FormRules } from "element-plus";
+import { Upload } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
+import type {
+  FormInstance,
+  FormRules,
+  UploadRequestOptions,
+} from "element-plus";
 
 const props = defineProps<{
   product?: Product | null;
@@ -188,6 +218,41 @@ const addSpecification = () => {
 // 删除规格
 const removeSpecification = (index: number) => {
   form.specifications.splice(index, 1);
+};
+
+const uploadingCover = ref(false);
+
+// 上传前验证
+const handleBeforeUpload = (file: File) => {
+  const isImage = file.type.startsWith("image/");
+  const isLt5M = file.size / 1024 / 1024 < 5;
+
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
+  if (!isLt5M) {
+    ElMessage.error("图片大小不能超过 5MB！");
+    return false;
+  }
+  return true;
+};
+
+// 处理封面上传
+const handleUploadCover = async (options: UploadRequestOptions) => {
+  try {
+    uploadingCover.value = true;
+    const response = await uploadService.uploadProductCover(
+      options.file as File,
+    );
+    form.cover = response.data;
+    ElMessage.success("封面上传成功");
+  } catch (error) {
+    console.error("上传失败：", error);
+    ElMessage.error("封面上传失败");
+  } finally {
+    uploadingCover.value = false;
+  }
 };
 
 // 处理提交
