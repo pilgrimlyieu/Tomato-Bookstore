@@ -128,6 +128,28 @@ export const useUserStore = defineStore("user", {
     },
 
     /**
+     * 修改用户密码
+     *
+     * @param {string} newPassword 新密码
+     * @returns {Promise<boolean>} 是否修改成功
+     */
+    async changePassword(newPassword: string): Promise<boolean> {
+      return await performAsyncAction(
+        this,
+        "loading",
+        () => userService.changePassword(newPassword),
+        (data) => {
+          // 更新用户信息，但不包含密码字段
+          this.user = data;
+        },
+        "修改密码失败：",
+        true,
+        [HttpStatusCode.Ok],
+        "密码修改成功",
+      );
+    },
+
+    /**
      * 退出登录
      *
      * @returns {void}

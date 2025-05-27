@@ -18,16 +18,6 @@
             <router-link v-if="userStore.isAdmin" :to="Routes.ADMIN" class="nav-link">管理后台</router-link>
           </div>
 
-          <!-- 搜索 -->
-          <el-button
-            type="primary"
-            size="large"
-            :icon="Search"
-            text
-            @click="openSearch"
-            class="hidden sm:flex"
-          />
-
           <!-- 购物车 -->
           <router-link :to="Routes.CART" class="relative">
             <el-button type="primary" size="large" :icon="ShoppingCart" text />
@@ -122,11 +112,6 @@ onMounted(async () => {
     await cartStore.fetchUserCart();
   }
 });
-
-// 打开搜索框
-const openSearch = () => {
-  // TODO: 实现搜索功能
-};
 
 // 退出登录
 const logout = () => {

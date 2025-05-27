@@ -161,10 +161,6 @@
                 <div class="py-4">
                   <h3 class="text-xl font-medium text-gray-800 mb-6">修改密码</h3>
                   <el-form label-position="top" :model="passwordForm" :rules="passwordRules" ref="passwordFormRef">
-                    <el-form-item label="当前密码" prop="currentPassword">
-                      <el-input v-model="passwordForm.currentPassword" type="password" placeholder="请输入当前密码"
-                        :prefix-icon="Lock" show-password />
-                    </el-form-item>
                     <el-form-item label="新密码" prop="newPassword">
                       <el-input v-model="passwordForm.newPassword" type="password" placeholder="请输入新密码" :prefix-icon="Lock"
                         show-password />
@@ -340,13 +336,12 @@ const notesWithProductNames = computed(() => {
 // 修改密码相关
 const passwordFormRef = ref<FormInstance>();
 const passwordForm = ref({
-  currentPassword: "",
   newPassword: "",
   confirmPassword: "",
 });
 const changingPassword = ref(false);
 
-// 使用统一的密码修改验证规则
+// 简化的密码验证规则
 const passwordRules = getChangePasswordRules();
 
 // 修改密码处理函数
@@ -357,20 +352,18 @@ const handleChangePassword = async () => {
     if (valid) {
       changingPassword.value = true;
       try {
-        // await userStore.changePassword({
-        //   currentPassword: passwordForm.value.currentPassword,
-        //   newPassword: passwordForm.value.newPassword,
-        // }); // TODO
+        await userStore.changePassword(passwordForm.value.newPassword);
 
-        ElMessage.success("密码修改成功");
         passwordForm.value = {
-          currentPassword: "",
           newPassword: "",
           confirmPassword: "",
         };
+
+        // 重置表单验证状态
+        passwordFormRef.value?.resetFields();
+        ElMessage.success("密码修改成功");
       } catch (error) {
         console.error("修改密码失败：", error);
-        ElMessage.error("修改密码失败，请重试");
       } finally {
         changingPassword.value = false;
       }

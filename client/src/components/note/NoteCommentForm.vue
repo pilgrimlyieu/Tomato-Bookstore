@@ -37,7 +37,8 @@
 
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
-import type { FormInstance, FormRules } from "element-plus";
+import { getCommentRules } from "@/utils/validators";
+import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 
 // Props
@@ -59,17 +60,7 @@ const form = reactive({
 });
 
 // 表单验证规则
-const rules: FormRules = {
-  content: [
-    { required: true, message: "请输入评论内容", trigger: "blur" },
-    {
-      min: 2,
-      max: 500,
-      message: "评论长度应在 2 到 500 个字符之间",
-      trigger: "blur",
-    },
-  ],
-};
+const rules = getCommentRules();
 
 // 获取用户 store
 const userStore = useUserStore();

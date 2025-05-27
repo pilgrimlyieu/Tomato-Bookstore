@@ -52,7 +52,8 @@ import type {
   ReviewCreateParams,
   ReviewUpdateParams,
 } from "@/types/review";
-import { type FormInstance, type FormRules } from "element-plus";
+import { getReviewRules } from "@/utils/validators";
+import { type FormInstance } from "element-plus";
 
 // 属性
 const props = defineProps<{
@@ -78,21 +79,7 @@ const form = reactive({
 });
 
 // 表单校验规则
-const rules = reactive<FormRules>({
-  rating: [
-    { required: true, message: "请选择评分", trigger: "change" },
-    {
-      type: "number",
-      min: 0,
-      max: 10,
-      message: "评分范围为 0-10 分",
-      trigger: "change",
-    },
-  ],
-  content: [
-    { max: 1000, message: "评论内容不能超过 1000 个字符", trigger: "blur" },
-  ],
-});
+const rules = getReviewRules();
 
 // 初始化
 watch(

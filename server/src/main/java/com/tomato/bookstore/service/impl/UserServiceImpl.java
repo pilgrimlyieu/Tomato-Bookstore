@@ -105,6 +105,10 @@ public class UserServiceImpl implements UserService {
     if (userDTO.getAddress() != null) {
       user.setAddress(userDTO.getAddress());
     }
+    // 更新密码
+    if (userDTO.getPassword() != null && !userDTO.getPassword().trim().isEmpty()) {
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+    }
     user.setUpdatedAt(LocalDateTime.now());
 
     userRepository.save(user);

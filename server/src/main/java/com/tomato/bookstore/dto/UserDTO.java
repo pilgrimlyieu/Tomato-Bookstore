@@ -1,5 +1,6 @@
 package com.tomato.bookstore.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tomato.bookstore.model.User.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +24,8 @@ public class UserDTO {
   private String avatar;
   private String address;
   private UserRole role;
+
+  /** 密码字段，仅用于密码修改，不会在查询时返回 */
+  @JsonIgnore
+  private String password;
 }
