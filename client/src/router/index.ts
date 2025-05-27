@@ -97,6 +97,24 @@ const router = createRouter({
           meta: { title: "编辑商品", requiresAuth: true, requiresAdmin: true },
         },
         {
+          path: Routes.ADMIN_ADVERTISEMENTS,
+          name: "adminAdvertisements",
+          component: () => import("@/views/Admin/Advertisement/List.vue"),
+          meta: { title: "广告管理", requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: Routes.ADMIN_ADVERTISEMENT_CREATE,
+          name: "adminAdvertisementsCreate",
+          component: () => import("@/views/Admin/Advertisement/Edit.vue"),
+          meta: { title: "创建广告", requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: Routes.ADMIN_ADVERTISEMENT_EDIT,
+          name: "adminAdvertisementsEdit",
+          component: () => import("@/views/Admin/Advertisement/Edit.vue"),
+          meta: { title: "编辑广告", requiresAuth: true, requiresAdmin: true },
+        },
+        {
           path: Routes.ADMIN_REVIEWS,
           name: "adminReviews",
           component: () => import("@/views/Admin/Review/List.vue"),

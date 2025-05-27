@@ -25,6 +25,10 @@
           <el-icon><User /></el-icon>
           <template #title>用户管理</template>
         </el-menu-item>
+        <el-menu-item :index="Routes.ADMIN_ADVERTISEMENTS">
+          <el-icon><Picture /></el-icon>
+          <template #title>广告管理</template>
+        </el-menu-item>
         <el-menu-item :index="Routes.ADMIN_REVIEWS">
           <el-icon><ChatLineRound /></el-icon>
           <template #title>评价管理</template>
@@ -90,6 +94,7 @@ import {
   House,
   List,
   Notebook,
+  Picture,
   Setting,
   SwitchButton,
   User,
@@ -113,6 +118,12 @@ const pageTitle = computed(() => {
     return "订单管理";
   } else if (route.path === Routes.ADMIN_USERS) {
     return "用户管理";
+  } else if (route.path === Routes.ADMIN_ADVERTISEMENTS) {
+    return "广告管理";
+  } else if (route.path === Routes.ADMIN_ADVERTISEMENT_CREATE) {
+    return "创建广告";
+  } else if (route.path.includes(Routes.ADMIN_ADVERTISEMENTS)) {
+    return "编辑广告";
   } else if (route.path === Routes.ADMIN_REVIEWS) {
     return "评价管理";
   } else if (route.path === Routes.ADMIN_NOTES) {
@@ -132,6 +143,11 @@ const activeMenuItem = computed(() => {
     path === Routes.ADMIN_PRODUCT_CREATE
   ) {
     return Routes.ADMIN_PRODUCTS;
+  } else if (
+    path.startsWith(Routes.ADMIN_ADVERTISEMENTS) ||
+    path === Routes.ADMIN_ADVERTISEMENT_CREATE
+  ) {
+    return Routes.ADMIN_ADVERTISEMENTS;
   }
   return path;
 });

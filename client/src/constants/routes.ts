@@ -41,5 +41,8 @@ export const Routes = {
   ADMIN_USERS: "/admin/users",
   ADMIN_REVIEWS: "/admin/reviews",
   ADMIN_NOTES: "/admin/notes",
+  ADMIN_ADVERTISEMENTS: "/admin/advertisements",
+  ADMIN_ADVERTISEMENT_CREATE: "/admin/advertisements/create",
+  ADMIN_ADVERTISEMENT_EDIT: "/admin/advertisements/:id",
   ADMIN_SETTINGS: "/admin/settings",
 } as const;
