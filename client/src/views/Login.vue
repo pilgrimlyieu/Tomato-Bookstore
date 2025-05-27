@@ -42,7 +42,7 @@
           <p class="text-gray-600">欢迎回来！请登录您的账号</p>
         </div>
 
-        <!-- 登录选项 -->
+        <!-- 账号登录 -->
         <div class="mb-6">
 
           <div class="my-4 flex items-center">
