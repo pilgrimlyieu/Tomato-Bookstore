@@ -214,6 +214,11 @@ const loginRoute = computed(() => {
   };
 });
 
+// 获取书评列表
+const fetchReviews = async () => {
+  await reviewStore.fetchProductReviews(props.productId);
+};
+
 // 监听商品 ID 变化，重新加载书评
 watch(
   () => props.productId,
@@ -231,11 +236,6 @@ onMounted(async () => {
     await fetchReviews();
   }
 });
-
-// 获取书评列表
-const fetchReviews = async () => {
-  await reviewStore.fetchProductReviews(props.productId);
-};
 
 // 创建书评
 const handleCreateReview = async (formData: ReviewCreateParams) => {
