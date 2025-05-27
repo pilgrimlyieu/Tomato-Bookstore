@@ -47,7 +47,7 @@ export default {
   uploadAdvertisementImage(file: File): Promise<ApiResponse<string>> {
     const formData = new FormData();
     formData.append("file", file);
-    return apiClient.post(`${UPLOAD_MODULE}/advertisement-covert`, formData, {
+    return apiClient.post(`${UPLOAD_MODULE}/advertisement-cover`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
