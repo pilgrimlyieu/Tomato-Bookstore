@@ -66,24 +66,24 @@ onMounted(async () => {
 
 // 提交表单
 const handleSubmit = async (advertisement: Advertisement) => {
-try {
-  if (isEdit.value) {
-    // 更新广告
-    await advertisementStore.updateAdvertisement(advertisement);
-    ElMessage.success("广告更新成功");
-  } else {
-    // 创建广告
-    await advertisementStore.createAdvertisement(advertisement);
-    ElMessage.success("广告创建成功");
+  try {
+    if (isEdit.value) {
+      // 更新广告
+      await advertisementStore.updateAdvertisement(advertisement);
+      ElMessage.success("广告更新成功");
+    } else {
+      // 创建广告
+      await advertisementStore.createAdvertisement(advertisement);
+      ElMessage.success("广告创建成功");
+    }
+    router.push(Routes.ADMIN_ADVERTISEMENTS);
+  } catch (error) {
+    const action = isEdit.value ? "更新" : "创建";
+    console.error("广告操作失败：", error);
+    ElMessage.error(
+      `${action}广告失败： ${error instanceof Error ? error.message : "未知错误"}`,
+    );
   }
-  router.push(Routes.ADMIN_ADVERTISEMENTS);
-} catch (error) {
-  const action = isEdit.value ? "更新" : "创建";
-  console.error("广告操作失败：", error);
-  ElMessage.error(
-    `${action}广告失败： ${error instanceof Error ? error.message : "未知错误"}`,
-  );
-}
 };
 
 // 取消操作

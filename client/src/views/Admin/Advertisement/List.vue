@@ -128,7 +128,7 @@ const handleSearch = () => {
 // 删除广告
 const handleDelete = (advertisement: Advertisement) => {
   ElMessageBox.confirm(
-    `确定要删除广告"${advertisement.title}"吗？此操作不可逆`,
+    `确定要删除广告「${advertisement.title}」吗？此操作不可逆`,
     "警告",
     {
       confirmButtonText: "确定删除",

@@ -34,7 +34,7 @@ public class FileUploadController {
       throw new IllegalArgumentException("文件不能为空");
     }
     if (file.getSize() > 5 * 1024 * 1024) { // 5MB limit
-      throw new IllegalArgumentException("文件大小不能超过5MB");
+      throw new IllegalArgumentException("文件大小不能超过 5MB");
     }
     String contentType = file.getContentType();
     if (contentType == null || !contentType.startsWith("image/")) {
