@@ -55,7 +55,7 @@ const handleSubmit = async () => {
 
       if (success) {
         // 如果有重定向参数，登录后跳转到指定页面
-        const redirectPath = (route.query.redirect as string) || "/";
+        const redirectPath = (route.query.redirect as string) || Routes.HOME;
         router.push(redirectPath);
       }
     }

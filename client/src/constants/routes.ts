@@ -37,8 +37,6 @@ export const Routes = {
   ADMIN_PRODUCTS: "/admin/products",
   ADMIN_PRODUCT_CREATE: "/admin/products/create",
   ADMIN_PRODUCT_EDIT: "/admin/products/:id",
-  ADMIN_ORDERS: "/admin/orders",
-  ADMIN_USERS: "/admin/users",
   ADMIN_REVIEWS: "/admin/reviews",
   ADMIN_NOTES: "/admin/notes",
   ADMIN_ADVERTISEMENTS: "/admin/advertisements",

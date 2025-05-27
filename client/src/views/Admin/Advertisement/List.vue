@@ -36,6 +36,7 @@
             :src="scope.row.imageUrl"
             :preview-src-list="[scope.row.imageUrl]"
             fit="cover"
+            referrerPolicy="no-referrer"
             class="h-16 w-16 object-cover rounded"
           />
         </template>

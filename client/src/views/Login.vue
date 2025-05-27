@@ -42,26 +42,12 @@
           <p class="text-gray-600">欢迎回来！请登录您的账号</p>
         </div>
 
-        <!-- 社交登录选项 -->
+        <!-- 账号登录 -->
         <div class="mb-6">
-          <div class="grid grid-cols-3 gap-3">
-            <button
-              class="bg-white border border-gray-300 p-2 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google" class="w-6 h-6">
-            </button>
-            <button
-              class="bg-white border border-gray-300 p-2 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6">
-            </button>
-            <button
-              class="bg-white border border-gray-300 p-2 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <img src="https://img.icons8.com/color/48/000000/twitter--v1.png" alt="Twitter" class="w-6 h-6">
-            </button>
-          </div>
 
           <div class="my-4 flex items-center">
             <div class="flex-grow border-t border-gray-300"></div>
-            <span class="px-3 text-gray-500 text-sm">或使用账号登录</span>
+            <span class="px-3 text-gray-500 text-sm">使用账号登录</span>
             <div class="flex-grow border-t border-gray-300"></div>
           </div>
         </div>

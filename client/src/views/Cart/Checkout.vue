@@ -170,11 +170,7 @@ const handleSubmitOrder = async () => {
 
         if (order && order.orderId) {
           // 跳转到支付页面
-          router.push({
-            path: buildRoute(Routes.ORDER_PAY, {
-              orderId: order.orderId,
-            }),
-          });
+          router.push(buildRoute(Routes.ORDER_PAY, { orderId: order.orderId }));
         } else {
           ElMessage.error("创建订单失败");
         }
