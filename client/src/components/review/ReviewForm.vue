@@ -53,7 +53,7 @@ import type {
   ReviewUpdateParams,
 } from "@/types/review";
 import { getReviewRules } from "@/utils/validators";
-import { type FormInstance } from "element-plus";
+import type { FormInstance } from "element-plus";
 
 // 属性
 const props = defineProps<{

@@ -45,4 +45,5 @@ export interface UpdateUserParams {
   phone?: string;
   address?: string;
   password?: string;
+  avatar?: string;
 }

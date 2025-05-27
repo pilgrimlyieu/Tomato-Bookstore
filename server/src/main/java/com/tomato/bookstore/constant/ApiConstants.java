@@ -97,4 +97,11 @@ public class ApiConstants {
   public static final String NOTE_COMMENT_PATH = NOTES + NOTE_COMMENT;
   public static final String NOTE_COMMENT_DETAIL_PATH = NOTES + NOTE_COMMENT_DETAIL;
   public static final String NOTE_FEEDBACK_PATH = NOTES + NOTE_FEEDBACK;
+
+  // 文件上传相关路径
+  public static final String FILE_UPLOAD = "/upload";
+  public static final String FILE_UPLOAD_AVATAR = "/avatar";
+  public static final String FILE_UPLOAD_PRODUCT_COVER = "/product-cover";
+  public static final String FILE_UPLOAD_ADVERTISEMENT_COVER = "/advertisement-cover";
+  public static final String FILE_UPLOAD_COMMON = "/common";
 }

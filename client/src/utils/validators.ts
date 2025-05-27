@@ -226,6 +226,42 @@ export const noteContentRules: FormItemRule[] = [
 ];
 
 /**
+ * 广告标题验证规则
+ */
+export const advertisementTitleRules: FormItemRule[] = [
+  { required: true, message: "请输入广告标题", trigger: "blur" },
+  { max: 50, message: "广告标题不能超过 50 个字符", trigger: "blur" },
+];
+
+/**
+ * 广告内容验证规则
+ */
+export const advertisementContentRules: FormItemRule[] = [
+  { required: true, message: "请输入广告内容", trigger: "blur" },
+  { max: 500, message: "广告内容不能超过 500 个字符", trigger: "blur" },
+];
+
+/**
+ * 广告图片 URL 验证规则
+ */
+export const advertisementImageUrlRules: FormItemRule[] = [
+  {
+    required: true,
+    message: "请上传广告图片或输入图片 URL",
+    trigger: "blur",
+  },
+  { max: 500, message: "图片 URL 不能超过 500 个字符", trigger: "blur" },
+];
+
+/**
+ * 广告关联商品 ID 验证规则
+ */
+export const advertisementProductIdRules: FormItemRule[] = [
+  { required: true, message: "请输入关联商品 ID", trigger: "blur" },
+  { type: "number", min: 1, message: "商品 ID 必须大于 0", trigger: "blur" },
+];
+
+/**
  * 获取登录表单验证规则
  */
 export const getLoginRules = (): FormRules => {
@@ -386,5 +422,34 @@ export const getNoteRules = (): FormRules => {
 export const getCommentRules = (): FormRules => {
   return {
     content: commentContentRules,
+  };
+};
+
+/**
+ * 获取广告表单验证规则
+ */
+export const getAdvertisementRules = (): FormRules => {
+  return {
+    title: advertisementTitleRules,
+    content: advertisementContentRules,
+    imageUrl: advertisementImageUrlRules,
+    productId: advertisementProductIdRules,
+  };
+};
+
+/**
+ * 获取注册表单分步验证规则
+ */
+export const getRegisterStepRules = () => {
+  return {
+    account: {
+      username: usernameRules,
+      password: passwordRules,
+      confirmPassword: confirmPasswordRules(),
+    } as FormRules,
+    profile: {
+      email: emailRules,
+      phone: phoneRules,
+    } as FormRules,
   };
 };
