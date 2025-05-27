@@ -61,11 +61,9 @@ onMounted(async () => {
 // 跳转到订单详情
 const goToOrderDetail = () => {
   if (order.value && order.value.orderId) {
-    router.push({
-      path: buildRoute(Routes.ORDER_DETAIL, {
-        orderId: order.value.orderId,
-      }),
-    });
+    router.push(
+      buildRoute(Routes.ORDER_DETAIL, { orderId: order.value.orderId }),
+    );
   } else {
     router.push(Routes.USER_PROFILE);
   }
@@ -74,12 +72,7 @@ const goToOrderDetail = () => {
 // 重试支付
 const retryPayment = () => {
   if (order.value && order.value.orderId) {
-    router.push({
-      path: Routes.ORDER_PAY.replace(
-        ":orderId",
-        order.value.orderId.toString(),
-      ),
-    });
+    router.push(buildRoute(Routes.ORDER_PAY, { orderId: order.value.orderId }));
   } else {
     router.push(Routes.USER_PROFILE);
   }

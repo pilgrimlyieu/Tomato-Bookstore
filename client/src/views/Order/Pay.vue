@@ -202,11 +202,9 @@ const submitPaymentForm = () => {
 // 跳转到订单详情
 const goToOrderDetail = () => {
   if (order.value && order.value.orderId) {
-    router.push({
-      path: buildRoute(Routes.ORDER_DETAIL, {
-        orderId: order.value.orderId,
-      }),
-    });
+    router.push(
+      buildRoute(Routes.ORDER_DETAIL, { orderId: order.value.orderId }),
+    );
   }
 };
 
