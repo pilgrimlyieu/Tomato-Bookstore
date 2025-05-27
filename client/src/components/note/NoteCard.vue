@@ -44,7 +44,7 @@
     <div class="text-sm text-gray-500 mb-3">
       <span>关联书籍：</span>
       <router-link
-        :to="{ name: Routes.PRODUCT_DETAIL, params: { id: note.productId } }"
+        :to="buildRoute(Routes.PRODUCT_DETAIL, { id: note.productId })"
         class="text-primary hover:underline"
       >
         《{{ note.productTitle }}》
@@ -110,6 +110,7 @@ import { usePermissions } from "@/composables/usePermissions";
 import { Routes } from "@/constants/routes";
 import type { Note } from "@/types/note";
 import { formatDate } from "@/utils/formatters";
+import { buildRoute } from "@/utils/routeHelper";
 import {
   ArrowDownBold,
   ArrowRight,
