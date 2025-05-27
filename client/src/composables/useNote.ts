@@ -3,14 +3,12 @@ import { useNoteStore } from "@/stores/note";
 import { useProductStore } from "@/stores/product";
 import type {
   FeedbackType,
-  Note,
   NoteCommentCreateParams,
   NoteCreateParams,
   NoteUpdateParams,
 } from "@/types/note";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "./useAuth";
 

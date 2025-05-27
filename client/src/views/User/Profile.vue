@@ -293,7 +293,6 @@ import { ArrowRight, Lock, Plus, Upload } from "@element-plus/icons-vue";
 import type { FormInstance, UploadFile } from "element-plus";
 import { ElMessage } from "element-plus";
 import gsap from "gsap";
-import { computed, onMounted, ref } from "vue";
 
 const userStore = useUserStore();
 const reviewStore = useReviewStore();
@@ -472,6 +471,7 @@ const handleUploadAvatar = async () => {
 
 .line-clamp-2 {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

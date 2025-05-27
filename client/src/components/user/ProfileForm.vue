@@ -34,7 +34,6 @@ import { getProfileRules } from "@/utils/validators";
 import { Location, Message, Phone, User } from "@element-plus/icons-vue";
 import type { FormInstance } from "element-plus";
 import { gsap } from "gsap";
-import { onMounted, ref } from "vue";
 
 const userStore = useUserStore();
 const profileFormRef = ref<FormInstance>();

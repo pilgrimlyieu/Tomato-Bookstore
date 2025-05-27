@@ -133,7 +133,7 @@ const emit = defineEmits<{
 }>();
 
 // 获取权限相关功能
-const { canEditNote, canDeleteNote, isAdmin } = usePermissions();
+const { canEditNote, canDeleteNote } = usePermissions();
 </script>
 
 <style scoped>
@@ -151,6 +151,7 @@ const { canEditNote, canDeleteNote, isAdmin } = usePermissions();
 
 .line-clamp-2 {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -158,6 +159,7 @@ const { canEditNote, canDeleteNote, isAdmin } = usePermissions();
 
 .line-clamp-3 {
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;

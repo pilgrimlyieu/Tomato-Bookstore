@@ -50,7 +50,6 @@
 <script setup lang="ts">
 import type { Note } from "@/types/note";
 import type { FormInstance, FormRules } from "element-plus";
-import { reactive, ref, watchEffect } from "vue";
 
 // Props
 const props = defineProps<{

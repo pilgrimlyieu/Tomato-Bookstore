@@ -41,7 +41,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import type { Note } from "@/types/note";
-import { computed } from "vue";
 import NoteCard from "./NoteCard.vue";
 
 const props = defineProps<{

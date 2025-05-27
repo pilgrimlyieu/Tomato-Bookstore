@@ -27,7 +27,6 @@ import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import type { Product } from "@/types/product";
 import { ElMessage } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();

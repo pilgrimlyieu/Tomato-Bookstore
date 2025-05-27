@@ -48,7 +48,6 @@
 import { Routes } from "@/constants/routes";
 import { useOrderStore } from "@/stores/order";
 import { formatDate, formatPrice } from "@/utils/formatters";
-import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();

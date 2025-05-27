@@ -58,7 +58,6 @@ import { useUserStore } from "@/stores/user";
 import type { NoteCreateParams } from "@/types/note";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessage } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();

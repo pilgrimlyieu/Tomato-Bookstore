@@ -131,7 +131,6 @@ import type {
   ReviewUpdateParams,
 } from "@/types/review";
 import { ElMessage } from "element-plus";
-import { computed, onMounted, ref, watch } from "vue";
 import ReviewForm from "./ReviewForm.vue";
 import ReviewItem from "./ReviewItem.vue";
 
@@ -330,15 +329,6 @@ const handleSizeChange = (val: number) => {
 
 const handleCurrentChange = (val: number) => {
   currentPage.value = val;
-};
-
-// 获取评分对应的状态
-const getRatingStatus = (
-  rating: number,
-): "success" | "warning" | "exception" => {
-  if (rating >= 7) return "success";
-  if (rating >= 4) return "warning";
-  return "exception";
 };
 </script>
 

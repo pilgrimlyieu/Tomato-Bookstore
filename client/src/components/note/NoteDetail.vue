@@ -138,7 +138,6 @@ import {
   ChatDotRound,
   MoreFilled,
 } from "@element-plus/icons-vue";
-import { ref } from "vue";
 import NoteCommentForm from "./NoteCommentForm.vue";
 import NoteCommentList from "./NoteCommentList.vue";
 
@@ -160,7 +159,7 @@ const emit = defineEmits<{
   (e: "deleteComment", comment: NoteComment): void;
 }>();
 
-const { canEditNote, canDeleteNote, isAdmin } = usePermissions();
+const { canEditNote, canDeleteNote } = usePermissions();
 
 const commentFormRef = ref();
 

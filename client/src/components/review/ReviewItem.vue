@@ -53,7 +53,6 @@ import type { Review } from "@/types/review";
 import { formatDate } from "@/utils/formatters";
 import { MoreFilled } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
-import { computed } from "vue";
 
 // 属性
 const props = defineProps<{

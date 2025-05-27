@@ -139,7 +139,6 @@ import { useCartStore } from "@/stores/cart";
 import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessageBox } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

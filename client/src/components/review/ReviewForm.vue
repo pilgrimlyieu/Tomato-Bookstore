@@ -53,7 +53,6 @@ import type {
   ReviewUpdateParams,
 } from "@/types/review";
 import { type FormInstance, type FormRules } from "element-plus";
-import { reactive, ref } from "vue";
 
 // 属性
 const props = defineProps<{

@@ -35,8 +35,6 @@ import {
 } from "@/constants/errorCode";
 import advertisementService from "@/services/advertisement-service";
 import type { Advertisement } from "@/types/advertisement";
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
 import AdvertisementCard from "./AdvertisementCard.vue";
 
 const advertisements = ref<Advertisement[]>([]);

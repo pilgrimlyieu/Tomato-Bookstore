@@ -32,7 +32,6 @@ import { useUserStore } from "@/stores/user";
 import { getLoginRules } from "@/utils/validators";
 import { Lock, User } from "@element-plus/icons-vue";
 import type { FormInstance } from "element-plus";
-import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
