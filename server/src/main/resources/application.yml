@@ -55,3 +55,11 @@ alipay:
   notifyUrl: ${ALIPAY_TUNNEL_URL}${server.servlet.context-path}/orders/notify
   returnUrl: ${ALIPAY_TUNNEL_URL}${server.servlet.context-path}/orders/return
   serverUrl: ${ALIPAY_SERVER_URL:https://openapi-sandbox.dl.alipaydev.com/gateway.do}
+
+# 阿里云 OSS 配置
+aliyun:
+  oss:
+    endpoint: ${ALIYUN_OSS_ENDPOINT}
+    accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID}
+    accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET}
+    bucketName: ${ALIYUN_OSS_BUCKET_NAME}
