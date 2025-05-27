@@ -50,4 +50,14 @@ export default {
   updateUserProfile(params: UpdateUserParams): Promise<ApiResponse<User>> {
     return apiClient.put(`${USER_MODULE}/profile`, params);
   },
+
+  /**
+   * 修改用户密码
+   *
+   * @param {string} newPassword 新密码
+   * @returns {Promise<ApiResponse<User>>} 修改结果
+   */
+  changePassword(newPassword: string): Promise<ApiResponse<User>> {
+    return apiClient.put(`${USER_MODULE}/profile`, { password: newPassword });
+  },
 };

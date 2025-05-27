@@ -23,4 +23,7 @@ public class UserDTO {
   private String avatar;
   private String address;
   private UserRole role;
+
+  /** 密码字段，仅用于密码修改，不会在查询时返回 */
+  private String password;
 }
