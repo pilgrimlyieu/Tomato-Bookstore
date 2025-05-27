@@ -11,13 +11,6 @@
       </el-form-item>
 
       <el-form-item>
-        <div class="flex justify-between">
-          <el-checkbox v-model="rememberMe">记住我</el-checkbox>
-            <a href="#" class="text-tomato-600 hover:text-tomato-800">忘记密码？</a>
-        </div>
-      </el-form-item>
-
-      <el-form-item>
         <el-button type="primary" class="w-full" :loading="userStore.loading" @click="handleSubmit">
           登录
         </el-button>
@@ -51,7 +44,6 @@ const loginForm = ref({
   username: "",
   password: "",
 });
-const rememberMe = ref(false); // TODO
 
 const rules = getLoginRules();
 
