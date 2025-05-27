@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-
 // 按钮属性，与 ElButton 一致
 const props = defineProps({
   type: {
