@@ -342,25 +342,7 @@ const passwordForm = ref({
 const changingPassword = ref(false);
 
 // 简化的密码验证规则
-const passwordRules = {
-  newPassword: [
-    { required: true, message: "请输入新密码", trigger: "blur" },
-    { min: 6, max: 20, message: "密码长度应为 6-20 位", trigger: "blur" },
-  ],
-  confirmPassword: [
-    { required: true, message: "请确认新密码", trigger: "blur" },
-    {
-      validator: (rule: any, value: any, callback: any) => {
-        if (value !== passwordForm.value.newPassword) {
-          callback(new Error("两次输入的密码不一致"));
-        } else {
-          callback();
-        }
-      },
-      trigger: "blur",
-    },
-  ],
-};
+const passwordRules = getChangePasswordRules();
 
 // 修改密码处理函数
 const handleChangePassword = async () => {
@@ -379,6 +361,7 @@ const handleChangePassword = async () => {
 
         // 重置表单验证状态
         passwordFormRef.value?.resetFields();
+        ElMessage.success("密码修改成功");
       } catch (error) {
         console.error("修改密码失败：", error);
       } finally {

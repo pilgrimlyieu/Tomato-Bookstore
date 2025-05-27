@@ -266,7 +266,6 @@ export const getProfileRules = (): FormRules => {
  */
 export const getChangePasswordRules = (): FormRules => {
   return {
-    currentPassword: passwordRules,
     newPassword: passwordRules,
     confirmPassword: confirmPasswordRules("newPassword"),
   };
