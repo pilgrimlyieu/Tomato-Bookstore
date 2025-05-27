@@ -123,7 +123,6 @@ import type { Review, ReviewUpdateParams } from "@/types/review";
 import { formatDate } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessageBox } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 
 // store
 const reviewStore = useReviewStore();

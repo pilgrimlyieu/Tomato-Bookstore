@@ -61,7 +61,6 @@ import { Routes } from "@/constants/routes";
 import { useProductStore } from "@/stores/product";
 import type { Note, NoteCreateParams } from "@/types/note";
 import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
 
 const productStore = useProductStore();
 const {

@@ -67,11 +67,6 @@
         </div>
 
         <LoginForm />
-
-        <!-- 帮助链接 -->
-        <div class="text-center mt-6 text-gray-600 text-sm">
-          <p>登录遇到问题？<a href="#" class="text-tomato-600 hover:text-tomato-800">联系客服</a></p>
-        </div>
       </div>
     </div>
   </div>

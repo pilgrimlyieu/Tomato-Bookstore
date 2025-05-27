@@ -1,7 +1,6 @@
 import { useNoteStore } from "@/stores/note";
 import type { NoteCreateParams } from "@/types/note";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { computed } from "vue";
 import { useAuth } from "./useAuth";
 
 /**

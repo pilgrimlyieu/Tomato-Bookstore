@@ -241,7 +241,6 @@ import { formatDate } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessageBox } from "element-plus";
 import { debounce } from "lodash-es";
-import { computed, onMounted, reactive, ref } from "vue";
 
 // store
 const reviewStore = useReviewStore();
@@ -421,6 +420,7 @@ const handleCurrentChange = (val: number) => {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }

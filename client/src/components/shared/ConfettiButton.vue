@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, ref } from "vue";
 
 // 按钮属性，与 ElButton 一致
 const props = defineProps({

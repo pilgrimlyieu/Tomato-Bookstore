@@ -1,6 +1,5 @@
 import ElementPlus from "element-plus";
 import { createPinia } from "pinia";
-import { createApp } from "vue";
 import "element-plus/dist/index.css";
 import gsap from "gsap";
 import "./style.css";

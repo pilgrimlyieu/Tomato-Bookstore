@@ -67,7 +67,6 @@
 import ProductCard from "@/components/product/ProductCard.vue";
 import { useProductStore } from "@/stores/product";
 import { Search } from "@element-plus/icons-vue";
-import { computed, onMounted, ref } from "vue";
 
 const productStore = useProductStore();
 const searchQuery = ref("");

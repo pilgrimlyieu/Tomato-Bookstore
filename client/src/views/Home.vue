@@ -119,39 +119,13 @@
         </el-carousel>
       </div>
     </section>
-
-    <!-- 订阅通讯 -->
-    <section class="py-16 px-4 bg-gradient-to-r from-tomato-600 to-tomato-700 text-white">
-      <div class="container mx-auto max-w-4xl">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold mb-2">订阅我们的通讯</h2>
-          <p class="text-tomato-100">获取最新图书推荐、特别优惠和阅读灵感</p>
-        </div>
-        <div class="max-w-lg mx-auto">
-          <el-form @submit.prevent="handleNewsletter">
-            <div class="flex">
-              <el-input v-model="newsletterEmail" placeholder="您的邮箱地址" class="flex-grow rounded-r-none border-none"
-                size="large" />
-              <el-button type="default" size="large" class="rounded-l-none font-medium" :loading="subscribingNewsletter"
-                @click="handleNewsletter">
-                订阅
-              </el-button>
-            </div>
-          </el-form>
-          <p class="text-tomato-100 text-sm mt-2 text-center">
-            我们每月仅发送一次通讯，您可以随时取消订阅。
-          </p>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import AdvertisementList from "@/components/advertisement/AdvertisementList.vue";
+import { Routes } from "@/constants/routes";
 import { Collection, Discount, Van } from "@element-plus/icons-vue";
-import { ElMessage } from "element-plus";
-import { ref } from "vue";
 
 // 轮播数据
 const carouselSlides = [
@@ -159,7 +133,7 @@ const carouselSlides = [
     title: "探索阅读的新世界",
     description: "新书上架，限时折扣。立即浏览我们精选的图书系列。",
     buttonText: "立即探索",
-    link: "/books",
+    link: Routes.PRODUCT_LIST,
     image:
       "https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
   },
@@ -167,7 +141,7 @@ const carouselSlides = [
     title: "夏季阅读大促",
     description: "精选好书 5 折起，多买多省，点击了解详情。",
     buttonText: "查看特惠",
-    link: "/promotions",
+    link: Routes.PRODUCT_LIST,
     image:
       "https://images.unsplash.com/photo-1476275466078-4007374efbbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
   },
@@ -175,7 +149,7 @@ const carouselSlides = [
     title: "发现您的下一本最爱",
     description: "基于您的阅读喜好，为您推荐定制化的图书。",
     buttonText: "获取推荐",
-    link: "/recommendations",
+    link: Routes.PRODUCT_LIST,
     image:
       "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
   },
@@ -185,53 +159,23 @@ const carouselSlides = [
 const testimonials = [
   {
     text: "番茄书城是我买书的首选，不仅种类丰富，而且配送速度很快。最近买的《深度学习》图书质量非常好，价格也比实体书店优惠很多。",
-    name: "张明",
+    name: "张明（化名）",
     title: "软件工程师",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
     text: "作为一个爱读书的人，番茄书城为我提供了很多难以在本地书店找到的书籍。他们的客户服务也很棒，有一次订单出了问题，客服很快就帮我解决了。",
-    name: "李红",
+    name: "李红（化名）",
     title: "大学教师",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
     text: "孩子很喜欢这里的儿童读物，质量好、内容丰富。而且网站的推荐系统很智能，经常能发现适合孩子的新书。",
-    name: "王强",
+    name: "王强（化名）",
     title: "家长",
     avatar: "https://randomuser.me/api/portraits/men/15.jpg",
   },
 ];
-
-// 通讯订阅
-const newsletterEmail = ref("");
-const subscribingNewsletter = ref(false);
-
-const handleNewsletter = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!newsletterEmail.value.trim()) {
-    ElMessage.warning("请输入邮箱地址");
-    return;
-  }
-
-  if (!emailRegex.test(newsletterEmail.value)) {
-    ElMessage.error("请输入有效的邮箱地址");
-    return;
-  }
-
-  subscribingNewsletter.value = true;
-
-  // 模拟订阅请求
-  setTimeout(() => {
-    ElMessage({
-      message: "订阅成功！感谢您的关注",
-      type: "success",
-    });
-    newsletterEmail.value = "";
-    subscribingNewsletter.value = false;
-  }, 1000);
-};
 </script>
 
 <style scoped>

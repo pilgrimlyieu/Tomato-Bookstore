@@ -193,7 +193,6 @@ import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
 import { ShoppingCart, Star } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const productStore = useProductStore();

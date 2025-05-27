@@ -107,7 +107,6 @@ import {
   User,
 } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
-import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

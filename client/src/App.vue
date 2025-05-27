@@ -16,7 +16,6 @@ import Header from "@/components/layout/Header.vue";
 import PageTransition from "@/components/shared/PageTransition.vue";
 import { useUserStore } from "@/stores/user";
 import { applyRoundedStyle, setCSSVariables } from "@/utils/theme";
-import { onMounted } from "vue";
 
 const userStore = useUserStore();
 

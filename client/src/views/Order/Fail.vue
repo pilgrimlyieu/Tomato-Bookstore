@@ -41,7 +41,6 @@ import { AppConfig } from "@/constants/config";
 import { Routes } from "@/constants/routes";
 import { useOrderStore } from "@/stores/order";
 import { buildRoute } from "@/utils/routeHelper";
-import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();

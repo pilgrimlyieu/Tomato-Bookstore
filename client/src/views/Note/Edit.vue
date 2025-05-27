@@ -43,7 +43,6 @@ import { Routes } from "@/constants/routes";
 import type { NoteCreateParams } from "@/types/note";
 import { buildRoute } from "@/utils/routeHelper";
 import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();

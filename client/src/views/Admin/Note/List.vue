@@ -82,7 +82,6 @@ import { useNoteStore } from "@/stores/note";
 import type { Note, NoteUpdateParams } from "@/types/note";
 import { ElMessageBox } from "element-plus";
 import { debounce } from "lodash-es";
-import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 // store

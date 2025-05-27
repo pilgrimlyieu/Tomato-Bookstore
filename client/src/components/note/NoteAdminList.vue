@@ -152,7 +152,6 @@ import {
   ArrowUpBold,
   ChatDotRound,
 } from "@element-plus/icons-vue";
-import { computed, ref } from "vue";
 
 // Props
 const props = defineProps<{

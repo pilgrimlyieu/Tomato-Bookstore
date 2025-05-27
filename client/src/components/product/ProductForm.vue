@@ -120,7 +120,6 @@
 import type { Product, Specification } from "@/types/product";
 import { getProductRules, getSpecificationRules } from "@/utils/validators";
 import type { FormInstance, FormRules } from "element-plus";
-import { onMounted, reactive, ref, watch } from "vue";
 
 const props = defineProps<{
   product?: Product | null;
