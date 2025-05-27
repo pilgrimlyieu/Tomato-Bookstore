@@ -166,6 +166,66 @@ export const confirmPasswordRules = (
 ];
 
 /**
+ * 评分验证规则
+ */
+export const ratingRules: FormItemRule[] = [
+  { required: true, message: "请选择评分", trigger: "change" },
+  {
+    type: "number",
+    min: 0,
+    max: 10,
+    message: "评分范围为 0-10 分",
+    trigger: "change",
+  },
+];
+
+/**
+ * 评论内容验证规则
+ */
+export const commentContentRules: FormItemRule[] = [
+  { required: true, message: "请输入评论内容", trigger: "blur" },
+  {
+    min: 2,
+    max: 500,
+    message: "评论长度应在 2 到 500 个字符之间",
+    trigger: "blur",
+  },
+];
+
+/**
+ * 长评论内容验证规则（用于评价等场景）
+ */
+export const longCommentContentRules: FormItemRule[] = [
+  { max: 1000, message: "评论内容不能超过 1000 个字符", trigger: "blur" },
+];
+
+/**
+ * 笔记标题验证规则
+ */
+export const noteTitleRules: FormItemRule[] = [
+  { required: true, message: "请输入笔记标题", trigger: "blur" },
+  {
+    min: 2,
+    max: 50,
+    message: "标题长度应在 2 到 50 个字符之间",
+    trigger: "blur",
+  },
+];
+
+/**
+ * 笔记内容验证规则
+ */
+export const noteContentRules: FormItemRule[] = [
+  { required: true, message: "请输入笔记内容", trigger: "blur" },
+  {
+    min: 10,
+    max: 2000,
+    message: "内容长度应在 10 到 2000 个字符之间",
+    trigger: "blur",
+  },
+];
+
+/**
  * 获取登录表单验证规则
  */
 export const getLoginRules = (): FormRules => {
@@ -298,5 +358,34 @@ export const shippingAddressRules: FormItemRule[] = [
 export const getCheckoutRules = (): FormRules => {
   return {
     shippingAddress: shippingAddressRules,
+  };
+};
+
+/**
+ * 获取评价表单验证规则
+ */
+export const getReviewRules = (): FormRules => {
+  return {
+    rating: ratingRules,
+    content: longCommentContentRules,
+  };
+};
+
+/**
+ * 获取笔记表单验证规则
+ */
+export const getNoteRules = (): FormRules => {
+  return {
+    title: noteTitleRules,
+    content: noteContentRules,
+  };
+};
+
+/**
+ * 获取评论表单验证规则
+ */
+export const getCommentRules = (): FormRules => {
+  return {
+    content: commentContentRules,
   };
 };

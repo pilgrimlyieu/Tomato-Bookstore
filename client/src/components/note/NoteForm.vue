@@ -49,7 +49,8 @@
 
 <script setup lang="ts">
 import type { Note } from "@/types/note";
-import type { FormInstance, FormRules } from "element-plus";
+import { getNoteRules } from "@/utils/validators";
+import type { FormInstance } from "element-plus";
 
 // Props
 const props = defineProps<{
@@ -74,26 +75,7 @@ const form = reactive({
 });
 
 // 表单验证规则
-const rules: FormRules = {
-  title: [
-    { required: true, message: "请输入笔记标题", trigger: "blur" },
-    {
-      min: 2,
-      max: 50,
-      message: "标题长度应在 2 到 50 个字符之间",
-      trigger: "blur",
-    },
-  ],
-  content: [
-    { required: true, message: "请输入笔记内容", trigger: "blur" },
-    {
-      min: 10,
-      max: 2000,
-      message: "内容长度应在 10 到 2000 个字符之间",
-      trigger: "blur",
-    },
-  ],
-};
+const rules = getNoteRules();
 
 // 当初始数据变化时更新表单
 watchEffect(() => {
