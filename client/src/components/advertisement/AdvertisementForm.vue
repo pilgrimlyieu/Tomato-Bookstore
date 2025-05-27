@@ -82,13 +82,10 @@
 <script setup lang="ts">
 import uploadService from "@/services/upload-service";
 import type { Advertisement } from "@/types/advertisement";
+import { getAdvertisementRules } from "@/utils/validators";
 import { Upload } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import type {
-  FormInstance,
-  FormRules,
-  UploadRequestOptions,
-} from "element-plus";
+import type { FormInstance, UploadRequestOptions } from "element-plus";
 
 const props = defineProps<{
   advertisement?: Advertisement | null;
@@ -119,28 +116,7 @@ const form = reactive<{
 });
 
 // 表单验证规则
-const rules = reactive<FormRules>({
-  title: [
-    { required: true, message: "请输入广告标题", trigger: "blur" },
-    { max: 50, message: "广告标题不能超过 50 个字符", trigger: "blur" },
-  ],
-  content: [
-    { required: true, message: "请输入广告内容", trigger: "blur" },
-    { max: 500, message: "广告内容不能超过 500 个字符", trigger: "blur" },
-  ],
-  imageUrl: [
-    {
-      required: true,
-      message: "请上传广告图片或输入图片 URL",
-      trigger: "blur",
-    },
-    { max: 500, message: "图片 URL 不能超过 500 个字符", trigger: "blur" },
-  ],
-  productId: [
-    { required: true, message: "请输入关联商品 ID", trigger: "blur" },
-    { type: "number", min: 1, message: "商品 ID 必须大于 0", trigger: "blur" },
-  ],
-});
+const rules = getAdvertisementRules();
 
 // 上传前验证
 const handleBeforeUpload = (file: File) => {

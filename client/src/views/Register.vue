@@ -164,7 +164,10 @@
 import ConfettiButton from "@/components/shared/ConfettiButton.vue";
 import { Routes } from "@/constants/routes";
 import { useUserStore } from "@/stores/user";
-import { checkPasswordStrength, getRegisterRules } from "@/utils/validators";
+import {
+  checkPasswordStrength,
+  getRegisterStepRules,
+} from "@/utils/validators";
 import {
   CircleCheck,
   Discount,
@@ -216,24 +219,10 @@ const benefits = [
   },
 ];
 
-const {
-  username: usernameRules,
-  password: passwordRules,
-  confirmPassword: confirmPasswordRules,
-  email: emailRules,
-  phone: phoneRules,
-} = getRegisterRules();
+const registerStepRules = getRegisterStepRules();
 
-const accountRules: FormRules = {
-  username: usernameRules,
-  password: passwordRules,
-  confirmPassword: confirmPasswordRules,
-};
-
-const profileRules: FormRules = {
-  email: emailRules,
-  phone: phoneRules,
-};
+const accountRules: FormRules = registerStepRules.account;
+const profileRules: FormRules = registerStepRules.profile;
 
 // 密码强度状态对象
 const passwordStrength = reactive({
