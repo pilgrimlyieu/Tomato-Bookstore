@@ -33,12 +33,6 @@
                 全部商品
               </router-link>
             </li>
-            <li>
-              <router-link to="/about" class="text-gray-600 hover:text-tomato-600">关于我们</router-link>
-            </li>
-            <li>
-              <router-link to="/contact" class="text-gray-600 hover:text-tomato-600">联系我们</router-link>
-            </li>
           </ul>
         </div>
 
@@ -53,12 +47,6 @@
             </li>
             <li>
               <router-link :to="Routes.ORDER_LIST" class="text-gray-600 hover:text-tomato-600">订单查询</router-link>
-            </li>
-            <li>
-              <router-link to="/faq" class="text-gray-600 hover:text-tomato-600">常见问题</router-link>
-            </li>
-            <li>
-              <router-link to="/support" class="text-gray-600 hover:text-tomato-600">售后服务</router-link>
             </li>
           </ul>
         </div>
