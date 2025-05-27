@@ -17,14 +17,6 @@
           <el-icon><Goods /></el-icon>
           <template #title>商品管理</template>
         </el-menu-item>
-        <el-menu-item :index="Routes.ADMIN_ORDERS">
-          <el-icon><List /></el-icon>
-          <template #title>订单管理</template>
-        </el-menu-item>
-        <el-menu-item :index="Routes.ADMIN_USERS">
-          <el-icon><User /></el-icon>
-          <template #title>用户管理</template>
-        </el-menu-item>
         <el-menu-item :index="Routes.ADMIN_ADVERTISEMENTS">
           <el-icon><Picture /></el-icon>
           <template #title>广告管理</template>
@@ -114,10 +106,6 @@ const pageTitle = computed(() => {
     return "创建商品";
   } else if (route.path.includes(Routes.ADMIN_PRODUCTS)) {
     return "编辑商品";
-  } else if (route.path === Routes.ADMIN_ORDERS) {
-    return "订单管理";
-  } else if (route.path === Routes.ADMIN_USERS) {
-    return "用户管理";
   } else if (route.path === Routes.ADMIN_ADVERTISEMENTS) {
     return "广告管理";
   } else if (route.path === Routes.ADMIN_ADVERTISEMENT_CREATE) {

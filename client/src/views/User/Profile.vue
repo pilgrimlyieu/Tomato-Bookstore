@@ -176,65 +176,6 @@
                     </el-form-item>
                   </el-form>
 
-                  <el-divider content-position="left">账户安全</el-divider>
-
-                  <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                      <div>
-                        <h4 class="text-gray-800 font-medium">双因素认证</h4>
-                        <p class="text-gray-500 text-sm">启用后将通过手机短信或邮件验证登录</p>
-                      </div>
-                      <el-switch v-model="twoFactorEnabled" />
-                    </div>
-
-                    <div class="flex justify-between items-center">
-                      <div>
-                        <h4 class="text-gray-800 font-medium">登录通知</h4>
-                        <p class="text-gray-500 text-sm">有新设备登录时通过邮件通知</p>
-                      </div>
-                      <el-switch v-model="loginNotifications" />
-                    </div>
-                  </div>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="账户绑定">
-                <div class="py-4">
-                  <h3 class="text-xl font-medium text-gray-800 mb-6">社交账号绑定</h3>
-
-                  <div class="space-y-6">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center">
-                        <img src="https://img.icons8.com/color/48/000000/wechat--v1.png" alt="WeChat" class="w-8 h-8 mr-3">
-                        <div>
-                          <h4 class="text-gray-800 font-medium">微信</h4>
-                          <p class="text-gray-500 text-sm">未绑定</p>
-                        </div>
-                      </div>
-                      <el-button size="small" class="rounded-full">绑定</el-button>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center">
-                        <img src="https://img.icons8.com/color/48/000000/alipay.png" alt="Alipay" class="w-8 h-8 mr-3">
-                        <div>
-                          <h4 class="text-gray-800 font-medium">支付宝</h4>
-                          <p class="text-gray-500 text-sm">未绑定</p>
-                        </div>
-                      </div>
-                      <el-button size="small" class="rounded-full">绑定</el-button>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center">
-                        <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google" class="w-8 h-8 mr-3">
-                        <div>
-                          <h4 class="text-gray-800 font-medium">Google</h4>
-                          <p class="text-gray-500 text-sm">未绑定</p>
-                        </div>
-                      </div>
-                      <el-button size="small" class="rounded-full">绑定</el-button>
-                    </div>
-                  </div>
                 </div>
               </el-tab-pane>
             </el-tabs>
