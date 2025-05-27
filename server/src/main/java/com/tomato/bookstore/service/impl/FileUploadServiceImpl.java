@@ -1,6 +1,7 @@
 package com.tomato.bookstore.service.impl;
 
 import com.aliyun.oss.OSS;
+import java.io.InputStream;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.tomato.bookstore.config.OssConfig;
 import com.tomato.bookstore.constant.BusinessErrorCode;
@@ -40,9 +41,11 @@ public class FileUploadServiceImpl implements FileUploadService {
       String fileName = generateFileName(file, folder);
 
       // 上传文件到 OSS
-      PutObjectRequest putObjectRequest =
-          new PutObjectRequest(ossConfig.getBucketName(), fileName, file.getInputStream());
-      ossClient.putObject(putObjectRequest);
+      try (InputStream inputStream = file.getInputStream()) {
+        PutObjectRequest putObjectRequest =
+            new PutObjectRequest(ossConfig.getBucketName(), fileName, inputStream);
+        ossClient.putObject(putObjectRequest);
+      }
 
       // 生成访问 URL
       String imageUrl = generateImageUrl(fileName);

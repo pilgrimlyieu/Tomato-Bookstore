@@ -43,32 +43,47 @@ const isEdit = computed(() => Boolean(route.params.id));
 onMounted(async () => {
   if (isEdit.value) {
     loading.value = true;
-    const advertisementId = Number(route.params.id);
-    await advertisementStore.fetchAdvertisementById(advertisementId);
-    currentAdvertisement.value = advertisementStore.currentAdvertisement;
-    loading.value = false;
+    try {
+      const advertisementId = Number(route.params.id);
+      if (isNaN(advertisementId) || advertisementId <= 0) {
+        throw new Error("无效的广告 ID");
+      }
+
+      await advertisementStore.fetchAdvertisementById(advertisementId);
+      currentAdvertisement.value = advertisementStore.currentAdvertisement;
+
+      if (!currentAdvertisement.value) {
+        throw new Error("广告不存在");
+      }
+    } catch (error) {
+      ElMessage.error(error instanceof Error ? error.message : "加载广告失败");
+      router.push(Routes.ADMIN_ADVERTISEMENTS);
+    } finally {
+      loading.value = false;
+    }
   }
 });
 
 // 提交表单
 const handleSubmit = async (advertisement: Advertisement) => {
-  let success = false;
-
+try {
   if (isEdit.value) {
     // 更新广告
-    success = await advertisementStore.updateAdvertisement(advertisement);
-    if (success) {
-      ElMessage.success("广告更新成功");
-      router.push(Routes.ADMIN_ADVERTISEMENTS);
-    }
+    await advertisementStore.updateAdvertisement(advertisement);
+    ElMessage.success("广告更新成功");
   } else {
     // 创建广告
-    success = await advertisementStore.createAdvertisement(advertisement);
-    if (success) {
-      ElMessage.success("广告创建成功");
-      router.push(Routes.ADMIN_ADVERTISEMENTS);
-    }
+    await advertisementStore.createAdvertisement(advertisement);
+    ElMessage.success("广告创建成功");
   }
+  router.push(Routes.ADMIN_ADVERTISEMENTS);
+} catch (error) {
+  const action = isEdit.value ? "更新" : "创建";
+  console.error("广告操作失败：", error);
+  ElMessage.error(
+    `${action}广告失败： ${error instanceof Error ? error.message : "未知错误"}`,
+  );
+}
 };
 
 // 取消操作

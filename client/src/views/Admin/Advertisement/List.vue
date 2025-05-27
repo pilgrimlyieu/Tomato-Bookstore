@@ -138,7 +138,12 @@ const handleDelete = (advertisement: Advertisement) => {
   )
     .then(async () => {
       if (advertisement.id) {
-        await advertisementStore.deleteAdvertisement(advertisement.id);
+        try {
+          await advertisementStore.deleteAdvertisement(advertisement.id);
+          ElMessage.success("广告删除成功");
+        } catch (error) {
+          ElMessage.error("删除失败，请重试");
+        }
       }
     })
     .catch(() => {

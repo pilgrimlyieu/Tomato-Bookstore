@@ -58,13 +58,19 @@ export default {
    * 通用图片上传
    *
    * @param {File} file 图片文件
-   * @param {string} folder 存储文件夹
+   * @param {string} folder 存储文件夹（仅支持: 'general', 'temp', 'misc'）
    * @returns {Promise<ApiResponse<string>>} 图片 URL
    */
   uploadImage(
     file: File,
     folder: string = "general",
   ): Promise<ApiResponse<string>> {
+    const allowedFolders = ["general", "temp", "misc"];
+    if (!allowedFolders.includes(folder)) {
+      throw new Error(
+        `Invalid folder: ${folder}. Allowed values: ${allowedFolders.join(", ")}`,
+      );
+    }
     const formData = new FormData();
     formData.append("file", file);
     formData.append("folder", folder);

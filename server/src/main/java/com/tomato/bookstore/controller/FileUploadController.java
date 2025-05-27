@@ -29,6 +29,18 @@ public class FileUploadController {
   public ApiResponse<String> uploadAvatar(
       @RequestParam("file") MultipartFile file,
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    // 添加文件验证
+    if (file.isEmpty()) {
+      throw new IllegalArgumentException("文件不能为空");
+    }
+    if (file.getSize() > 5 * 1024 * 1024) { // 5MB limit
+      throw new IllegalArgumentException("文件大小不能超过5MB");
+    }
+    String contentType = file.getContentType();
+    if (contentType == null || !contentType.startsWith("image/")) {
+      throw new IllegalArgumentException("只支持图片文件");
+    }
+
     log.info("用户「{}」上传头像", userPrincipal.getUsername());
     String imageUrl = fileUploadService.uploadImage(file, "avatar");
     return ApiResponse.success("头像上传成功", imageUrl);

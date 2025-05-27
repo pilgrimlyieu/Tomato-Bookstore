@@ -260,7 +260,7 @@
           </el-icon>
           <template #tip>
             <div class="el-upload__tip text-center">
-              支持 JPG, PNG 文件，最大 2MB
+              支持 JPG, PNG 文件，最大 5MB
             </div>
           </template>
         </el-upload>
@@ -389,14 +389,14 @@ const handleAvatarChange = (file: UploadFile) => {
     ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(
       file.raw.type,
     );
-  const isLt2M = file.raw && file.raw.size / 1024 / 1024 < 2;
+  const isLt5M = file.raw && file.raw.size / 1024 / 1024 < 5;
 
   if (!isImage) {
     ElMessage.error("上传头像图片只能是 JPG/PNG/GIF/WebP 格式！");
     return false;
   }
-  if (!isLt2M) {
-    ElMessage.error("上传头像图片大小不能超过 2MB！");
+  if (!isLt5M) {
+    ElMessage.error("上传头像图片大小不能超过 5MB！");
     return false;
   }
 
