@@ -2,9 +2,11 @@
   <div class="min-h-screen flex flex-col">
     <Header />
     <main class="flex-grow">
-      <PageTransition type="fade" mode="out-in">
-        <router-view />
-      </PageTransition>
+      <router-view v-slot="{ Component }">
+        <PageTransition type="fade" mode="out-in">
+          <component :is="Component" />
+        </PageTransition>
+      </router-view>
     </main>
     <Footer />
   </div>
