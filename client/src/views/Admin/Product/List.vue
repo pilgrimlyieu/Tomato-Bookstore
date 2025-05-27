@@ -36,6 +36,7 @@
             :src="scope.row.cover || '@/assets/images/placeholder.svg'"
             :preview-src-list="[scope.row.cover || '@/assets/images/placeholder.svg']"
             fit="cover"
+            referrerPolicy="no-referrer"
             class="h-16 w-12 object-cover rounded"
           />
         </template>
