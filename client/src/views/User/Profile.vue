@@ -284,7 +284,9 @@ const passwordForm = ref({
 const changingPassword = ref(false);
 
 // 简化的密码验证规则
-const passwordRules = getChangePasswordRules();
+const passwordRules = getChangePasswordRules(
+  () => passwordForm.value.newPassword,
+);
 
 // 修改密码处理函数
 const handleChangePassword = async () => {

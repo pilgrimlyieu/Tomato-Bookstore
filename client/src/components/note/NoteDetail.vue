@@ -9,7 +9,7 @@
       <div class="mb-4">
         <router-link
           :to="buildRoute(Routes.PRODUCT_DETAIL, { id: note.productId })"
-          class="text-gray-500 hover:text-primary flex items-center"
+          class="text-gray-500 hover:text-primary flex items-center m-2"
         >
           <el-icon class="mr-1"><ArrowLeft /></el-icon>
           返回《{{ note.productTitle }}》
@@ -17,7 +17,7 @@
       </div>
 
       <!-- 笔记内容 -->
-      <el-card class="mb-6" shadow="never">
+      <el-card class="m-4 mb-6" shadow="never">
         <div class="flex justify-between items-start mb-4">
           <!-- 用户信息 -->
           <div class="flex items-center">
@@ -67,7 +67,7 @@
         <h1 class="text-2xl font-bold text-gray-800 mb-4">{{ note.title }}</h1>
 
         <!-- 笔记内容 -->
-        <div class="whitespace-pre-line text-gray-700 mb-6">
+        <div class="whitespace-pre-line text-gray-700 mb-6 text-left">
           {{ note.content }}
         </div>
 

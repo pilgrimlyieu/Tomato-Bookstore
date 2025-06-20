@@ -3,14 +3,14 @@ import type { FormItemRule, FormRules } from "element-plus";
 /**
  * 验证两次输入的密码是否一致
  *
- * @param {string} firstField 第一次输入密码的字段名
+ * @param {() => string} getPasswordValue 获取原始密码值的函数
  * @returns {Function} 验证函数
  */
-export const validateConfirmPassword = (firstField: string = "password") => {
+export const validateConfirmPassword = (getPasswordValue: () => string) => {
   return (_: any, value: string, callback: any) => {
     if (value === "") {
       callback(new Error("请再次输入密码"));
-    } else if (value !== (_.form as any)[firstField]) {
+    } else if (value !== getPasswordValue()) {
       callback(new Error("两次输入的密码不一致"));
     } else {
       callback();
@@ -155,14 +155,14 @@ export const phoneRules: FormItemRule[] = [
 /**
  * 生成确认密码验证规则
  *
- * @param {string} firstField 第一次输入密码的字段名
+ * @param {() => string} getPasswordValue 获取原始密码值的函数
  * @returns {FormItemRule[]} 确认密码验证规则数组
  */
 export const confirmPasswordRules = (
-  firstField: string = "password",
+  getPasswordValue: () => string,
 ): FormItemRule[] => [
   { required: true, message: "请再次输入密码", trigger: "blur" },
-  { validator: validateConfirmPassword(firstField), trigger: "blur" },
+  { validator: validateConfirmPassword(getPasswordValue), trigger: "blur" },
 ];
 
 /**
@@ -274,11 +274,11 @@ export const getLoginRules = (): FormRules => {
 /**
  * 获取注册表单验证规则
  */
-export const getRegisterRules = (): FormRules => {
+export const getRegisterRules = (getPasswordValue: () => string): FormRules => {
   return {
     username: usernameRules,
     password: passwordRules,
-    confirmPassword: confirmPasswordRules(),
+    confirmPassword: confirmPasswordRules(getPasswordValue),
     email: emailRules,
     phone: phoneRules,
   };
@@ -300,10 +300,12 @@ export const getProfileRules = (): FormRules => {
 /**
  * 获取密码修改表单验证规则
  */
-export const getChangePasswordRules = (): FormRules => {
+export const getChangePasswordRules = (
+  getNewPasswordValue: () => string,
+): FormRules => {
   return {
     newPassword: passwordRules,
-    confirmPassword: confirmPasswordRules("newPassword"),
+    confirmPassword: confirmPasswordRules(getNewPasswordValue),
   };
 };
 
@@ -440,12 +442,12 @@ export const getAdvertisementRules = (): FormRules => {
 /**
  * 获取注册表单分步验证规则
  */
-export const getRegisterStepRules = () => {
+export const getRegisterStepRules = (getPasswordValue: () => string) => {
   return {
     account: {
       username: usernameRules,
       password: passwordRules,
-      confirmPassword: confirmPasswordRules(),
+      confirmPassword: confirmPasswordRules(getPasswordValue),
     } as FormRules,
     profile: {
       email: emailRules,

@@ -13,6 +13,7 @@ import com.tomato.bookstore.security.JwtTokenProvider;
 import com.tomato.bookstore.service.UserService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
@@ -91,13 +93,15 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new ResourceNotFoundException("用户不存在，ID：" + userId));
     // 更新用户信息
     if (userDTO.getEmail() != null) {
-      if (userRepository.existsByEmail(userDTO.getEmail())) {
+      if (userRepository.existsByEmail(userDTO.getEmail())
+          && !user.getEmail().equals(userDTO.getEmail())) {
         throw new BusinessException(BusinessErrorCode.EMAIL_ALREADY_EXISTS);
       }
       user.setEmail(userDTO.getEmail());
     }
     if (userDTO.getPhone() != null) {
-      if (userRepository.existsByPhone(userDTO.getPhone())) {
+      if (userRepository.existsByPhone(userDTO.getPhone())
+          && !user.getPhone().equals(userDTO.getPhone())) {
         throw new BusinessException(BusinessErrorCode.PHONE_ALREADY_EXISTS);
       }
       user.setPhone(userDTO.getPhone());
@@ -112,6 +116,7 @@ public class UserServiceImpl implements UserService {
     // 更新密码
     if (userDTO.getPassword() != null && !userDTO.getPassword().trim().isEmpty()) {
       user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+      log.info("用户 {} 更新密码", user.getUsername());
     }
     user.setUpdatedAt(LocalDateTime.now());
 

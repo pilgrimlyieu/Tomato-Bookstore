@@ -60,7 +60,7 @@ const registerForm = ref({
   phone: "",
 });
 
-const rules = getRegisterRules();
+const rules = getRegisterRules(() => registerForm.value.password);
 
 const handleSubmit = async () => {
   if (!registerFormRef.value) return;

@@ -13,7 +13,7 @@
         <div
           v-for="comment in comments"
           :key="comment.id"
-          class="bg-gray-50 p-4 rounded-lg"
+          class="bg-gray-50 p-4 rounded-lg m-4"
         >
           <div class="flex justify-between items-start mb-2">
             <div class="flex items-center">
@@ -43,7 +43,7 @@
             </el-dropdown>
           </div>
 
-          <div class="whitespace-pre-line text-gray-700 pl-11">{{ comment.content }}</div>
+          <div class="whitespace-pre-line text-gray-700 pl-11 text-left">{{ comment.content }}</div>
         </div>
       </div>
 

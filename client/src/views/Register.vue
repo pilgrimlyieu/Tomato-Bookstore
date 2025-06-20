@@ -219,7 +219,7 @@ const benefits = [
   },
 ];
 
-const registerStepRules = getRegisterStepRules();
+const registerStepRules = getRegisterStepRules(() => registerForm.password);
 
 const accountRules: FormRules = registerStepRules.account;
 const profileRules: FormRules = registerStepRules.profile;

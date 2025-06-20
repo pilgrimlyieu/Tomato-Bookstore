@@ -18,6 +18,7 @@
           maxlength="500"
           show-word-limit
           resize="vertical"
+          class="m-4 mb-2"
         ></el-input>
       </el-form-item>
 
@@ -26,7 +27,7 @@
           type="primary"
           @click="handleSubmit"
           :loading="loading"
-          class="rounded-lg"
+          class="rounded-lg mb-4 mr-4"
         >
           发表评论
         </el-button>
