@@ -300,7 +300,9 @@ export const getProfileRules = (): FormRules => {
 /**
  * 获取密码修改表单验证规则
  */
-export const getChangePasswordRules = (getNewPasswordValue: () => string): FormRules => {
+export const getChangePasswordRules = (
+  getNewPasswordValue: () => string,
+): FormRules => {
   return {
     newPassword: passwordRules,
     confirmPassword: confirmPasswordRules(getNewPasswordValue),

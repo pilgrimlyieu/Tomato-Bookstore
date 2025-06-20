@@ -14,7 +14,6 @@ import com.tomato.bookstore.service.UserService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -94,13 +93,15 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new ResourceNotFoundException("用户不存在，ID：" + userId));
     // 更新用户信息
     if (userDTO.getEmail() != null) {
-      if (userRepository.existsByEmail(userDTO.getEmail()) && !user.getEmail().equals(userDTO.getEmail())) {
+      if (userRepository.existsByEmail(userDTO.getEmail())
+          && !user.getEmail().equals(userDTO.getEmail())) {
         throw new BusinessException(BusinessErrorCode.EMAIL_ALREADY_EXISTS);
       }
       user.setEmail(userDTO.getEmail());
     }
     if (userDTO.getPhone() != null) {
-      if (userRepository.existsByPhone(userDTO.getPhone()) && !user.getPhone().equals(userDTO.getPhone())) {
+      if (userRepository.existsByPhone(userDTO.getPhone())
+          && !user.getPhone().equals(userDTO.getPhone())) {
         throw new BusinessException(BusinessErrorCode.PHONE_ALREADY_EXISTS);
       }
       user.setPhone(userDTO.getPhone());
