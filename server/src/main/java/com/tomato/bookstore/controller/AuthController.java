@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>该类包含用户认证相关的接口。
  */
 @RestController
-@RequestMapping(ApiConstants.USER)
+@RequestMapping(ApiConstants.USER_BASE_PATH)
 @RequiredArgsConstructor
 public class AuthController {
   private final UserService userService;

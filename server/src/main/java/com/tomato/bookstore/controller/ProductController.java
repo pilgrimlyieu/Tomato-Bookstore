@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * <p>该类包含商品相关的接口，包括获取商品列表、创建商品、更新商品、删除商品等操作。
  */
 @RestController
-@RequestMapping(ApiConstants.PRODUCTS)
+@RequestMapping(ApiConstants.PRODUCT_BASE_PATH)
 @RequiredArgsConstructor
 @Slf4j
 @Validated
