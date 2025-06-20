@@ -42,7 +42,7 @@
     </div>
 
     <div class="review-content mt-3" v-if="review.content">
-      <p class="text-gray-800 whitespace-pre-line">{{ review.content }}</p>
+      <p class="text-gray-800 whitespace-pre-line text-left">{{ review.content }}</p>
     </div>
   </div>
 </template>

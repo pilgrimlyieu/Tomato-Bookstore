@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex">
     <!-- 侧边栏 -->
-    <div class="fixed w-40 h-full bg-white/90 backdrop-blur-md shadow-md">
+    <div class="w-40 h-full bg-white/90 backdrop-blur-md shadow-md">
       <div class="p-6">
         <h1 class="text-xl font-bold text-tomato-600 flex items-center">
           <el-icon class="mr-2" size="24"><Setting /></el-icon>
