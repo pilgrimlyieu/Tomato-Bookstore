@@ -132,9 +132,6 @@
               >
                 加入购物车
               </el-button>
-              <el-button size="large" class="rounded-lg" :icon="Star">
-                收藏
-              </el-button>
             </div>
           </div>
         </div>

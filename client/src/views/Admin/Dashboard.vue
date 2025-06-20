@@ -23,7 +23,7 @@
         </el-menu-item>
         <el-menu-item :index="Routes.ADMIN_REVIEWS">
           <el-icon><ChatLineRound /></el-icon>
-          <template #title>评价管理</template>
+          <template #title>书评管理</template>
         </el-menu-item>
         <el-menu-item :index="Routes.ADMIN_NOTES">
           <el-icon><Notebook /></el-icon>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- 主要内容 -->
-    <div class="ml-48 flex-1 p-6">
+    <div class="ml-4 flex-1 p-6">
       <!-- 顶部导航 -->
       <div class="mb-6 p-4 bg-white/90 backdrop-blur-md rounded-xl shadow-sm flex justify-between items-center">
         <h2 class="text-xl font-bold text-gray-800">{{ pageTitle }}</h2>
@@ -110,7 +110,7 @@ const pageTitle = computed(() => {
   } else if (route.path.includes(Routes.ADMIN_ADVERTISEMENTS)) {
     return "编辑广告";
   } else if (route.path === Routes.ADMIN_REVIEWS) {
-    return "评价管理";
+    return "书评管理";
   } else if (route.path === Routes.ADMIN_NOTES) {
     return "笔记管理";
   } else {
