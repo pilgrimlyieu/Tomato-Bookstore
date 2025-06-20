@@ -29,10 +29,7 @@
           <el-icon><Notebook /></el-icon>
           <template #title>笔记管理</template>
         </el-menu-item>
-        <el-menu-item :index="Routes.ADMIN_SETTINGS">
-          <el-icon><Setting /></el-icon>
-          <template #title>系统设置</template>
-        </el-menu-item>
+
       </el-menu>
     </div>
 
@@ -116,8 +113,6 @@ const pageTitle = computed(() => {
     return "评价管理";
   } else if (route.path === Routes.ADMIN_NOTES) {
     return "笔记管理";
-  } else if (route.path === Routes.ADMIN_SETTINGS) {
-    return "系统设置";
   } else {
     return "管理后台";
   }
