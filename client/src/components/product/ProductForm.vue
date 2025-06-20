@@ -59,7 +59,7 @@
 
         <div class="mt-2 flex items-center gap-4">
           <div v-if="form.cover" class="w-24 h-32 rounded overflow-hidden bg-gray-100 shadow-md">
-            <img :src="form.cover" class="w-full h-full object-cover object-center" />
+            <img :src="form.cover" class="w-full h-full object-cover object-center" referrerPolicy="no-referrer" />
           </div>
           <div v-else class="w-24 h-32 rounded bg-gray-100 flex items-center justify-center text-gray-400 shadow-md">
             无封面
