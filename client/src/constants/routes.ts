@@ -42,5 +42,4 @@ export const Routes = {
   ADMIN_ADVERTISEMENTS: "/admin/advertisements",
   ADMIN_ADVERTISEMENT_CREATE: "/admin/advertisements/create",
   ADMIN_ADVERTISEMENT_EDIT: "/admin/advertisements/:id",
-  ADMIN_SETTINGS: "/admin/settings",
 } as const;
