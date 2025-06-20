@@ -55,8 +55,7 @@
 - **后台管理**：管理员管理商品（增删改查、库存调整）、订单、用户等。
 - **广告展示**：在前端页面展示广告信息。
 - **书评模块**：用户可以针对已购买的图书发表评论和评分，分享阅读体验和见解。
-- **读书笔记模块**：用户可以撰写、分享个人的读书笔记，记录阅读心得。
-- **个性化推荐模块**：基于用户的浏览历史、购买记录和兴趣偏好，为用户推荐可能感兴趣的图书。
+- **读书笔记模块**：用户可以撰写、分享个人的读书笔记，记录阅读心得。支持其他用户对笔记进行点赞/点踩反馈和评论交流。
 
 项目目标是构建一个功能完善、用户友好、具有良好可扩展性的电商平台，并在此过程中培养团队成员的软件工程实践能力。
 
@@ -154,7 +153,7 @@ flowchart TB
         %% 自由需求组件
         ReviewComponent["书评组件<br>（BookReview.vue）"]
         NoteComponent["读书笔记组件<br>（ReadingNote.vue）"]
-        RecommendComponent["推荐组件<br>（BookRecommend.vue）"]
+        CommentComponent["笔记评论组件<br>（NoteComment.vue）"]
     end
 
     subgraph Business["业务逻辑层（Business Logic Layer）"]
@@ -167,12 +166,9 @@ flowchart TB
         %% 自由需求业务组件
         ReviewController["书评控制器<br>（ReviewController）"]
         NoteController["笔记控制器<br>（NoteController）"]
-        RecommendController["推荐控制器<br>（RecommendController）"]
 
         ReviewService["书评服务<br>（ReviewService）"]
         NoteService["笔记服务<br>（NoteService）"]
-        RecommendService["推荐服务<br>（RecommendService）"]
-        RecommendEngine["推荐引擎<br>（算法组件）"]
     end
 
     subgraph Data["数据访问层（Data Access Layer）"]
@@ -184,7 +180,8 @@ flowchart TB
         %% 自由需求数据访问组件
         ReviewRepository["书评仓库<br>（ReviewRepository）"]
         NoteRepository["笔记仓库<br>（NoteRepository）"]
-        UserBehaviorRepository["用户行为仓库<br>（UserBehaviorRepository）"]
+        CommentRepository["笔记评论仓库<br>（NoteCommentRepository）"]
+        FeedbackRepository["笔记反馈仓库<br>（NoteFeedbackRepository）"]
     end
 
     subgraph Infra["基础设施层（Infrastructure）"]
@@ -209,24 +206,23 @@ flowchart TB
     %% 自由需求组件连接
     ReviewComponent --> ServiceProxy
     NoteComponent --> ServiceProxy
-    RecommendComponent --> ServiceProxy
+    CommentComponent --> ServiceProxy
 
     ServiceProxy -->|"HTTP 请求"| ReviewController
     ServiceProxy -->|"HTTP 请求"| NoteController
-    ServiceProxy -->|"HTTP 请求"| RecommendController
 
     ReviewController --> ReviewService
     NoteController --> NoteService
-    RecommendController --> RecommendService
 
     ReviewService --> ReviewRepository
     NoteService --> NoteRepository
-    RecommendService --> UserBehaviorRepository
-    RecommendService --> RecommendEngine
+    NoteService --> CommentRepository
+    NoteService --> FeedbackRepository
 
     ReviewRepository --> JPA
     NoteRepository --> JPA
-    UserBehaviorRepository --> JPA
+    CommentRepository --> JPA
+    FeedbackRepository --> JPA
 
     %% 关联关系（虚线，减少重叠）
     Controller -.->|"使用"| DTO
@@ -237,21 +233,19 @@ flowchart TB
 
     ReviewController -.->|"使用"| DTO
     NoteController -.->|"使用"| DTO
-    RecommendController -.->|"使用"| DTO
 
     ReviewService -.->|"使用"| Entity
     NoteService -.->|"使用"| Entity
-    RecommendService -.->|"使用"| Entity
 
     %% 简化基础设施依赖（使用集合连线减少混乱）
     Config & Utils & Logging -.->|"被依赖"| Business
     Utils & Logging -.->|"被依赖"| Data
 
     %% 应用样式
-    class View,Router,Store,ServiceProxy,ReviewComponent,NoteComponent,RecommendComponent clientNode
-    class Controller,DTO,Security,ReviewController,NoteController,RecommendController,ReviewService,NoteService,RecommendService,RecommendEngine serverController
+    class View,Router,Store,ServiceProxy,ReviewComponent,NoteComponent,CommentComponent clientNode
+    class Controller,DTO,Security,ReviewController,NoteController,ReviewService,NoteService serverController
     class Service serverService
-    class Repository,Entity,JPA,ReviewRepository,NoteRepository,UserBehaviorRepository dataAccess
+    class Repository,Entity,JPA,ReviewRepository,NoteRepository,CommentRepository,FeedbackRepository dataAccess
     class Database,Config,Utils,Logging infrastructure
 ```
 
@@ -262,10 +256,9 @@ flowchart TB
 表 1 开发包设计：
 
 | 开发（物理）包 | 依赖的其他开发包                                                                    |
-| :------------- | :--------------------------------------------------------------------------------   |
+| :------------- | :---------------------------------------------------------------------------------- |
 | `client`       | `server`（通过 API）                                                                |
 | `server`       | `MySQL`（数据库驱动）, `Maven 依赖库`（Spring Boot, JPA, Security, Lombok, JWT 等） |
-| `recommend`    | `server`, `Maven 依赖库`（算法库、数据处理库）                                      |
 
 开发包图：
 
@@ -274,25 +267,19 @@ graph TD
     %% 节点定义
     Client[("Client<br>（前端 Vue 应用）")]:::frontend
     Server[("Server<br>（后端 Spring Boot 应用）")]:::backend
-    RecommendEngine[("RecommendEngine<br>（推荐引擎）")]:::algorithm
     DBDriver["MySQL Connector/J"]:::middleware
     MavenDeps["Maven 依赖库"]:::dependency
-    AlgorithmLibs["算法库<br>（推荐算法）"]:::algorithm
     MySQLDB[(MySQL 数据库)]:::database
 
     %% 连接关系
     Client -- "REST API 调用" --> Server
-    Server -- "调用" --> RecommendEngine
     Server -- "JDBC" --> DBDriver
     Server -- "依赖" --> MavenDeps
-    RecommendEngine -- "依赖" --> AlgorithmLibs
-    RecommendEngine -- "依赖" --> MavenDeps
     DBDriver -- "连接" --> MySQLDB
 
     %% 样式定义
     classDef frontend fill:#ff9999,stroke:#333,stroke-width:1px;
     classDef backend fill:#99ccff,stroke:#333,stroke-width:1px;
-    classDef algorithm fill:#ffaaff,stroke:#333,stroke-width:1px;
     classDef middleware fill:#ffcc99,stroke:#333,stroke-width:1px;
     classDef dependency fill:#e6e6e6,stroke:#333,stroke-width:1px;
     classDef database fill:#99ff99,stroke:#333,stroke-width:1px;
@@ -310,19 +297,15 @@ graph TD
     FrontendUI["前端用户界面<br>（Vue）"]:::frontend
     BackendAPI["后端业务逻辑与 API<br>（Spring Boot）"]:::backend
     Database["数据存储<br>（MySQL）"]:::database
-    RecommendEngine["推荐引擎<br>（算法组件）"]:::algorithm
 
     %% 连接关系
     FrontendUI -->|"API 请求<br>（HTTP/JSON）"| BackendAPI
     BackendAPI -->|"数据读写<br>（SQL/JPA）"| Database
-    BackendAPI -->|"调用"| RecommendEngine
-    RecommendEngine -.->|"读取数据"| Database
 
     %% 样式定义
     classDef frontend fill:#ff9999,stroke:#333,stroke-width:1px,rx:10,ry:10;
     classDef backend fill:#99ccff,stroke:#333,stroke-width:1px,rx:10,ry:10;
     classDef database fill:#99ff99,stroke:#333,stroke-width:1px,rx:10,ry:10;
-    classDef algorithm fill:#ffaaff,stroke:#333,stroke-width:1px,rx:10,ry:10;
 ```
 
 各层职责：
@@ -333,8 +316,8 @@ graph TD
     - 调用后端 API 获取数据和执行操作。
     - 管理前端状态（如用户登录状态、购物车内容）。
     - **书评组件**：提供书评的展示、发布和交互功能。
-    - **读书笔记组件**：提供读书笔记的创建、编辑和分享功能。
-    - **推荐组件**：展示个性化推荐的图书列表。
+    - **读书笔记组件**：提供读书笔记的创建、编辑和展示功能。
+    - **笔记评论组件**：提供对读书笔记的评论和反馈功能。
 - **业务逻辑层**（BackendAPI - Service）：
     - 实现系统的核心业务规则（如订单创建、库存检查、用户认证、权限控制）。
     - 编排数据访问操作。
@@ -342,8 +325,7 @@ graph TD
     - 验证输入数据的有效性。
     - 提供 RESTful API 接口供前端调用。
     - **书评服务**：处理书评的发布、查询、修改和删除逻辑。
-    - **读书笔记服务**：处理读书笔记的创建、查询、更新和分享逻辑。
-    - **推荐服务**：协调用户数据收集和推荐引擎，生成个性化推荐结果。
+    - **读书笔记服务**：处理读书笔记的创建、查询、更新和删除逻辑，以及笔记的评论和反馈管理。
 - **数据访问层**（BackendAPI - Repository & Database）：
     - 负责数据的持久化存储和检索。
     - 定义数据实体模型。
@@ -351,50 +333,50 @@ graph TD
     - 管理数据库连接。
     - **书评仓库**：提供对书评数据的访问操作。
     - **笔记仓库**：提供对读书笔记数据的访问操作。
-    - **用户行为仓库**：记录和访问用户浏览、搜索、购买等行为数据。
-- **推荐引擎**：
-    - 实现基于协同过滤、内容推荐等算法的图书推荐逻辑。
-    - 处理用户行为数据，生成推荐结果。
-    - 优化和调整推荐算法参数。
+    - **笔记评论仓库**：提供对读书笔记评论数据的访问操作。
+    - **笔记反馈仓库**：提供对读书笔记反馈（点赞/点踩）数据的访问操作。
 
 层之间调用接口示例（发布书评）：
 
 1. **前端书评组件**（表现层）收集用户输入的书评内容和评分。
-2. **API 服务代理** 发送 `POST /api/books/{bookId}/reviews` HTTP 请求到后端。
+2. **API 服务代理** 发送 `POST /reviews/product/{productId}` HTTP 请求到后端。
 3. **ReviewController**（业务逻辑层 - 控制器）接收请求，验证用户身份和参数有效性。
-4. **ReviewController** 调用 **ReviewService**（业务逻辑层 - 服务）的 `createReview(reviewDTO)` 方法。
-5. **ReviewService** 检查用户是否已购买该书籍（可选），然后调用 **ReviewRepository**（数据访问层）保存书评数据。
+4. **ReviewController** 调用 **ReviewService**（业务逻辑层 - 服务）的 `createReview(productId, userId, reviewCreateDTO)` 方法。
+5. **ReviewService** 检查业务规则（如是否已评论过），然后调用 **ReviewRepository**（数据访问层）保存书评数据。
 6. **ReviewRepository** 通过 JPA 将书评信息存入数据库。
 7. 操作结果逐层返回给前端，前端更新界面显示。
 
 ```java
 // ReviewController.java (示例片段)
-@PostMapping("/{bookId}/reviews")
+@PostMapping("/product/{productId}")
+@PreAuthorize(RoleConstants.HAS_ANY_ROLE)
 public ApiResponse<ReviewDTO> createReview(
-        @PathVariable Long bookId,
-        @Valid @RequestBody ReviewCreateDTO reviewCreateDTO) {
-    log.info("用户 {} 为图书 {} 发布书评", getCurrentUserId(), bookId);
+        @PathVariable Long productId,
+        @RequestBody @Valid ReviewCreateDTO reviewCreateDTO,
+        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    log.info("用户 {} 为商品 {} 创建书评", userPrincipal.getUsername(), productId);
     // 调用业务逻辑层接口
-    ReviewDTO createdReview = reviewService.createReview(bookId, getCurrentUserId(), reviewCreateDTO);
-    return ApiResponse.success(createdReview);
+    ReviewDTO createdReview = reviewService.createReview(productId, userPrincipal.getUserId(), reviewCreateDTO);
+    return ApiResponse.created(createdReview);
 }
 
 // ReviewServiceImpl.java (示例片段)
 @Override
 @Transactional
-public ReviewDTO createReview(Long bookId, Long userId, ReviewCreateDTO reviewCreateDTO) {
-    // 检查用户是否已购买该书籍（可选）
-    if (!orderService.hasUserPurchasedBook(userId, bookId)) {
-        throw new BusinessException("只有购买过此书的用户才能发表评论");
+public ReviewDTO createReview(Long productId, Long userId, ReviewCreateDTO reviewCreateDTO) {
+    // 检查用户是否已经评论过
+    if (reviewRepository.existsByProductIdAndUserId(productId, userId)) {
+        throw new BusinessException("您已经评论过该商品");
     }
 
     // 创建书评实体对象
-    Review review = new Review();
-    review.setBookId(bookId);
-    review.setUserId(userId);
-    review.setRating(reviewCreateDTO.getRating());
-    review.setContent(reviewCreateDTO.getContent());
-    review.setCreatedAt(LocalDateTime.now());
+    Review review = Review.builder()
+        .productId(productId)
+        .userId(userId)
+        .rating(reviewCreateDTO.getRating())
+        .content(reviewCreateDTO.getContent())
+        .createdAt(LocalDateTime.now())
+        .build();
 
     // 保存书评
     Review savedReview = reviewRepository.save(review);
@@ -415,27 +397,30 @@ public ReviewDTO createReview(Long bookId, Long userId, ReviewCreateDTO reviewCr
 - **API 通信**（Services/Axios）：封装对后端 RESTful API 的调用。
 - **书评组件**（BookReview.vue）：提供书评的列表展示、单条书评展示、发布书评表单等功能。
 - **读书笔记组件**（ReadingNote.vue）：提供笔记编辑器、笔记列表、笔记详情页面。
-- **推荐组件**（BookRecommend.vue）：展示个性化推荐的图书列表，可能包括"猜你喜欢"、"相关推荐"等内容。
+- **笔记评论组件**（NoteComment.vue）：提供对读书笔记的评论功能，包括评论列表展示、发布评论、点赞/点踩等交互。
 
 #### 接口规范
 
 用户界面层通过 HTTP/HTTPS 协议与后端业务逻辑层交互，遵循 RESTful API 设计规范。
 
 - **书评相关接口**：
-    - `GET /api/books/{bookId}/reviews`：获取指定图书的所有书评
-    - `POST /api/books/{bookId}/reviews`：发布新书评
-    - `PUT /api/reviews/{reviewId}`：更新书评内容
-    - `DELETE /api/reviews/{reviewId}`：删除书评
+    - `GET /reviews/product/{productId}`：获取指定图书的所有书评
+    - `POST /reviews/product/{productId}`：发布新书评
+    - `PUT /reviews/{reviewId}`：更新书评内容
+    - `DELETE /reviews/{reviewId}`：删除书评
+    - `GET /reviews/user`：获取当前用户的所有书评
 - **读书笔记相关接口**：
-    - `GET /api/notes`：获取用户的所有读书笔记
-    - `GET /api/notes/{noteId}`：获取指定读书笔记详情
-    - `POST /api/notes`：创建新的读书笔记
-    - `PUT /api/notes/{noteId}`：更新读书笔记
-    - `DELETE /api/notes/{noteId}`：删除读书笔记
-    - `POST /api/notes/{noteId}/share`：分享读书笔记
-- **推荐相关接口**：
-    - `GET /api/recommendations`：获取个性化推荐的图书列表
-    - `GET /api/books/{bookId}/related`：获取与指定图书相关的推荐
+    - `GET /notes/user`：获取当前用户的所有读书笔记
+    - `GET /notes/product/{productId}`：获取指定图书的所有读书笔记
+    - `GET /notes/{noteId}`：获取指定读书笔记详情
+    - `POST /notes/product/{productId}`：创建新的读书笔记
+    - `PUT /notes/{noteId}`：更新读书笔记
+    - `DELETE /notes/{noteId}`：删除读书笔记
+- **笔记评论相关接口**：
+    - `GET /notes/{noteId}/comments`：获取指定笔记的所有评论
+    - `POST /notes/{noteId}/comments`：为笔记添加评论
+    - `DELETE /notes/{noteId}/comments/{commentId}`：删除评论
+    - `POST /notes/{noteId}/feedback`：为笔记添加反馈（点赞/点踩）
 
 ### 业务逻辑层的分解
 
@@ -460,17 +445,11 @@ public ReviewDTO createReview(Long bookId, Long userId, ReviewCreateDTO reviewCr
     - 验证用户是否有权限发布或修改书评。
     - 实现书评的评分统计和展示逻辑。
 - **读书笔记服务**（NoteService）：
-    - 管理读书笔记的创建、保存、查询和分享。
-    - 处理笔记内容的富文本格式化和存储。
-    - 实现笔记的权限控制（公开/私密）。
-- **推荐服务**（RecommendService）：
-    - 收集和分析用户行为数据。
-    - 调用推荐引擎生成推荐结果。
-    - 缓存和管理推荐结果，提高响应速度。
-- **推荐引擎**（RecommendEngine）：
-    - 实现基于不同算法的图书推荐策略。
-    - 处理用户历史行为和兴趣模型。
-    - 执行推荐算法计算并输出结果。
+    - 管理读书笔记的创建、保存、查询和删除。
+    - 处理笔记内容的存储和展示。
+    - 实现笔记的权限控制（用户只能修改自己的笔记）。
+    - 管理笔记的评论功能，包括评论的创建、查询和删除。
+    - 管理笔记的反馈功能，包括点赞和点踩。
 
 #### 接口规范
 
@@ -478,25 +457,23 @@ public ReviewDTO createReview(Long bookId, Long userId, ReviewCreateDTO reviewCr
 
 ```java
 @RestController
-@RequestMapping("/api/books/{bookId}/reviews")
+@RequestMapping("/reviews")
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping
-    public ApiResponse<Page<ReviewDTO>> getBookReviews(
-            @PathVariable Long bookId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/product/{productId}")
+    public ApiResponse<List<ReviewDTO>> getProductReviews(@PathVariable Long productId) {
         // 实现获取书评列表
     }
 
-    @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/product/{productId}")
+    @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
     public ApiResponse<ReviewDTO> createReview(
-            @PathVariable Long bookId,
-            @Valid @RequestBody ReviewCreateDTO reviewCreateDTO) {
+            @PathVariable Long productId,
+            @RequestBody @Valid ReviewCreateDTO reviewCreateDTO,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         // 实现创建书评
     }
 
@@ -508,52 +485,40 @@ public class ReviewController {
 
 ```java
 @RestController
-@RequestMapping("/api/notes")
+@RequestMapping("/notes")
 @RequiredArgsConstructor
 @Slf4j
 public class NoteController {
     private final NoteService noteService;
 
-    @GetMapping
-    @PreAuthorize("isAuthenticated()")
-    public ApiResponse<Page<NoteDTO>> getUserNotes(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/user")
+    @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
+    public ApiResponse<List<NoteDTO>> getUserNotes(
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         // 实现获取用户笔记列表
     }
 
-    @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/product/{productId}")
+    @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
     public ApiResponse<NoteDTO> createNote(
-            @Valid @RequestBody NoteCreateDTO noteCreateDTO) {
+            @PathVariable Long productId,
+            @RequestBody @Valid NoteCreateDTO noteCreateDTO,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         // 实现创建笔记
     }
 
-    // 其他方法...
-}
-```
-
-推荐控制器接口：
-
-```java
-@RestController
-@RequestMapping("/api/recommendations")
-@RequiredArgsConstructor
-@Slf4j
-public class RecommendController {
-    private final RecommendService recommendService;
-
-    @GetMapping
-    public ApiResponse<List<BookDTO>> getPersonalizedRecommendations(
-            @RequestParam(defaultValue = "12") int limit) {
-        // 实现获取个性化推荐
+    @GetMapping("/{noteId}/comments")
+    public ApiResponse<List<NoteCommentDTO>> getNoteComments(@PathVariable Long noteId) {
+        // 实现获取笔记评论
     }
 
-    @GetMapping("/books/{bookId}/related")
-    public ApiResponse<List<BookDTO>> getRelatedBooks(
-            @PathVariable Long bookId,
-            @RequestParam(defaultValue = "6") int limit) {
-        // 实现获取相关图书推荐
+    @PostMapping("/{noteId}/comments")
+    @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
+    public ApiResponse<NoteCommentDTO> addComment(
+            @PathVariable Long noteId,
+            @RequestBody @Valid NoteCommentCreateDTO commentCreateDTO,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        // 实现添加评论
     }
 
     // 其他方法...
@@ -570,14 +535,16 @@ public class RecommendController {
 - **仓库层**（Repository）：
     - 定义数据访问接口，继承 JpaRepository。
     - 提供 CRUD 操作和自定义查询方法。
-- **新增实体类**：
-    - **Review**：书评实体，包含评分、内容、用户ID、图书ID等字段。
-    - **Note**：读书笔记实体，包含标题、内容、是否公开、用户ID、关联图书ID等字段。
-    - **UserBehavior**：用户行为实体，记录用户的浏览历史、搜索记录、购买记录等。
-- **新增仓库接口**：
+- **主要实体类**：
+    - **Review**：书评实体，包含评分、内容、用户 ID、图书 ID 等字段。
+    - **Note**：读书笔记实体，包含标题、内容、用户 ID、关联图书 ID 等字段。
+    - **NoteComment**：读书笔记评论实体，包含评论内容、用户 ID、笔记 ID 等字段。
+    - **NoteFeedback**：读书笔记反馈实体，记录用户对笔记的点赞/点踩行为。
+- **仓库接口**：
     - **ReviewRepository**：提供书评的 CRUD 和查询操作。
     - **NoteRepository**：提供读书笔记的 CRUD 和查询操作。
-    - **UserBehaviorRepository**：提供用户行为数据的存储和检索操作。
+    - **NoteCommentRepository**：提供读书笔记评论的 CRUD 和查询操作。
+    - **NoteFeedbackRepository**：提供读书笔记反馈的 CRUD 和查询操作。
 
 #### 接口规范
 
@@ -587,17 +554,17 @@ public class RecommendController {
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 查询指定图书的所有书评，按创建时间倒序排列
-    Page<Review> findByBookIdOrderByCreatedAtDesc(Long bookId, Pageable pageable);
+    List<Review> findByProductIdOrderByCreatedAtDesc(Long productId);
 
     // 查询用户发布的所有书评
     List<Review> findByUserId(Long userId);
 
     // 检查用户是否已经评论过指定图书
-    boolean existsByBookIdAndUserId(Long bookId, Long userId);
+    boolean existsByProductIdAndUserId(Long productId, Long userId);
 
     // 计算图书的平均评分
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.bookId = :bookId")
-    Double calculateAverageRating(@Param("bookId") Long bookId);
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.productId = :productId")
+    Double calculateAverageRating(@Param("productId") Long productId);
 }
 ```
 
@@ -607,44 +574,51 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
     // 查询用户的所有笔记
-    Page<Note> findByUserIdOrderByUpdatedAtDesc(Long userId, Pageable pageable);
+    List<Note> findByUserIdOrderByCreatedAtDesc(Long userId);
 
-    // 查询公开的笔记
-    Page<Note> findByIsPublicTrueOrderByCreatedAtDesc(Pageable pageable);
+    // 查询与特定图书相关的笔记
+    List<Note> findByProductIdOrderByCreatedAtDesc(Long productId);
 
-    // 查询与特定图书相关的公开笔记
-    List<Note> findByBookIdAndIsPublicTrue(Long bookId);
-
-    // 根据标题或内容进行模糊搜索
-    @Query("SELECT n FROM Note n WHERE n.userId = :userId AND " +
-           "(LOWER(n.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-           "LOWER(n.content) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    List<Note> searchUserNotes(@Param("userId") Long userId, @Param("keyword") String keyword);
+    // 检查用户是否已经为某商品创建过笔记
+    boolean existsByProductIdAndUserId(Long productId, Long userId);
 }
 ```
 
-用户行为仓库接口：
+读书笔记评论仓库接口：
 
 ```java
 @Repository
-public interface UserBehaviorRepository extends JpaRepository<UserBehavior, Long> {
-    // 获取用户最近的浏览历史
-    List<UserBehavior> findByUserIdAndBehaviorTypeOrderByCreatedAtDesc(
-            Long userId, BehaviorType behaviorType, Pageable pageable);
+public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> {
+    // 根据笔记 ID 查找所有评论，按创建时间倒序排序
+    List<NoteComment> findByNoteIdOrderByCreatedAtDesc(Long noteId);
 
-    // 获取图书的浏览/购买频率
-    @Query("SELECT COUNT(ub) FROM UserBehavior ub WHERE ub.bookId = :bookId AND ub.behaviorType = :type")
-    Long countByBookIdAndBehaviorType(@Param("bookId") Long bookId, @Param("type") BehaviorType type);
+    // 统计笔记的评论数
+    long countByNoteId(Long noteId);
 
-    // 获取用户对某类别图书的兴趣程度（通过行为次数）
-    @Query("SELECT COUNT(ub) FROM UserBehavior ub " +
-           "JOIN Book b ON ub.bookId = b.id " +
-           "JOIN b.categories c " +
-           "WHERE ub.userId = :userId AND c.id = :categoryId AND ub.behaviorType IN :types")
-    Long countUserInterestInCategory(
-            @Param("userId") Long userId,
-            @Param("categoryId") Long categoryId,
-            @Param("types") List<BehaviorType> types);
+    // 批量统计多个笔记的评论数量
+    @Query("SELECT c.noteId AS noteId, COUNT(c) AS count FROM NoteComment c WHERE c.noteId IN :noteIds GROUP BY c.noteId")
+    List<NoteCommentCountProjection> countByNoteIds(@Param("noteIds") List<Long> noteIds);
+}
+```
+
+读书笔记反馈仓库接口：
+
+```java
+@Repository
+public interface NoteFeedbackRepository extends JpaRepository<NoteFeedback, Long> {
+    // 根据笔记 ID 和用户 ID 查找反馈
+    Optional<NoteFeedback> findByNoteIdAndUserId(Long noteId, Long userId);
+
+    // 检查用户是否已经对某笔记进行过反馈
+    boolean existsByNoteIdAndUserId(Long noteId, Long userId);
+
+    // 统计某笔记的指定类型反馈数
+    long countByNoteIdAndFeedbackType(Long noteId, FeedbackType feedbackType);
+
+    // 批量统计多个笔记的指定反馈类型数量
+    @Query("SELECT f.noteId AS noteId, COUNT(f) AS count FROM NoteFeedback f WHERE f.noteId IN :noteIds AND f.feedbackType = :feedbackType GROUP BY f.noteId")
+    List<NoteFeedbackCountProjection> countByNoteIdsAndFeedbackType(
+        @Param("noteIds") List<Long> noteIds, @Param("feedbackType") FeedbackType feedbackType);
 }
 ```
 
@@ -660,21 +634,22 @@ public interface UserBehaviorRepository extends JpaRepository<UserBehavior, Long
 - **Stockpile**(`stockpiles` 表)：存储商品的库存信息（可用数量、冻结数量），与 `Product` 是一对一关系。
 - **Cart**(`carts` 表)：存储用户的购物车项，包含用户 ID、商品 ID、数量。
 - **Order**(`orders` 表)：存储订单头信息，包含订单号、用户 ID、总金额、支付方式、状态、收货地址、支付时间等。
-- **CartsOrdersRelation**(`carts_orders_relation` 表)：订单项，存储订单与购物车项（商品）的关联及购买数量，作为 `Order` 和 `Cart` 之间的连接表（虽然命名可能需要优化，但反映了当前结构）。
+- **CartsOrdersRelation**(`carts_orders_relation` 表)：订单项，存储订单与购物车项（商品）的关联及购买数量，作为 `Order` 和 `Cart` 之间的连接表。
 - **Advertisement**(`advertisements` 表)：存储广告信息，包含标题、内容、图片 URL、关联的商品 ID。
 - **Review**(`reviews` 表)：存储书评信息，包含用户 ID、图书 ID、评分、内容、创建时间等。与 `User` 和 `Product` 分别是多对一关系。
-- **Note**(`notes` 表)：存储读书笔记信息，包含标题、内容、是否公开、用户 ID、关联图书 ID（可选）、创建时间、更新时间等。与 `User` 是多对一关系，与 `Product` 是多对一关系（可选）。
-- **UserBehavior**(`user_behaviors` 表)：记录用户行为数据，包含用户 ID、行为类型（浏览、搜索、购买等）、图书 ID、发生时间等。用于个性化推荐算法的输入数据。
+- **Note**(`notes` 表)：存储读书笔记信息，包含标题、内容、用户 ID、关联图书 ID、创建时间、更新时间等。与 `User` 是多对一关系，与 `Product` 是多对一关系。
+- **NoteComment**(`note_comments` 表)：存储读书笔记评论信息，包含评论内容、用户 ID、笔记 ID、创建时间等。与 `User` 和 `Note` 分别是多对一关系。
+- **NoteFeedback**(`note_feedbacks` 表)：存储读书笔记反馈信息，包含用户 ID、笔记 ID、反馈类型（点赞/点踩）、创建时间等。与 `User` 和 `Note` 分别是多对一关系。
 
 这些 PO 使用 JPA 注解进行数据库映射，并通过 Lombok 注解简化代码。
 
 ### 数据库表
 
-根据 `init.sql` 和实体类定义，主要数据库表如下：
+根据 `schema.sql` 和实体类定义，主要数据库表如下：
 
 | 表名                    | 主要职责                           | 关联表                                                                        |
 | :---------------------- | :--------------------------------- | :---------------------------------------------------------------------------- |
-| `users`                 | 存储用户信息                       | `carts`, `orders`, `reviews`, `notes`, `user_behaviors`                       |
+| `users`                 | 存储用户信息                       | `carts`, `orders`, `reviews`, `notes`, `note_comments`, `note_feedbacks`      |
 | `products`              | 存储商品基本信息                   | `specifications`, `stockpiles`, `carts`, `advertisements`, `reviews`, `notes` |
 | `specifications`        | 存储商品规格                       | `products` (ManyToOne)                                                        |
 | `stockpiles`            | 存储商品库存                       | `products` (OneToOne)                                                         |
@@ -683,5 +658,6 @@ public interface UserBehaviorRepository extends JpaRepository<UserBehavior, Long
 | `carts_orders_relation` | 存储订单项（订单与购物车商品关联） | `carts`, `orders`                                                             |
 | `advertisements`        | 存储广告信息                       | `products`                                                                    |
 | `reviews`               | 存储用户对图书的评论和评分         | `users`, `products`                                                           |
-| `notes`                 | 存储用户的读书笔记                 | `users`, `products`（可选）                                                   |
-| `user_behaviors`        | 记录用户行为数据                   | `users`, `products`                                                           |
+| `notes`                 | 存储用户的读书笔记                 | `users`, `products`                                                           |
+| `note_comments`         | 存储读书笔记的评论信息             | `users`, `notes`                                                              |
+| `note_feedbacks`        | 存储读书笔记的反馈信息             | `users`, `notes`                                                              |
