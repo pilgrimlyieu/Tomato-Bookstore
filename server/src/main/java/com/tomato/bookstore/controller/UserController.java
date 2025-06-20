@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>该类包含用户相关的接口。
  */
 @RestController
-@RequestMapping(ApiConstants.USER)
+@RequestMapping(ApiConstants.USER_BASE_PATH)
 @RequiredArgsConstructor
 public class UserController {
   private final UserService userService;

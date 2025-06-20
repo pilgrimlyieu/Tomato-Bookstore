@@ -1,5 +1,6 @@
 package com.tomato.bookstore.controller;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.constant.RoleConstants;
 import com.tomato.bookstore.dto.ApiResponse;
 import com.tomato.bookstore.dto.ReviewCreateDTO;
@@ -34,7 +35,7 @@ public class ReviewController {
    * @param productId 商品 ID
    * @return 书评列表
    */
-  @GetMapping("/product/{productId}")
+  @GetMapping(ApiConstants.REVIEW_PRODUCT)
   public ApiResponse<List<ReviewDTO>> getProductReviews(@PathVariable Long productId) {
     log.info("获取商品 {} 的所有书评", productId);
     List<ReviewDTO> reviews = reviewService.getReviewsByProductId(productId);
@@ -47,7 +48,7 @@ public class ReviewController {
    * @param userPrincipal 当前用户
    * @return 书评列表
    */
-  @GetMapping("/user")
+  @GetMapping(ApiConstants.REVIEW_USER)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<List<ReviewDTO>> getUserReviews(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -62,7 +63,7 @@ public class ReviewController {
    * @param userId 用户 ID
    * @return 书评列表
    */
-  @GetMapping("/user/{userId}")
+  @GetMapping(ApiConstants.REVIEW_USER_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<List<ReviewDTO>> getUserReviewsByAdmin(@PathVariable Long userId) {
     log.info("管理员查看用户 {} 的书评列表", userId);
@@ -91,7 +92,7 @@ public class ReviewController {
    * @param userPrincipal 当前用户
    * @return 创建的书评
    */
-  @PostMapping("/product/{productId}")
+  @PostMapping(ApiConstants.REVIEW_PRODUCT)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<ReviewDTO> createReview(
       @PathVariable Long productId,
@@ -111,7 +112,7 @@ public class ReviewController {
    * @param userPrincipal 当前用户
    * @return 更新后的书评
    */
-  @PutMapping("/{reviewId}")
+  @PutMapping(ApiConstants.REVIEW_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<ReviewDTO> updateReview(
       @PathVariable Long reviewId,
@@ -131,7 +132,7 @@ public class ReviewController {
    * @param userPrincipal 当前用户
    * @return 更新后的书评
    */
-  @PutMapping("/admin/{reviewId}")
+  @PutMapping(ApiConstants.REVIEW_ADMIN)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<ReviewDTO> updateReviewByAdmin(
       @PathVariable Long reviewId,
@@ -149,7 +150,7 @@ public class ReviewController {
    * @param userPrincipal 当前用户
    * @return 删除结果
    */
-  @DeleteMapping("/{reviewId}")
+  @DeleteMapping(ApiConstants.REVIEW_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<String> deleteReview(
       @PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -165,7 +166,7 @@ public class ReviewController {
    * @param userPrincipal 当前用户
    * @return 删除结果
    */
-  @DeleteMapping("/admin/{reviewId}")
+  @DeleteMapping(ApiConstants.REVIEW_ADMIN)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<String> deleteReviewByAdmin(
       @PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {

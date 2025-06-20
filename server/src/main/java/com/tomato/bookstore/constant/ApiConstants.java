@@ -12,6 +12,7 @@ public class ApiConstants {
   public static final String USER_PROFILE = "/profile";
 
   // 完整用户路径
+  public static final String USER_BASE_PATH = USER;
   public static final String USER_REGISTER_PATH = USER + USER_REGISTER;
   public static final String USER_LOGIN_PATH = USER + USER_LOGIN;
   public static final String USER_PROFILE_PATH = USER + USER_PROFILE;
@@ -85,6 +86,7 @@ public class ApiConstants {
   public static final String NOTE_ADMIN = "/admin/{noteId}";
   public static final String NOTE_COMMENT = "/{noteId}/comments";
   public static final String NOTE_COMMENT_DETAIL = "/{noteId}/comments/{commentId}";
+  public static final String NOTE_ADMIN_COMMENT_DETAIL = "/admin/{noteId}/comments/{commentId}";
   public static final String NOTE_FEEDBACK = "/{noteId}/feedback";
 
   // 完整读书笔记路径

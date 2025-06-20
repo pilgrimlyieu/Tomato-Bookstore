@@ -1,5 +1,6 @@
 package com.tomato.bookstore.controller;
 
+import com.tomato.bookstore.constant.ApiConstants;
 import com.tomato.bookstore.constant.RoleConstants;
 import com.tomato.bookstore.dto.ApiResponse;
 import com.tomato.bookstore.dto.NoteCommentCreateDTO;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * <p>该类包含读书笔记相关的接口，包括获取读书笔记列表、创建笔记、更新笔记、删除笔记、评论管理等操作。
  */
 @RestController
-@RequestMapping("/notes")
+@RequestMapping(ApiConstants.NOTE_BASE_PATH)
 @RequiredArgsConstructor
 @Slf4j
 @Validated
@@ -37,7 +38,7 @@ public class NoteController {
    * @param productId 商品 ID
    * @return 读书笔记列表
    */
-  @GetMapping("/product/{productId}")
+  @GetMapping(ApiConstants.NOTE_PRODUCT)
   public ApiResponse<List<NoteDTO>> getProductNotes(@PathVariable Long productId) {
     log.info("获取商品 {} 的所有读书笔记", productId);
     List<NoteDTO> notes = noteService.getNotesByProductId(productId);
@@ -50,7 +51,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 读书笔记列表
    */
-  @GetMapping("/user")
+  @GetMapping(ApiConstants.NOTE_USER)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<List<NoteDTO>> getUserNotes(
       @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -65,7 +66,7 @@ public class NoteController {
    * @param userId 用户 ID
    * @return 读书笔记列表
    */
-  @GetMapping("/user/{userId}")
+  @GetMapping(ApiConstants.NOTE_USER_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<List<NoteDTO>> getUserNotesByAdmin(@PathVariable Long userId) {
     log.info("管理员查看用户 {} 的读书笔记列表", userId);
@@ -93,7 +94,7 @@ public class NoteController {
    * @param userPrincipal 当前登录用户（可选）
    * @return 读书笔记详情
    */
-  @GetMapping("/{noteId}")
+  @GetMapping(ApiConstants.NOTE_DETAIL)
   public ApiResponse<NoteDTO> getNoteById(
       @PathVariable Long noteId, @AuthenticationPrincipal(expression = "userId") Long userId) {
     log.info("查看读书笔记 {}", noteId);
@@ -109,7 +110,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 创建的读书笔记
    */
-  @PostMapping("/product/{productId}")
+  @PostMapping(ApiConstants.NOTE_PRODUCT)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<NoteDTO> createNote(
       @PathVariable Long productId,
@@ -129,7 +130,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 更新后的读书笔记
    */
-  @PutMapping("/{noteId}")
+  @PutMapping(ApiConstants.NOTE_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<NoteDTO> updateNote(
       @PathVariable Long noteId,
@@ -148,7 +149,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 更新后的读书笔记
    */
-  @PutMapping("/admin/{noteId}")
+  @PutMapping(ApiConstants.NOTE_ADMIN)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<NoteDTO> updateNoteByAdmin(
       @PathVariable Long noteId,
@@ -166,7 +167,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 删除结果
    */
-  @DeleteMapping("/{noteId}")
+  @DeleteMapping(ApiConstants.NOTE_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<String> deleteNote(
       @PathVariable Long noteId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -182,7 +183,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 删除结果
    */
-  @DeleteMapping("/admin/{noteId}")
+  @DeleteMapping(ApiConstants.NOTE_ADMIN)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<String> deleteNoteByAdmin(
       @PathVariable Long noteId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -199,7 +200,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 更新后的读书笔记
    */
-  @PostMapping("/{noteId}/feedback")
+  @PostMapping(ApiConstants.NOTE_FEEDBACK)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<NoteDTO> addFeedback(
       @PathVariable Long noteId,
@@ -222,7 +223,7 @@ public class NoteController {
    * @param noteId 笔记 ID
    * @return 评论列表
    */
-  @GetMapping("/{noteId}/comments")
+  @GetMapping(ApiConstants.NOTE_COMMENT)
   public ApiResponse<List<NoteCommentDTO>> getNoteComments(@PathVariable Long noteId) {
     log.info("获取读书笔记 {} 的所有评论", noteId);
     List<NoteCommentDTO> comments = noteService.getNoteComments(noteId);
@@ -237,7 +238,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 创建的评论
    */
-  @PostMapping("/{noteId}/comments")
+  @PostMapping(ApiConstants.NOTE_COMMENT)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<NoteCommentDTO> addComment(
       @PathVariable Long noteId,
@@ -257,7 +258,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 删除结果
    */
-  @DeleteMapping("/{noteId}/comments/{commentId}")
+  @DeleteMapping(ApiConstants.NOTE_COMMENT_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ANY_ROLE)
   public ApiResponse<String> deleteComment(
       @PathVariable Long noteId,
@@ -276,7 +277,7 @@ public class NoteController {
    * @param userPrincipal 当前用户
    * @return 删除结果
    */
-  @DeleteMapping("/admin/{noteId}/comments/{commentId}")
+  @DeleteMapping(ApiConstants.NOTE_ADMIN_COMMENT_DETAIL)
   @PreAuthorize(RoleConstants.HAS_ROLE_ADMIN)
   public ApiResponse<String> deleteCommentByAdmin(
       @PathVariable Long noteId,
