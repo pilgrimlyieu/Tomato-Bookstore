@@ -158,10 +158,10 @@ public class NoteServiceImpl implements NoteService {
   @Transactional
   public NoteDTO createNote(Long productId, Long userId, NoteCreateDTO noteCreateDTO) {
     // 检查商品是否存在
-    Product product = getProductById(productId);
+    getProductById(productId);
 
     // 检查用户是否存在
-    User user = getUserById(userId);
+    getUserById(userId);
 
     // 检查用户是否已经为该商品创建过笔记
     if (noteRepository.existsByProductIdAndUserId(productId, userId)) {
@@ -216,7 +216,7 @@ public class NoteServiceImpl implements NoteService {
   @Transactional
   public NoteDTO addOrUpdateFeedback(Long noteId, Long userId, FeedbackType feedbackType) {
     // 确认笔记存在
-    Note note = getNoteEntityById(noteId);
+    getNoteEntityById(noteId);
 
     // 确认用户存在
     getUserById(userId);
