@@ -11,8 +11,6 @@ export const BusinessErrorCode = {
   EMAIL_ALREADY_EXISTS: 10003,
   PHONE_ALREADY_EXISTS: 10004,
   PASSWORD_INCORRECT: 10005,
-  USER_ACCOUNT_LOCKED: 10006,
-  USER_UNAUTHORIZED: 10007,
 
   // 商品模块（20xxx）
   PRODUCT_NOT_FOUND: 20001,
@@ -82,8 +80,6 @@ export const BusinessErrorMessages: Record<number, string> = {
   [BusinessErrorCode.EMAIL_ALREADY_EXISTS]: "邮箱已存在",
   [BusinessErrorCode.PHONE_ALREADY_EXISTS]: "手机号已存在",
   [BusinessErrorCode.PASSWORD_INCORRECT]: "密码不正确",
-  [BusinessErrorCode.USER_ACCOUNT_LOCKED]: "账户已被锁定",
-  [BusinessErrorCode.USER_UNAUTHORIZED]: "用户未授权",
 
   // 商品模块（20xxx）
   [BusinessErrorCode.PRODUCT_NOT_FOUND]: "商品不存在",

@@ -10,7 +10,7 @@
           <el-button type="primary" @click="router.push(Routes.PRODUCT_LIST)" class="rounded-lg">
             继续购物
           </el-button>
-          <el-button @click="router.push(Routes.USER_PROFILE)" class="rounded-lg">
+          <el-button @click="router.push(Routes.ORDER_LIST)" class="rounded-lg">
             查看我的订单
           </el-button>
         </template>
