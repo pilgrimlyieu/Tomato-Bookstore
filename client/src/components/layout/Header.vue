@@ -90,7 +90,6 @@ import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/user";
 import {
   List,
-  Search,
   Setting,
   ShoppingCart,
   SwitchButton,

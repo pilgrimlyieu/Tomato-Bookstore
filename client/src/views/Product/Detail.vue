@@ -188,7 +188,7 @@ import { useReviewStore } from "@/stores/review";
 import type { Note } from "@/types/note";
 import { formatPrice } from "@/utils/formatters";
 import { buildRoute } from "@/utils/routeHelper";
-import { ShoppingCart, Star } from "@element-plus/icons-vue";
+import { ShoppingCart } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 

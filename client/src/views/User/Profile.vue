@@ -315,10 +315,6 @@ const handleChangePassword = async () => {
   });
 };
 
-// 安全设置开关
-const twoFactorEnabled = ref(false);
-const loginNotifications = ref(true);
-
 // 头像上传相关
 const visibleUploadAvatar = ref(false);
 const avatarPreview = ref("");
