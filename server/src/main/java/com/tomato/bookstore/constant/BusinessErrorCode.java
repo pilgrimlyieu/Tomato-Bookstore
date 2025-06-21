@@ -13,8 +13,6 @@ public enum BusinessErrorCode {
   EMAIL_ALREADY_EXISTS(10003, "邮箱已存在"),
   PHONE_ALREADY_EXISTS(10004, "手机号已存在"),
   PASSWORD_INCORRECT(10005, "密码不正确"),
-  USER_ACCOUNT_LOCKED(10006, "账户已被锁定"),
-  USER_UNAUTHORIZED(10007, "用户未授权"),
 
   // 商品模块（20xxx）
   PRODUCT_NOT_FOUND(20001, "商品不存在"),
