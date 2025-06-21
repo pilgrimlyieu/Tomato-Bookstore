@@ -120,6 +120,20 @@ public class OrderController {
         totalAmount,
         gmtPayment);
 
+    // 从 out_trade_no 中解析订单 ID（格式：时间戳_订单ID）
+    Long orderId;
+    try {
+      String[] parts = outTradeNo.split("_");
+      if (parts.length >= 2) {
+        orderId = Long.valueOf(parts[parts.length - 1]); // 取最后一部分作为订单 ID
+      } else {
+        orderId = Long.valueOf(outTradeNo); // 兼容旧格式
+      }
+    } catch (NumberFormatException e) {
+      log.error("解析订单 ID 失败：outTradeNo={}", outTradeNo, e);
+      throw new IllegalArgumentException("无效的商户订单号格式");
+    }
+
     // 构建支付通知对象
     LocalDateTime paymentTime = null;
     if (gmtPayment != null && !gmtPayment.isEmpty()) {
@@ -133,7 +147,7 @@ public class OrderController {
 
     PaymentNotifyDTO notifyDTO =
         PaymentNotifyDTO.builder()
-            .orderId(Long.valueOf(outTradeNo))
+            .orderId(orderId)
             .tradeNo(tradeNo)
             .status(tradeStatus)
             .totalAmount(new BigDecimal(totalAmount))
@@ -156,12 +170,25 @@ public class OrderController {
       @RequestParam("trade_no") String tradeNo,
       @RequestParam(value = "total_amount", required = false) String totalAmount,
       HttpServletResponse response) {
-
     log.info("收到支付同步返回：outTradeNo={}, tradeNo={}, amount={}", outTradeNo, tradeNo, totalAmount);
+
+    // 从 out_trade_no 中解析订单 ID（格式：时间戳_订单ID）
+    String orderIdStr;
+    try {
+      String[] parts = outTradeNo.split("_");
+      if (parts.length >= 2) {
+        orderIdStr = parts[parts.length - 1]; // 取最后一部分作为订单 ID
+      } else {
+        orderIdStr = outTradeNo; // 兼容旧格式
+      }
+    } catch (Exception e) {
+      log.error("解析订单 ID 失败：outTradeNo={}", outTradeNo, e);
+      orderIdStr = outTradeNo; // 降级处理
+    }
 
     try {
       // 重定向到前端订单成功页面
-      String redirectUrl = frontendBaseUrl + "/orders/success?orderId=" + outTradeNo;
+      String redirectUrl = frontendBaseUrl + "/orders/success?orderId=" + orderIdStr;
       log.info("重定向到前端订单成功页面：{}", redirectUrl);
       response.sendRedirect(redirectUrl);
       return null;

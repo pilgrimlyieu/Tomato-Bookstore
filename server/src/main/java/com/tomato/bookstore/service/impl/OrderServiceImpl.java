@@ -336,7 +336,8 @@ public class OrderServiceImpl implements OrderService {
 
     // 构建请求参数
     String subject = "番茄书店订单-" + order.getId();
-    String outTradeNo = order.getId().toString(); // 以订单 ID 作为商户订单号
+    // 使用时间戳 + 订单 ID 确保商户订单号唯一性，避免数据库重置后的重复问题
+    String outTradeNo = System.currentTimeMillis() + "_" + order.getId();
     String totalAmount = order.getTotalAmount().toString();
 
     StringBuilder builder = new StringBuilder();
