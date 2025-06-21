@@ -108,6 +108,7 @@
       title="编辑评价"
       width="500px"
       destroy-on-close
+      append-to-body
     >
       <ReviewForm
         v-if="editDialogVisible && currentReview"
